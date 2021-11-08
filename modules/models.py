@@ -12,4 +12,8 @@ class Module(models.Model):
     notes = models.TextField(blank=True)
 
     class Meta:
+        verbose_name_plural = "Modules"
         unique_together = ('name', 'manufacturer', 'version')
+
+    def __str__(self):
+        return f"{self.name} - {self.manufacturer}"

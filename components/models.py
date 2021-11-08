@@ -10,3 +10,9 @@ class Component(models.Model):
     name = models.CharField(max_length=255)
     type = models.ForeignKey(Types, on_delete=models.PROTECT)
     notes = models.TextField()
+
+    class Meta:
+        verbose_name_plural = "Components"
+
+    def __str__(self):
+        return self.name

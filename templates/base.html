@@ -21,11 +21,23 @@
 <nav class="navbar navbar-dark sticky-top" style="background-color: #1E1E1D">
     <div class="container-fluid">
         <a class="navbar-brand logo" href="#">BOM SQUAD</a>
-        <ul class="nav justify-content-end">
-            <li class="nav-item">
-                <a class="nav-link nav-login-logout" href="#"><b>login</b></a>
-            </li>
-        </ul>
+        <div class="d-flex">
+            <div class="mx-2">
+                <button class="btn btn-outline-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">menu</button>
+                <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
+                  <div class="offcanvas-header">
+                    <h5 id="offcanvasTopLabel">Offcanvas top</h5>
+                    <button type="button" class="btn-close text-reset btn-outline-light" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                  </div>
+                  <div class="offcanvas-body">
+                    ...
+                  </div>
+                </div>
+            </div>
+            <div>
+                <button class="btn btn-outline-light" type="button">login</button>
+            </div>
+        </div>
     </div>
 </nav>
 

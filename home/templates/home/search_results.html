@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Search Results</h1>
+
+<ul>
+  {% for module in module_list %}
+    <li>
+      {{ module.name }}
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}

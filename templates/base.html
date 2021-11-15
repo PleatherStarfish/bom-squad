@@ -1,3 +1,5 @@
+{% load static %}
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,31 +12,21 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Extra+Condensed:wght@800&display=swap" rel="stylesheet">
+    <link href="{% static 'index.css' %}" rel="stylesheet" type="text/css">
 
     <title>Bom-Squad</title>
 </head>
-<body>
+<body id="bootstrap-overrides">
 
-<nav class="navbar navbar-dark" style="background-color: #1E1E1D">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#" style="font-family: 'Fira Sans Extra Condensed', sans-serif; font-size: 34px; color: #FFFE05;">BOM SQUAD</a>
-      <div class="collapse navbar-collapse" id="navbarText">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+<nav class="navbar navbar-dark sticky-top" style="background-color: #1E1E1D">
+    <div class="container-fluid">
+        <a class="navbar-brand logo" href="#">BOM SQUAD</a>
+        <ul class="nav justify-content-end">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
+                <a class="nav-link nav-login-logout" href="#"><b>login</b></a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Features</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Pricing</a>
-            </li>
-          </ul>
-          <span class="navbar-text">
-            Navbar text with an inline element
-          </span>
+        </ul>
     </div>
-  </div>
 </nav>
 
 <br/>
@@ -48,5 +40,11 @@
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
 </body>
 </html>

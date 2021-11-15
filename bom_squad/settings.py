@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ls7g9dh9$@muwdg#r@ir#s$z6p_!1+#65blgf)ajpgxr=r*61f'
+from bom_squad.secrets.secrets import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'modules',
     'suppliers',
     'home',
+    'authenticate'
 ]
 
 MIDDLEWARE = [
@@ -124,6 +125,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'bom_squad', 'static'),
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

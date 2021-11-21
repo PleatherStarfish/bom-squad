@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <section class="gradient-custom" style="height: calc(100vh - 200px)">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center h-100">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                    <div class="card bg-light text-black" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+
+                            <div class="mb-md-5 mt-md-4 pb-5">
+
+                                <h1 class="fw-bold mb-2 text-uppercase">Login</h1>
+                                <p class="text-white-50 mb-5">Please enter your Courant username and password.</p>
+                                {% for message in messages %}<div class="alert alert-danger" role="alert">{{ message }}</div>{% endfor %}
+
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <div class="form-outline form-white mb-4">
+                                        <label class="form-label" for="username-field">Email</label>
+                                        <input type="text" id="username-field" class="form-control" placeholder="Enter Username" name="username">
+                                    </div>
+
+                                    <div class="form-outline form-white mb-4">
+                                        <label class="form-label" for="password-field">Password</label>
+                                        <input type="password" id="password-field" class="form-control" placeholder="Enter Password" name="password">
+                                    </div>
+
+                                    <button class="btn btn-outline-dark btn-lg px-5" type="submit" style="margin-top: 3vh;">Login</button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

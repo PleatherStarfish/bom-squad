@@ -22,7 +22,7 @@ class Module(models.Model):
     name = models.CharField(max_length=255)
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.PROTECT)
     version = models.CharField(max_length=10, default="1")
-    description = models.TextField(blank=True)
+    description = models.TextField()
     date_updated = models.DateField(default=timezone.now, blank=False)
     slug = models.SlugField(blank=True)
 
@@ -31,6 +31,9 @@ class Module(models.Model):
         unique_together = ('name', 'manufacturer', 'version')
 
     def save(self, *args, **kwargs):
+        if self.description:
+            self.description = self.description
+            super(Module, self).save(*args, **kwargs)
         if not self.slug:
             self.slug = slugify(f"{self.name}-{self.manufacturer}-{self.version}")
             super(Module, self).save(*args, **kwargs)

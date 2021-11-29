@@ -21,14 +21,13 @@
 <nav class="navbar navbar-dark sticky-top" style="background-color: #1E1E1D">
     <div class="container-fluid">
         <a class="navbar-brand logo" href="{% url 'home' %}">BOM SQUAD</a>
-            <div>
-                {% if user.is_authenticated %}
-                <a href="{% url 'login' %}"><button class="btn btn-outline-light" type="button">account</button></a>
-                <a href="{% url 'logout' %}"><button class="btn btn-outline-light" type="button">logout</button></a>
-                {% else %}
-                <a href="{% url 'login' %}"><button class="btn btn-outline-light" type="button">login</button></a>
-                {% endif %}
-            </div>
+        <div>
+            {% if user.is_authenticated %}
+            <a href="{% url 'login' %}"><button class="btn btn-outline-light" type="button">account</button></a>
+            <a href="{% url 'logout' %}"><button class="btn btn-outline-light" type="button">logout</button></a>
+            {% else %}
+            <a href="{% url 'login' %}"><button class="btn btn-outline-light" type="button">login</button></a>
+            {% endif %}
         </div>
     </div>
 </nav>
@@ -39,6 +38,28 @@
     <div class="col">
       {% block content %}{% endblock content %}
     </div>
+</div>
+<div style="background-color: #f8f9fa; width: 100vw">
+    <footer class="container py-4">
+        <p class="my-1">
+            <a class="footer-link" href="/about/">About</a>
+        </p>
+
+        <p class="my-1">
+            <a class="footer-link" rel="noopener" href="mailto:danielmiller.js@gmail.com?subject=Bom+Squad">Contact</a>
+        </p>
+
+        <p class="my-1">
+            <a class="footer-link" href="/privacy/">Privacy Policy</a>
+        </p>
+
+        <div class="py-2">
+            <p class="my-1">
+                <a class="footer-link" target="_blank" href="https://www.itsnicethat.com/news/resources-supporting-black-lives-matter-movement-creative-industry-010620">Black lives matter.</a>
+            </p>
+        </div>
+
+    </footer>
 </div>
 
 <!-- Optional JavaScript -->

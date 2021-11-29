@@ -55,3 +55,8 @@
   color: #505050;
   text-decoration: none;
 }
+
+#bootstrap-overrides .footer-link {
+  color: silver;
+  text-decoration: none;
+}

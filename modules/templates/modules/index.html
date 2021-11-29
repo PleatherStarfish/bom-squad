@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% for module in module_list %}
+    <h1 class="my-3 my-lg-5">{{ module.name }}</h1>
+    {% endfor %}
+{% endblock %}

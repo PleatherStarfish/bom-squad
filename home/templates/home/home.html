@@ -23,7 +23,7 @@
                                                     <div class="card-body">
                                                         <div class="d-flex justify-content-between w-100">
                                                             <div>
-                                                                <h2 class="card-title"><a href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a></h2>
+                                                                <h2 class="card-title"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a></h2>
                                                             </div>
                                                             <div class="text-nowrap">
                                                                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to my built list">
@@ -42,10 +42,9 @@
                                                                 </span>
                                                             </div>
                                                         </div>
-                                                        <p class="card-title"><b>{{ module.manufacturer }}</b></p>
-                                                        <p class="card-text">This is a wider card with supporting text below as a
-                                                            natural lead-in to additional content. This content is a little bit
-                                                            longer.</p>
+                                                        <p class="card-title"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>
+                                                        <p class="card-text text-truncate">This is a wider card with supporting text below as a
+                                                            natural lead-in to additional content.</p>
                                                         {% comment %}
                                                         <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                                                         {% endcomment %}

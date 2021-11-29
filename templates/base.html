@@ -20,7 +20,7 @@
 
 <nav class="navbar navbar-dark sticky-top" style="background-color: #1E1E1D">
     <div class="container-fluid">
-        <a class="navbar-brand logo" href="#">BOM SQUAD</a>
+        <a class="navbar-brand logo" href="{% url 'home' %}">BOM SQUAD</a>
             <div>
                 {% if user.is_authenticated %}
                 <a href="{% url 'login' %}"><button class="btn btn-outline-light" type="button">account</button></a>

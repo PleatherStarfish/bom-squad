@@ -7,6 +7,12 @@ class Manufacturer(models.Model):
     name = models.CharField(max_length=255)
     notes = models.TextField(blank=True)
     date_updated = models.DateField(default=timezone.now, blank=False)
+    slug = models.SlugField(blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(f"{self.name}")
+            super(Manufacturer, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.name}"

@@ -1,3 +1,15 @@
+#bootstrap-overrides p,
+#bootstrap-overrides label,
+#bootstrap-overrides h1,
+#bootstrap-overrides h2,
+#bootstrap-overrides h3,
+#bootstrap-overrides h4,
+#bootstrap-overrides h5,
+#bootstrap-overrides h6 {
+  color: #505050;
+  text-decoration: none;
+}
+
 :root #bootstrap-overrides  {
   --bs-blue: #03178C;
   --bs-indigo: #6610f2;
@@ -37,4 +49,9 @@
   color: white;
   margin-right: 1vw;
   border: 1px solid white;
+}
+
+#bootstrap-overrides .home-card-link {
+  color: #505050;
+  text-decoration: none;
 }

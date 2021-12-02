@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
     <section class="vh-100 gradient-custom">
@@ -19,6 +20,9 @@
                                     <li style="list-style-type: none;">
                                         <div class="card w-100 mb-3">
                                             <div class="row g-0">
+                                                <div class="col-md-4">
+                                                  <img src="http://127.0.0.1:8000/{{ module.image }}" class="img-fluid rounded-start">
+                                                </div>
                                                 <div class="col-md-12">
                                                     <div class="card-body">
                                                         <div class="d-flex justify-content-between w-100">

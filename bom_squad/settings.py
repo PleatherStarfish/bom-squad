@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'modules',
     'suppliers',
     'home',
-    'authenticate'
+    'authenticate',
+    'users'
 ]
 
 MIDDLEWARE = [

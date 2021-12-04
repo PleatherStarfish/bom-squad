@@ -21,3 +21,6 @@ class UserExtended(models.Model):
 
     def __str__(self):
         return f"{self.first_name}_{self.last_name}"
+
+    class Meta:
+        verbose_name_plural = "User Extended Properties"

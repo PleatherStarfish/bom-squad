@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'suppliers',
     'home',
     'authenticate',
-    'users'
+    'users_extended'
 ]
 
 MIDDLEWARE = [

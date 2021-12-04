@@ -25,7 +25,7 @@ urlpatterns = [
     # path('logout/', views.logout_user, name='logout'),
     # path('register/', views.register_user, name='register'),
     path('modules/', include('modules.urls')),
-    path('users/', include('users.urls')),
+    path('users/', include('users_extended.urls')),
     path('admin/', admin.site.urls),
 ]
 

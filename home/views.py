@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .forms import SignUpForm
+from users_extended.models import UserExtended
 
 
 # Create your views here.
@@ -66,9 +67,18 @@ def register_user(request):
             user = authenticate(username=username, password=password)
             login(request, user)
             messages.success(request, ('You have registered...'))
+            user_extended = UserExtended(user=user,
+                                         first_name=form.cleaned_data['first_name'],
+                                         last_name=form.cleaned_data['last_name'])
+            user_extended.save()
             return redirect('home')
     else:
         form = SignUpForm()
 
     context = {'form': form}
     return render(request, 'home/register.html', context)
+
+def add_to_built(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated():
+            user_id = request.user.id

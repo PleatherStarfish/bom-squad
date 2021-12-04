@@ -11,6 +11,7 @@ media
 
 # If you are using PyCharm #
 .idea
+.DS_Store
 *.iws /out/
 
 # Python #

@@ -3,8 +3,6 @@ from django.utils import timezone
 from django.template.defaultfilters import slugify
 from django.core.files.storage import FileSystemStorage
 
-fs = FileSystemStorage(location='/media/photos')
-
 
 class Manufacturer(models.Model):
     name = models.CharField(max_length=255)
@@ -27,7 +25,7 @@ class Module(models.Model):
     version = models.CharField(max_length=10, default="1")
     description = models.TextField()
     date_updated = models.DateField(default=timezone.now, blank=False)
-    image = models.ImageField(storage=fs, blank=True)
+    image = models.ImageField(blank=True)
     slug = models.SlugField(blank=True)
 
     class Meta:

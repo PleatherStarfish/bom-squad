@@ -60,3 +60,12 @@
   color: silver;
   text-decoration: none;
 }
+
+#bootstrap-overrides .description-wrapped > p {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  display: inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

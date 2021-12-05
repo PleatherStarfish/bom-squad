@@ -22,6 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 from bom_squad.secrets.secrets import *
+from bom_squad.secrets.captcha import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -43,7 +44,8 @@ INSTALLED_APPS = [
     'suppliers',
     'home',
     'authenticate',
-    'users_extended'
+    'users_extended',
+    'captcha',
 ]
 
 MIDDLEWARE = [
@@ -76,6 +78,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'bom_squad.wsgi.application'
+
+RECAPTCHA_PUBLIC_KEY = '6LeiQXwdAAAAAHmVu0ULBug7RqdecPiDVrByThKT'
 
 
 # Database

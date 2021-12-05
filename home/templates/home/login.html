@@ -13,7 +13,9 @@
 
                                 <h1 class="fw-bold mb-2 text-uppercase">Login</h1>
                                 <p class="text-white-50 mb-5">Please enter your Courant username and password.</p>
-                                {% for message in messages %}<div class="alert alert-danger" role="alert">{{ message }}</div>{% endfor %}
+                                {% for message in messages %}
+                                    <div class="alert alert-danger" role="alert">{{ message }}</div>
+                                {% endfor %}
 
                                 <form method="POST">
                                     {% csrf_token %}

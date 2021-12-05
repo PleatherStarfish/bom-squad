@@ -109,3 +109,8 @@ secret
 secret.py
 bom_squad/secret.py
 bom_squad/secrets/secret.py
+
+captcha
+captcha.py
+bom_squad/captcha.py
+bom_squad/secrets/captcha.py

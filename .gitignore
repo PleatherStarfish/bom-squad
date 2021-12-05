@@ -105,10 +105,11 @@ GitHub.sublime-settings
 !.vscode/extensions.json
 .history
 
-secret
-secret.py
-bom_squad/secret.py
-bom_squad/secrets/secret.py
+secrets
+secrets.py
+bom_squad/secrets.py
+bom_squad/secrets/secrets.py
+bom_squad/secrets/*
 
 captcha
 captcha.py

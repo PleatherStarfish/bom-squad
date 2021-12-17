@@ -62,6 +62,7 @@ def logout_user(request):
     messages.success(request, ('You have been logged out.'))
     return redirect('home')
 
+# Create new user
 def register_user(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -102,9 +103,10 @@ def register_user(request):
 def add_to_built(request, id):
     if request.method == 'GET':
         user_id = request.user.id
-        user = UserExtended.objects.get(id=user_id)
+        user = UserExtended.objects.get(user__id=user_id)
+        print(user)
         module = Module.objects.get(id=id)
-        user.want_to_build_modules.add(module)
+        user.buil_modules.add(module)
         user.save()
         print(id)
         return HttpResponseRedirect('/')

@@ -68,3 +68,26 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+#bootstrap-overrides .user-page-nav > div > button.active {
+  border-top: unset;
+  border-left: unset;
+  border-right: unset;
+  border-bottom: 5px solid #50AFCC;
+  border-radius: unset;
+  color: #50AFCC;
+}
+
+#bootstrap-overrides .user-page-nav > div > button:hover {
+  border-top: unset;
+  border-left: unset;
+  border-right: unset;
+  border-bottom: 5px solid #50AFCC;
+  border-radius: unset;
+  color: #50AFCC;
+}
+
+#bootstrap-overrides .user-page-nav > div > button {
+  color: #495057;
+  border: unset;
+}

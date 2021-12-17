@@ -16,6 +16,7 @@
 
     <title>Bom-Squad</title>
     <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
 </head>
 <body id="bootstrap-overrides">
 
@@ -24,7 +25,7 @@
         <a class="navbar-brand logo" href="{% url 'home' %}">BOM SQUAD</a>
         <div>
             {% if user.is_authenticated %}
-            <a href="{% url 'user_page' request.user.id  %}"><button class="btn btn-outline-light" type="button" style="border: none;">account</button></a>
+            <a href="{% url 'user_page' request.user.username  %}"><button class="btn btn-outline-light" type="button" style="border: none;">account</button></a>
             <a href="{% url 'logout' %}"><button class="btn btn-outline-light" type="button" style="border: none;">logout</button></a>
             {% else %}
             <a href="{% url 'register' %}"><button class="btn btn-outline-light" type="button" style="border: none;">register</button></a>

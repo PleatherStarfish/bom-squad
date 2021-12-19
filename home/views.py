@@ -30,7 +30,12 @@ def index(request):
     except EmptyPage:
         module_list = paginator.page(paginator.num_pages)
 
-    context = {"module_list": module_list}
+    built = None
+    if request.user.is_authenticated:
+        user = UserExtended.objects.get(user=request.user)
+        built = user.built_modules.all()
+
+    context = {"module_list": module_list, "built": built}
     return render(request, 'home/home.html', context)
 
 def search_results(request):

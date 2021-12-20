@@ -32,15 +32,27 @@
                                                                 <h2 class="card-title"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a></h2>
                                                             </div>
                                                             <div class="text-nowrap">
-                                                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to my built list">
-                                                                    <a href="{% url 'AddToBuilt' module.id  %}">
-                                                                        <button type="button" class="btn btn-outline-secondary m-1 m-md-0 align-right" style="{% if built and module in built %}background-color: hotpink;{% endif %}">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="{% if built and module in built %}white{% else %}currentColor{% endif %}" class="bi bi-heart" viewBox="0 0 16 16">
-                                                                              <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                                                                            </svg>
-                                                                        </button>
-                                                                    </a>
-                                                                </span>
+                                                                {% if built and module in built %}
+                                                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove from my built list">
+                                                                        <a href="{% url 'RemoveFromBuilt' module.id  %}">
+                                                                            <button type="button" class="btn btn-outline-secondary m-1 m-md-0 align-right" style="background-color: hotpink;">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-heart" viewBox="0 0 16 16">
+                                                                                  <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                                                                                </svg>
+                                                                            </button>
+                                                                        </a>
+                                                                    </span>
+                                                                {% else %}
+                                                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to my built list">
+                                                                        <a href="{% url 'AddToBuilt' module.id  %}">
+                                                                            <button type="button" class="btn btn-outline-secondary m-1 m-md-0 align-right">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                                                                  <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                                                                                </svg>
+                                                                            </button>
+                                                                        </a>
+                                                                    </span>
+                                                                {% endif %}
                                                                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to my want-to-build list.">
                                                                     <button type="button" class="btn btn-outline-secondary m-1 m-md-0 align-right">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-wrench" viewBox="0 0 16 16">

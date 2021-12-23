@@ -110,6 +110,17 @@
     transform: translate(-50%, -50%);
     width: 275px;
     height:auto;
+    opacity: 1;
+    transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.logo-img-head {
+    position: fixed;
+    top: calc(50% - 60px);
+    left: calc(50% + 6px);
+    transform: translate(-50%, -50%);
+    width: 230px;
+    height:auto;
+    opacity: 0;
     transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
@@ -117,6 +128,14 @@
     top: 55px;
     left: 55px;
     width: 100px;
+    opacity: 0;
+    transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.logo-img-small-head {
+    top: 35px;
+    left: 55px;
+    width: 80px;
+    opacity: 1;
     transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 

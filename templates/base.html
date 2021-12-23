@@ -38,10 +38,11 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26.17 8.84"><defs><style>.cls-1{fill:none;stroke:#cccccc;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><polyline class="cls-1" points="25.17 1 13.18 7.83 12.99 7.83 1 1"/></svg>
             </div>
             <div id="scroll-up-cover-1" class="scroll-up-cover-1"></div>
+            <div id="scroll-up-cover-2" class="scroll-up-cover-2"></div>
 
             <div>
                 <nav class="navbar navbar-light sticky-top" style="position: fixed; top: 0; width: 100vw">
-                    <div class="container d-flex justify-content-end" style="margin-top: 6px;">
+                    <div class="container-fluid d-flex justify-content-end" style="margin-top: 6px;">
                         {% if user.is_authenticated %}
                         <a href="{% url 'user_page' request.user.username  %}"><button class="btn btn-outline-secondary" type="button" style="border: none; font-size: 18px">account</button></a>
                         <a href="{% url 'logout' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px">logout</button></a>
@@ -262,11 +263,10 @@
                 lax.addElements(".subtitle", {
                     scrollY: {
                         "letter-spacing": [
-                            [0, "screenHeight/2", "screenHeight"],
-                            [100, 0, 100],
+                            [0, "screenHeight/2", "screenHeight*0.6", "screenHeight"],
+                            [50, 0,  0, 50],
                             {
-                                cssUnit: "px",
-                                easing: 'easeInOutQuint',
+                                cssUnit: "px"
                             }
                         ],
                         opacity: [["screenHeight/3", "screenHeight/2", "screenHeight"], [0, 1.2, 0]],

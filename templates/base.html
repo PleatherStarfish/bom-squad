@@ -2,91 +2,283 @@
 
 <!doctype html>
 <html lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Extra+Condensed:wght@800&display=swap" rel="stylesheet">
-    <link href="{% static 'index.css' %}" rel="stylesheet" type="text/css">
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Extra+Condensed:wght@800&display=swap" rel="stylesheet">
+        <link href="{% static 'index.css' %}" rel="stylesheet" type="text/css">
 
-    <title>Bom-Squad</title>
-    <script src='https://www.google.com/recaptcha/api.js'></script>
-    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
-</head>
-<body id="bootstrap-overrides">
+        <title>Bom-Squad</title>
+        <script src='https://www.google.com/recaptcha/api.js'></script>
+        <script src="https://cdn.jsdelivr.net/npm/lax.js" ></script>
+        <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+    </head>
+    <body id="bootstrap-overrides" style="display: flex; min-height: 100vh; flex-direction: column;">
 
-<nav class="navbar navbar-dark sticky-top" style="background-color: #1E1E1D">
-    <div class="container-fluid">
-        <a class="navbar-brand logo" href="{% url 'home' %}">BOM SQUAD</a>
-        <div>
-            {% if user.is_authenticated %}
-            <a href="{% url 'user_page' request.user.username  %}"><button class="btn btn-outline-light" type="button" style="border: none;">account</button></a>
-            <a href="{% url 'logout' %}"><button class="btn btn-outline-light" type="button" style="border: none;">logout</button></a>
-            {% else %}
-            <a href="{% url 'register' %}"><button class="btn btn-outline-light" type="button" style="border: none;">register</button></a>
-            <a href="{% url 'login' %}"><button class="btn btn-outline-light" type="button" style="border: none;">login</button></a>
-            {% endif %}
-        </div>
-    </div>
-</nav>
+        <header class="main-header">
+            <div class="d-flex" style="height: 100vh; width: 100vw;">
+                <div class="selector logo-container">
+                    <a id="logo-link" class="navbar-brand" href="{% url 'home' %}" style="z-index: 9999">
+                        <img id="logo-img" src="/media/logo.png" alt="" class="d-inline-block align-text-top logo-img">
+                    </a>
+                </div>
+            </div>
+            <p class="subtitle">A search and inventory tool for DIY Eurorack modules and components.</p>
+            <h2 class="scrolldown" style="color: #cccccc;">scroll down</h2>
+            <div class="downarrows">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26.17 8.84"><defs><style>.cls-1{fill:none;stroke:#cccccc;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><polyline class="cls-1" points="25.17 1 13.18 7.83 12.99 7.83 1 1"/></svg>
+            </div>
+            <div id="scroll-up-cover-1" class="scroll-up-cover-1"></div>
 
-<div class="container" style="margin-bottom: 450px">
-    <div>
-        <div class="col">
-          {% block content %}{% endblock content %}
-        </div>
-    </div>
-</div>
-<footer class="container-fluid py-5" style="background-color: #f8f9fa; width: 100vw">
-    <div class="container px-5">
-        <div class="row">
-            <div class="col-6 col-md">
-                <h5>About</h5>
-                <ul class="list-unstyled text-small">
-                    <li><a class="text-muted" href="#">FAQ</a></li>
-                    <li><a class="text-muted" href="#">Terms of Service</a></li>
-                    <li><a class="text-muted" href="#">Privacy Policy</a></li>
-                </ul>
+            <div>
+                <nav class="navbar navbar-light sticky-top" style="position: fixed; top: 0; width: 100vw">
+                    <div class="container d-flex justify-content-end">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'user_page' request.user.username  %}"><button class="btn btn-outline-secondary" type="button" style="border: none; font-size: 18px">account</button></a>
+                        <a href="{% url 'logout' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px">logout</button></a>
+                        {% else %}
+                        <a href="{% url 'register' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px">register</button></a>
+                        <a href="{% url 'login' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px">login</button></a>
+                        {% endif %}
+                    </div>
+                </nav>
             </div>
-            <div class="col-6 col-md">
-                <h5>Support</h5>
-                <ul class="list-unstyled text-small">
-                    <li><a class="text-muted" href="#">Donate</a></li>
-                    <li><a class="text-muted" href="#">Contribute to the project on GitHub</a></li>
-                </ul>
-            </div>
-            <div class="col-6 col-md">
-                <h5>Account</h5>
-                <ul class="list-unstyled text-small">
-                    <li><a class="text-muted" href="#">Login</a></li>
-                </ul>
-            </div>
-            <div class="col-6 col-md">
-                <h5 class="visually-hidden-focusable">Contact</h5>
-                <ul class="list-unstyled text-small">
-                    <li><a class="text-muted mt-4" href="mailto:info@bom-squad.com">Contact</a></li>
-                </ul>
-            </div>
-            <div class="col-12 col-md py-4">
-                <a class="text-muted" target="_blank" href="https://www.itsnicethat.com/news/resources-supporting-black-lives-matter-movement-creative-industry-010620">Black lives matter.</a>
-            </div>
-        </div>
-    </div>
-</footer>
+        </header>
 
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-<script>
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
-</script>
-</body>
+        <main class="main-content container" style="margin-bottom: 700px; flex: 1;">
+            <div class="row">
+                {% block content %}{% endblock content %}
+            </div>
+        </main>
+
+        <footer class="main-footer container-fluid py-5" style="background-color: #f8f9fa; width: 100vw; position: relative;">
+            <div class="container px-5">
+                <div class="row col-6 col-md">
+                    <h5>About</h5>
+                    <ul class="list-unstyled text-small">
+                        <li><a class="text-muted" href="#">FAQ</a></li>
+                        <li><a class="text-muted" href="#">Terms of Service</a></li>
+                        <li><a class="text-muted" href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>Support</h5>
+                    <ul class="list-unstyled text-small">
+                        <li><a class="text-muted" href="#">Donate</a></li>
+                        <li><a class="text-muted" href="#">Contribute to the project on GitHub</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>Account</h5>
+                    <ul class="list-unstyled text-small">
+                        <li><a class="text-muted" href="#">Login</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md">
+                    <h5 class="visually-hidden-focusable">Contact</h5>
+                    <ul class="list-unstyled text-small">
+                        <li><a class="text-muted mt-4" href="mailto:info@bom-squad.com">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-12 col-md py-4">
+                    <a class="text-muted" target="_blank" href="https://www.itsnicethat.com/news/resources-supporting-black-lives-matter-movement-creative-industry-010620">Black lives matter.</a>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <script>
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        </script>
+        {% comment %}
+        <script>
+            window.onload = function () {
+                lax.init();
+
+                // Add a driver that we use to control our animations
+                lax.addDriver('scrollY', function () {
+                    return window.scrollY
+                });
+
+                // Add animation bindings to elements
+                lax.addElements('.scroll-up-cover-1', {
+                    scrollY: {
+                        translateY: [
+                            ["elInY", "elCenterY", "elOutY"],
+                            [0, 'screenHeight/2', 'screenHeight'],
+                            { inertia: 30 }
+                        ]
+                    }
+                }, {
+                  transform: '500ms cubic-bezier(0.83, 0, 0.17, 1)'
+                })
+            }
+        </script>
+        {% endcomment %}
+
+        <script>
+
+            function isElementVisible(el) {
+                var rect     = el.getBoundingClientRect(),
+                    vWidth   = window.innerWidth || document.documentElement.clientWidth,
+                    vHeight  = window.innerHeight || document.documentElement.clientHeight,
+                    efp      = function (x, y) { return document.elementFromPoint(x, y) };
+
+                // Return false if it's not in the viewport
+                if (rect.right < 0 || rect.bottom < 0
+                        || rect.left > vWidth || rect.top > vHeight)
+                    return false;
+
+                // Return true if any of its four corners are visible
+                return (
+                      el.contains(efp(rect.left,  rect.top))
+                  ||  el.contains(efp(rect.right, rect.top))
+                  ||  el.contains(efp(rect.right, rect.bottom))
+                  ||  el.contains(efp(rect.left,  rect.bottom))
+                );
+            }
+
+            function getRandomInt(min, max) {
+              min = Math.ceil(min);
+              max = Math.floor(max);
+              return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+            }
+
+            function getScrollPosition() {
+              var viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0); // Viewport height (px)
+              var scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop; // Current scroll position (px)
+              var documentHeight = $(document).height(); // Document height (px)
+              var scrollPositionRelative = scrollPosition / (documentHeight - viewportHeight); // The document height is reduced by the height of the viewport so that we reach 100% at the bottom
+              return {
+                documentHeight: documentHeight,
+                relative: scrollPositionRelative,
+                absolute: scrollPositionRelative * documentHeight // Yields an "average" pixel position
+              };
+            }
+
+            var threshold1 = document.body.clientHeight * 0.01;
+            var threshold2 = document.body.clientHeight * 0.2;
+            var scroll_up_cover_1 = document.getElementById("scroll-up-cover-1");
+            var logo_img = document.getElementById("logo-img");
+            var scroll_1 = false;
+
+            var percent = getRandomInt(10, 30);
+            if (getRandomInt(0, 100) < 50) {
+                var polygon1 = 'clip-path: polygon(0 0, 100% ' + percent + '%, 100% 100%, 0% 100%)';
+                scroll_up_cover_1.style.cssText = polygon1;
+            } else {
+                var polygon1 = 'clip-path: polygon(0 ' + percent + '%, 100% 0%, 100% 100%, 0% 100%)';
+                scroll_up_cover_1.style.cssText = polygon1;
+            }
+
+            if (getRandomInt(0, 100) < 50) {
+                var polygon2 = 'clip-path: polygon(0 0, 100% ' + percent + '%, 100% 100%, 0% 100%)';
+            } else {
+                var polygon2 = 'clip-path: polygon(0 ' + percent + '%, 100% 0%, 100% 100%, 0% 100%)';
+            }
+
+           window.addEventListener("scroll", function(){
+               scroll = this.scrollY
+
+               if (scroll >= threshold1) {
+
+                   scroll_up_cover_1.classList.remove("move-down");
+                   scroll_up_cover_1.classList.remove("move-all-the-way-up");
+                   logo_img.classList.remove("logo-img-small");
+                   scroll_up_cover_1.classList.add("move-up");
+                   scroll_up_cover_1.style.cssText = polygon2;
+
+                   scroll_1 = true
+               }
+               if (scroll < threshold1) {
+                   scroll_1 = false;
+
+                   scroll_up_cover_1.classList.remove("move-up");
+                   scroll_up_cover_1.classList.remove("move-all-the-way-up");
+                   logo_img.classList.remove("logo-img-small");
+                   scroll_up_cover_1.classList.add("move-down");
+               }
+               if (scroll >= threshold2) {
+                   scroll_up_cover_1.classList.remove("move-down");
+                   scroll_up_cover_1.classList.remove("move-up");
+                   scroll_up_cover_1.classList.add("move-all-the-way-up");
+                   logo_img.classList.add("logo-img-small")
+               }
+               if (scroll < threshold2 && scroll > threshold1) {
+
+               }
+               console.log(scroll_1)
+           })
+
+        </script>
+
+        <script>
+            window.scrollTo(0, 0);
+
+            window.onload = function () {
+
+                lax.init();
+
+                lax.addDriver(
+                    "scrollY",
+                    function () {
+                        return document.documentElement.scrollTop;
+                    },
+                    {frameStep: 1}
+                );
+                lax.addElements(".scrolldown", {
+                    scrollY: {
+                        "letter-spacing": [
+                            [0, "screenHeight"],
+                            [0, 150],
+                            {
+                                cssUnit: "px"
+                            }
+                        ],
+                        opacity: [["screenHeight*0.1", "screenHeight*0.3"], [1, 0]],
+                        blur: [["screenHeight*0.1", "screenHeight*0.3"], [0, 10]],
+                        translateX: [[0, "screenHeight"], [0, 80]],
+                    }
+                });
+                lax.addElements(".subtitle", {
+                    scrollY: {
+                        "letter-spacing": [
+                            [0, "screenHeight/2", "screenHeight"],
+                            [100, 0, 100],
+                            {
+                                cssUnit: "px",
+                                easing: 'easeInOutQuint',
+                            }
+                        ],
+                        opacity: [["screenHeight/3", "screenHeight/2", "screenHeight"], [0, 1.2, 0]],
+                        blur: [["screenHeight/3", "screenHeight/2", "screenHeight"], [3, 0, 3]],
+                    }
+                });
+                lax.addElements(".downarrows > *", {
+                    scrollY: {
+                        translateY: [
+                            [0, 200],
+                            [0, 200]
+                        ],
+                        opacity: [
+                            [0, "screenHeight/2"],
+                            [1, 0]
+                        ]
+                    }
+                });
+            };
+        </script>
+    </body>
 </html>

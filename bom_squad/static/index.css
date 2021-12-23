@@ -91,3 +91,99 @@
   color: #495057;
   border: unset;
 }
+
+/*#logo {*/
+/*   width:300px;!*give it a fixed size*!*/
+/*   margin:0 auto;*/
+/*   !* animation magic *!*/
+/*   -webkit-transition: all 1s ease-in-out;*/
+/*   -moz-transition: all 1s ease-in-out ;*/
+/*   -ms-transition: all 1s ease-in-out ;*/
+/*   -o-transition: all 1s ease-in-out ;*/
+/*   transition: all 1s ease-in-out ;*/
+/*}*/
+
+.logo-img {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 275px;
+    height:auto;
+    transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.logo-img-small {
+    top: 55px;
+    left: 55px;
+    width: 100px;
+    transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+#bootstrap-overrides header {
+   width: 100%;
+   z-index: 9999;
+}
+
+#bootstrap-overrides .shrink {
+   width:100px;/*change the size here*/
+}
+
+.move-up {
+   transform: translateY(-60vh);
+   transition: 3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.move-all-the-way-up {
+   transform: translateY(calc(-200vh + 70px));
+   transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.move-down {
+   transform: translateY(50vh);
+   transition: 2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+#scroll-up-cover-1 {
+    background-color: #232323;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 100vh;
+    z-index: -9999;
+    /*clip-path: polygon(0 0, 100% 15%, 100% 100%, 0% 100%);*/
+    /*-webkit-clip-path: polygon(0 0, 100% 15%, 100% 100%, 0% 100%);*/
+}
+
+#bootstrap-overrides .subtitle {
+    bottom: 21vh;
+    height: 40px;
+    position: fixed;
+    width: 300vw;
+    left: -100vw;
+    font-size: 30px;
+    text-align: center;
+    color: white;
+}
+
+.scrolldown {
+      bottom: 90px;
+      height: 40px;
+      position: fixed;
+      width: 300vw;
+      left: -100vw;
+      font-size: 40px;
+      text-align: center;
+}
+.downarrows {
+      bottom: 50px;
+      position: fixed;
+      left: 50vw;
+      width: 70px;
+      margin-left: -35px;
+      height: 26px;
+}
+.downarrows > * {
+      width: 70px;
+      position: absolute;
+}

@@ -19,9 +19,9 @@
         <script src="https://cdn.jsdelivr.net/npm/lax.js" ></script>
         <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
     </head>
-    <body id="bootstrap-overrides" class="main-grid" style="display: flex; min-height: 100vh; flex-direction: column;">
+    <body id="bootstrap-overrides" class="main-grid">
 
-        <header class="main-header header-area">
+        <header class="main-header">
             {% if not user.is_authenticated %}
                 <div class="d-flex" style="height: 100vh; width: 100vw;">
                     <div class="selector logo-container">
@@ -33,7 +33,9 @@
                         </a>
                     </div>
                 </div>
-                <p class="subtitle">A search and inventory tool for DIY Eurorack modules and components.</p>
+                <div style="width: 100%; padding: 0 10vw;">
+                    <p class="subtitle">A search and inventory tool for DIY Eurorack modules and components.</p>
+                </div>
                 <h2 class="scrolldown" style="color: #cccccc;">scroll down</h2>
                 <div class="downarrows">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26.17 8.84"><defs><style>.cls-1{fill:none;stroke:#cccccc;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><polyline class="cls-1" points="25.17 1 13.18 7.83 12.99 7.83 1 1"/></svg>
@@ -57,7 +59,7 @@
             </div>
         </header>
 
-        <main class="main-content container main-area" style="margin-bottom: 700px; flex: 1;">
+        <main class="main-content container main-area">
             <div class="row">
                 {% block content %}{% endblock content %}
             </div>

@@ -233,3 +233,7 @@
       width: 70px;
       position: absolute;
 }
+
+.home-module-list {
+    margin: calc(10vh + 55px) 0 10vh 0;
+}

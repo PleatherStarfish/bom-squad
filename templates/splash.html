@@ -19,13 +19,32 @@
         <script src="https://cdn.jsdelivr.net/npm/lax.js" ></script>
         <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
     </head>
-    <body id="bootstrap-overrides" class="main-grid">
+    <body id="bootstrap-overrides" class="main-grid" style="display: flex; min-height: 100vh; flex-direction: column;">
 
         <header class="main-header header-area">
+            {% if not user.is_authenticated %}
+                <div class="d-flex" style="height: 100vh; width: 100vw;">
+                    <div class="selector logo-container">
+                        <a id="logo-link-head" class="navbar-brand" href="{% url 'home' %}" style="z-index: 99">
+                            <img id="logo-img-head" src="/media/head_logo.png" alt="" class="d-inline-block align-text-top logo-img-head">
+                        </a>
+                        <a id="logo-link" class="navbar-brand" href="{% url 'home' %}" style="z-index: 9999">
+                            <img id="logo-img" src="/media/logo.png" alt="" class="d-inline-block align-text-top logo-img">
+                        </a>
+                    </div>
+                </div>
+                <p class="subtitle">A search and inventory tool for DIY Eurorack modules and components.</p>
+                <h2 class="scrolldown" style="color: #cccccc;">scroll down</h2>
+                <div class="downarrows">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26.17 8.84"><defs><style>.cls-1{fill:none;stroke:#cccccc;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><polyline class="cls-1" points="25.17 1 13.18 7.83 12.99 7.83 1 1"/></svg>
+                </div>
+                <div id="scroll-up-cover-1" class="scroll-up-cover-1"></div>
+                <div id="scroll-up-cover-2" class="scroll-up-cover-2"></div>
+            {% endif %}
+
             <div>
-                <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top" style="position: fixed; top: 0; width: 100vw">
-                    <div class="container-fluid d-flex justify-content-end">
-                        <a class="navbar-brand visually-hidden" href="{% url 'home' %}">BOM Squad</a>
+                <nav class="navbar navbar-expand-lg navbar-dark bgdark sticky-top" style="position: fixed; top: 0; width: 100vw">
+                    <div class="container-fluid d-flex justify-content-end" style="margin-top: 6px;">
                         {% if user.is_authenticated %}
                         <a href="{% url 'user_page' request.user.username  %}"><button class="btn btn-outline-secondary" type="button" style="border: none; font-size: 18px">account</button></a>
                         <a href="{% url 'logout' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px">logout</button></a>
@@ -35,55 +54,10 @@
                         {% endif %}
                     </div>
                 </nav>
-
-                {% comment %}
-                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                    <div class="container-fluid">
-                        <a class="navbar-brand" href="#">Navbar</a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                                aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Link</a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                       data-bs-toggle="dropdown" aria-expanded="false">
-                                        Dropdown
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <li><a class="dropdown-item" href="#">Action</a></li>
-                                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-                                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                                </li>
-                            </ul>
-                            <form class="d-flex">
-                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                                <button class="btn btn-outline-success" type="submit">Search</button>
-                            </form>
-                        </div>
-                    </div>
-                </nav>
-                {% endcomment %}
-
             </div>
         </header>
 
-        <main class="main-content container main-area">
+        <main class="main-content container main-area" style="margin-bottom: 700px; flex: 1;">
             <div class="row">
                 {% block content %}{% endblock content %}
             </div>

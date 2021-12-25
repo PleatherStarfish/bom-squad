@@ -366,3 +366,19 @@
     stroke-linejoin:round;
     stroke-width:2px;
 }
+
+#logo-text {
+    width: 200px;
+    left: 110px;
+    position: fixed;
+    top: 23px;
+}
+
+.logo-text-hidden {
+    opacity: 0;
+    transition: opacity 0.5s linear;
+}
+
+.logo-text-unhidden {
+    opacity: 1;
+}

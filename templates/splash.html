@@ -42,36 +42,37 @@
                 <div id="scroll-up-cover-2" class="scroll-up-cover-2"></div>
             {% endif %}
 
-            <div class="row">
-                <nav id="main-nav" class="navbar navbar-expand-lg navbar-dark sticky-top nav-style" style="position: fixed; height: 70px; top: 0;">
-                    <div class="container-fluid">
-                        <a id="logo-link-head" class="navbar-brand" href="{% url 'home' %}">
-                            <img id="logo-img-head" src="/media/head_logo.png" alt="" class="d-inline-block align-text-top logo-img-head">
-                        </a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                                aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-                            <ul class="navbar-nav mr-auto">
-                            {% if user.is_authenticated %}
-                            <li class="nav-item mr-2">
-                                <a href="{% url 'user_page' request.user.username  %}"><button class="btn btn-outline-secondary" type="button" style="border: none; font-size: 18px; color:#f8f9fa">account</button></a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{% url 'logout' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px; color:#f8f9fa">logout</button></a>
-                            </li>
-                            {% else %}
-                            <li class="nav-item mr-2">
-                                <a href="{% url 'register' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px; color:#f8f9fa">register</button></a>
-                            </li>
-                            <li class="nav-item">
-                            <a href="{% url 'login' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px; color:#f8f9fa">login</button></a>
-                            </li>
-                            {% endif %}
-                            </ul>
-                        </div>
+            <div class="row" style="left:0">
+                <nav id="main-nav" class="navbar navbar-expand-lg navbar-dark sticky-top nav-style" style="position: fixed; height: 70px; top: 0; left:0;">
+                    <a id="logo-link-head" class="navbar-brand" href="{% url 'home' %}">
+                        <img id="logo-img-head" src="/media/head_logo.png" alt="" class="d-inline-block align-text-top logo-img-head">
+                    </a>
+                    <a href="{% url 'home' %}">
+                        <img id="logo-text" src="/media/logo_text.png" alt="" class="d-inline-block logo-text-hidden">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item mr-2">
+                            <a href="{% url 'user_page' request.user.username  %}"><button class="btn btn-outline-secondary" type="button" style="border: none; font-size: 18px; color:#f8f9fa">account</button></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'logout' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px; color:#f8f9fa">logout</button></a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item mr-2">
+                            <a href="{% url 'register' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px; color:#f8f9fa">register</button></a>
+                        </li>
+                        <li class="nav-item">
+                        <a href="{% url 'login' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px; color:#f8f9fa">login</button></a>
+                        </li>
+                        {% endif %}
+                        </ul>
                     </div>
                 </nav>
             </div>
@@ -167,6 +168,7 @@
             var logo_img = document.getElementById("logo-img");
             var logo_img_head = document.getElementById("logo-img-head");
             var main_nav = document.getElementById("main-nav");
+            var logo_text = document.getElementById("logo-text");
             var scroll_1 = false;
 
             var percent = getRandomInt(15, 25);
@@ -185,7 +187,7 @@
             }
 
            window.addEventListener("scroll", function(){
-               scroll = this.scrollY
+               scroll = this.scrollY;
 
                if (scroll >= threshold1) {
 
@@ -194,6 +196,7 @@
                    logo_img.classList.remove("logo-img-small");
                    logo_img_head.classList.remove("logo-img-small-head");
                    main_nav.classList.remove("nav-style");
+                   logo_text.classList.remove("logo-text-unhidden");
                    scroll_up_cover_1.classList.add("move-up");
                    scroll_up_cover_1.style.cssText = polygon2;
 
@@ -207,6 +210,7 @@
                    logo_img.classList.remove("logo-img-small");
                    logo_img_head.classList.remove("logo-img-small-head");
                    main_nav.classList.remove("nav-style");
+                   logo_text.classList.remove("logo-text-unhidden");
                    scroll_up_cover_1.classList.add("move-down");
                }
                if (scroll >= threshold2) {
@@ -216,6 +220,7 @@
                    logo_img.classList.add("logo-img-small");
                    logo_img_head.classList.add("logo-img-small-head");
                    main_nav.classList.add("nav-style");
+                   logo_text.classList.add("logo-text-unhidden");
                }
                if (scroll < threshold2 && scroll > threshold1) {
 

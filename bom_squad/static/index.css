@@ -6,135 +6,254 @@
 #bootstrap-overrides h4,
 #bootstrap-overrides h5,
 #bootstrap-overrides h6 {
-  color: #505050;
-  text-decoration: none;
+    color: #505050;
+    text-decoration: none;
 }
 
-:root #bootstrap-overrides  {
-  --bs-blue: #03178C;
-  --bs-indigo: #6610f2;
-  --bs-purple: #6f42c1;
-  --bs-pink: #d63384;
-  --bs-red: #dc3545;
-  --bs-orange: #fd7e14;
-  --bs-yellow: #F2CB07;
-  --bs-green: #198754;
-  --bs-teal: #20c997;
-  --bs-cyan: #0dcaf0;
-  --bs-white: #fff;
-  --bs-gray: #6c757d;
-  --bs-gray-dark: #343a40;
-  --bs-primary: #0088B3;
-  --bs-secondary: #6c757d;
-  --bs-success: #50AFCC;
-  --bs-info: #FFED00;
-  --bs-warning: #FF0049;
-  --bs-danger: #FF0049;
-  --bs-light: #f8f9fa;
-  --bs-dark: #212529;
-  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+:root #bootstrap-overrides {
+    --bs-blue: #03178C;
+    --bs-indigo: #6610f2;
+    --bs-purple: #6f42c1;
+    --bs-pink: #d63384;
+    --bs-red: #dc3545;
+    --bs-orange: #fd7e14;
+    --bs-yellow: #F2CB07;
+    --bs-green: #198754;
+    --bs-teal: #20c997;
+    --bs-cyan: #0dcaf0;
+    --bs-white: #fff;
+    --bs-gray: #6c757d;
+    --bs-gray-dark: #343a40;
+    --bs-primary: #0088B3;
+    --bs-secondary: #6c757d;
+    --bs-success: #50AFCC;
+    --bs-info: #FFED00;
+    --bs-warning: #FF0049;
+    --bs-danger: #FF0049;
+    --bs-light: #f8f9fa;
+    --bs-dark: #212529;
+    --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
 }
 
 #bootstrap-overrides .logo {
-  font-family: 'Fira Sans Extra Condensed', sans-serif;
-  font-size: 34px;
-  color: #FFED00;
+    font-family: 'Fira Sans Extra Condensed', sans-serif;
+    font-size: 34px;
+    color: #FFED00;
 }
 
 #bootstrap-overrides .nav-login-logout {
-  font-family: var(--bs-font-sans-serif);
-  font-size: 14px;
-  color: white;
-  margin-right: 1vw;
-  border: 1px solid white;
+    font-family: var(--bs-font-sans-serif);
+    font-size: 14px;
+    color: white;
+    margin-right: 1vw;
+    border: 1px solid white;
 }
 
 #bootstrap-overrides .home-card-link {
-  color: #505050;
-  text-decoration: none;
+    color: #505050;
+    text-decoration: none;
 }
 
 #bootstrap-overrides .footer-link {
-  color: silver;
-  text-decoration: none;
+    color: silver;
+    text-decoration: none;
 }
 
 #bootstrap-overrides .description-wrapped > p {
-  width: 100%;
-  display: -webkit-box;
-  -webkit-line-clamp: 5;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+    width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 #bootstrap-overrides .user-page-nav > div > button.active {
-  border-top: unset;
-  border-left: unset;
-  border-right: unset;
-  border-bottom: 5px solid #50AFCC;
-  border-radius: unset;
-  color: #50AFCC;
+    border-top: unset;
+    border-left: unset;
+    border-right: unset;
+    border-bottom: 5px solid #50AFCC;
+    border-radius: unset;
+    color: #50AFCC;
 }
 
 #bootstrap-overrides .user-page-nav > div > button:hover {
-  border-top: unset;
-  border-left: unset;
-  border-right: unset;
-  border-bottom: 5px solid #50AFCC;
-  border-radius: unset;
-  color: #50AFCC;
+    border-top: unset;
+    border-left: unset;
+    border-right: unset;
+    border-bottom: 5px solid #50AFCC;
+    border-radius: unset;
+    color: #50AFCC;
 }
 
 #bootstrap-overrides .user-page-nav > div > button {
-  color: #495057;
-  border: unset;
+    color: #495057;
+    border: unset;
 }
 
 .main-grid {
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: auto auto auto;
-  grid-template-areas:
-    "header-area"
-    "main-area"
-    "footer-area";
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: auto auto auto;
+    grid-template-areas: "header-area" "main-area" "footer-area";
 }
-.header-area { grid-area: header-area; }
-.main-area { grid-area: main-area; }
-.footer-area { grid-area: footer-area; }
 
-.footer-grid{
-  display: grid;
-  grid-template-columns: 50% 50% auto;
-  grid-template-rows: auto auto;
-  gap: 15px 15px;
-  grid-template-areas:
-    "footer-left footer-right"
-    "footer-bottom footer-bottom";
+.header-area {
+    grid-area: header-area;
 }
-.footer-left { grid-area: footer-left; }
-.footer-right { grid-area: footer-right; }
-.footer-bottom { grid-area: footer-bottom; }
+
+.main-area {
+    grid-area: main-area;
+}
+
+.footer-area {
+    grid-area: footer-area;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 50% 50% auto;
+    grid-template-rows: auto auto;
+    gap: 15px 15px;
+    grid-template-areas: "footer-left footer-right" "footer-bottom footer-bottom";
+}
+
+.footer-left {
+    grid-area: footer-left;
+}
+
+.footer-right {
+    grid-area: footer-right;
+}
+
+.footer-bottom {
+    grid-area: footer-bottom;
+}
+
+@media (max-width: 575.98px) {
+    .logo-img {
+        width: 150px;
+    }
+    #bootstrap-overrides .scrolldown {
+        bottom: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+    .downarrows {
+        bottom: 15px;
+        left: 55vw;
+        width: 35px;
+        margin-left: -35px;
+        height: 26px;
+    }
+    .downarrows > * {
+        width: 35px;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .logo-img {
+        width: 200px;
+    }
+    #bootstrap-overrides .scrolldown {
+        bottom: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+    .downarrows {
+        bottom: 15px;
+        left: 52vw;
+        width: 35px;
+        margin-left: -35px;
+        height: 26px;
+    }
+    .downarrows > * {
+        width: 35px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .logo-img {
+        width: 240px;
+    }
+    #bootstrap-overrides .scrolldown {
+        bottom: 60px;
+        height: 40px;
+        font-size: 30px;
+    }
+    .downarrows {
+        bottom: 25px;
+        position: fixed;
+        left: 52vw;
+        width: 45px;
+        margin-left: -34px;
+        height: 26px;
+    }
+    .downarrows > * {
+        width: 45px;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .logo-img {
+        width: 275px;
+    }
+    #bootstrap-overrides .scrolldown {
+        bottom: 70px;
+        height: 40px;
+        font-size: 30px;
+    }
+    .downarrows {
+        bottom: 25px;
+        left: 51vw;
+        width: 50px;
+        margin-left: -34px;
+        height: 26px;
+    }
+    .downarrows > * {
+        width: 50px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .logo-img {
+        width: 275px;
+    }
+    #bootstrap-overrides .scrolldown {
+        bottom: 90px;
+        height: 40px;
+        font-size: 40px;
+    }
+    .downarrows {
+        bottom: 40px;
+        left: 50vw;
+        width: 70px;
+        margin-left: -34px;
+        height: 26px;
+    }
+    .downarrows > * {
+        width: 70px;
+    }
+}
 
 .logo-img {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 275px;
-    height:auto;
+    height: auto;
     opacity: 1;
     transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
+
 .logo-img-head {
     position: fixed;
     top: calc(50% - 60px);
     left: calc(50% + 6px);
     transform: translate(-50%, -50%);
     width: 230px;
-    height:auto;
+    height: auto;
     opacity: 0;
     transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
@@ -146,6 +265,7 @@
     opacity: 0;
     transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
+
 .logo-img-small-head {
     top: 35px;
     left: 55px;
@@ -155,38 +275,42 @@
 }
 
 #bootstrap-overrides header {
-   width: 100%;
-   z-index: 9999;
+    width: 100%;
+    z-index: 9999;
 }
 
 #bootstrap-overrides .shrink {
-   width:100px;/*change the size here*/
+    width: 100px; /*change the size here*/
 }
 
 .move-up {
-   transform: translateY(-60vh);
-   transition: 3s cubic-bezier(0.25, 1, 0.5, 1);
+    transform: translateY(-60vh);
+    transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .move-all-the-way-up {
-   transform: translateY(calc(-200vh + 70px));
-   transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+    height: 100vh !important;
+    transform: translateY(calc(-200vh + 70px));
+    transition: transform 1.5s cubic-bezier(0.25, 1, 0.5, 1), height 2s cubic-bezier(0.85, 0, 0.15, 1);
 }
 
 .move-down {
-   transform: translateY(50vh);
-   transition: 2s cubic-bezier(0.25, 1, 0.5, 1);
+    transform: translateY(50vh);
+    transition: 2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.nav-style {
+    background-color: #212529;
+    transition: background-color 2s cubic-bezier(0.85, 0, 0.15, 1)
 }
 
 #scroll-up-cover-1 {
-    background-color: #232323;
-    height: 100vh;
+    background-color: #212529;
+    height: 200vh;
     width: 100vw;
     position: fixed;
     top: 100vh;
     z-index: -9999;
-    /*clip-path: polygon(0 0, 100% 15%, 100% 100%, 0% 100%);*/
-    /*-webkit-clip-path: polygon(0 0, 100% 15%, 100% 100%, 0% 100%);*/
 }
 
 #scroll-up-cover-2 {
@@ -197,8 +321,6 @@
     top: 0;
     right: 100vw;
     z-index: -9999;
-    /*clip-path: polygon(0 0, 100% 15%, 100% 100%, 0% 100%);*/
-    /*-webkit-clip-path: polygon(0 0, 100% 15%, 100% 100%, 0% 100%);*/
 }
 
 #bootstrap-overrides .subtitle {
@@ -212,28 +334,35 @@
     color: white;
 }
 
-.scrolldown {
-      bottom: 90px;
-      height: 40px;
-      position: fixed;
-      width: 300vw;
-      left: -100vw;
-      font-size: 40px;
-      text-align: center;
+#bootstrap-overrides .scrolldown {
+    position: fixed;
+    width: 300vw;
+    left: -100vw;
+    text-align: center;
+    color: #cccccc;
 }
+
 .downarrows {
-      bottom: 50px;
-      position: fixed;
-      left: 50vw;
-      width: 70px;
-      margin-left: -35px;
-      height: 26px;
+    position: fixed;
 }
+
 .downarrows > * {
-      width: 70px;
-      position: absolute;
+    position: absolute;
 }
 
 .home-module-list {
     margin: calc(10vh + 55px) 0 10vh 0;
+}
+
+.subtitle-container {
+    width: 100%;
+    padding: 0 10vw;
+}
+
+#down-arrow-id {
+    fill:none;
+    stroke:#cccccc;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    stroke-width:2px;
 }

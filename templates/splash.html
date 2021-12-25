@@ -25,35 +25,53 @@
             {% if not user.is_authenticated %}
                 <div class="d-flex" style="height: 100vh; width: 100vw;">
                     <div class="selector logo-container">
-                        <a id="logo-link-head" class="navbar-brand" href="{% url 'home' %}" style="z-index: 99">
-                            <img id="logo-img-head" src="/media/head_logo.png" alt="" class="d-inline-block align-text-top logo-img-head">
-                        </a>
+
                         <a id="logo-link" class="navbar-brand" href="{% url 'home' %}" style="z-index: 9999">
                             <img id="logo-img" src="/media/logo.png" alt="" class="d-inline-block align-text-top logo-img">
                         </a>
                     </div>
                 </div>
-                <div style="width: 100%; padding: 0 10vw;">
+                <div class="subtitle-container" >
                     <p class="subtitle">A search and inventory tool for DIY Eurorack modules and components.</p>
                 </div>
-                <h2 class="scrolldown" style="color: #cccccc;">scroll down</h2>
+                <h2 class="scrolldown">scroll down</h2>
                 <div class="downarrows">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26.17 8.84"><defs><style>.cls-1{fill:none;stroke:#cccccc;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><polyline class="cls-1" points="25.17 1 13.18 7.83 12.99 7.83 1 1"/></svg>
+                    <svg id="down-arrow-id" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26.17 8.84"><defs></defs><polyline class="cls-1" points="25.17 1 13.18 7.83 12.99 7.83 1 1"/></svg>
                 </div>
                 <div id="scroll-up-cover-1" class="scroll-up-cover-1"></div>
                 <div id="scroll-up-cover-2" class="scroll-up-cover-2"></div>
             {% endif %}
 
-            <div>
-                <nav class="navbar navbar-expand-lg navbar-dark bgdark sticky-top" style="position: fixed; top: 0; width: 100vw">
-                    <div class="container-fluid d-flex justify-content-end" style="margin-top: 6px;">
-                        {% if user.is_authenticated %}
-                        <a href="{% url 'user_page' request.user.username  %}"><button class="btn btn-outline-secondary" type="button" style="border: none; font-size: 18px">account</button></a>
-                        <a href="{% url 'logout' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px">logout</button></a>
-                        {% else %}
-                        <a href="{% url 'register' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px">register</button></a>
-                        <a href="{% url 'login' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px">login</button></a>
-                        {% endif %}
+            <div class="row">
+                <nav id="main-nav" class="navbar navbar-expand-lg navbar-dark sticky-top nav-style" style="position: fixed; height: 70px; top: 0;">
+                    <div class="container-fluid">
+                        <a id="logo-link-head" class="navbar-brand" href="{% url 'home' %}">
+                            <img id="logo-img-head" src="/media/head_logo.png" alt="" class="d-inline-block align-text-top logo-img-head">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                            <ul class="navbar-nav mr-auto">
+                            {% if user.is_authenticated %}
+                            <li class="nav-item mr-2">
+                                <a href="{% url 'user_page' request.user.username  %}"><button class="btn btn-outline-secondary" type="button" style="border: none; font-size: 18px; color:#f8f9fa">account</button></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'logout' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px; color:#f8f9fa">logout</button></a>
+                            </li>
+                            {% else %}
+                            <li class="nav-item mr-2">
+                                <a href="{% url 'register' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px; color:#f8f9fa">register</button></a>
+                            </li>
+                            <li class="nav-item">
+                            <a href="{% url 'login' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px; color:#f8f9fa">login</button></a>
+                            </li>
+                            {% endif %}
+                            </ul>
+                        </div>
                     </div>
                 </nav>
             </div>
@@ -148,9 +166,10 @@
             var scroll_up_cover_1 = document.getElementById("scroll-up-cover-1");
             var logo_img = document.getElementById("logo-img");
             var logo_img_head = document.getElementById("logo-img-head");
+            var main_nav = document.getElementById("main-nav");
             var scroll_1 = false;
 
-            var percent = getRandomInt(10, 30);
+            var percent = getRandomInt(15, 25);
             if (getRandomInt(0, 100) < 50) {
                 var polygon1 = 'clip-path: polygon(0 0, 100% ' + percent + '%, 100% 100%, 0% 100%)';
                 scroll_up_cover_1.style.cssText = polygon1;
@@ -174,6 +193,7 @@
                    scroll_up_cover_1.classList.remove("move-all-the-way-up");
                    logo_img.classList.remove("logo-img-small");
                    logo_img_head.classList.remove("logo-img-small-head");
+                   main_nav.classList.remove("nav-style");
                    scroll_up_cover_1.classList.add("move-up");
                    scroll_up_cover_1.style.cssText = polygon2;
 
@@ -186,6 +206,7 @@
                    scroll_up_cover_1.classList.remove("move-all-the-way-up");
                    logo_img.classList.remove("logo-img-small");
                    logo_img_head.classList.remove("logo-img-small-head");
+                   main_nav.classList.remove("nav-style");
                    scroll_up_cover_1.classList.add("move-down");
                }
                if (scroll >= threshold2) {
@@ -193,7 +214,8 @@
                    scroll_up_cover_1.classList.remove("move-up");
                    scroll_up_cover_1.classList.add("move-all-the-way-up");
                    logo_img.classList.add("logo-img-small");
-                   logo_img_head.classList.add("logo-img-small-head")
+                   logo_img_head.classList.add("logo-img-small-head");
+                   main_nav.classList.add("nav-style");
                }
                if (scroll < threshold2 && scroll > threshold1) {
 
@@ -234,8 +256,8 @@
                 lax.addElements(".subtitle", {
                     scrollY: {
                         "letter-spacing": [
-                            [0, "screenHeight/2", "screenHeight*0.6", "screenHeight"],
-                            [50, 0,  0, 50],
+                            ["screenHeight/99", "screenHeight/2", "screenHeight*.99"],
+                            [50, 0, 50],
                             {
                                 cssUnit: "px"
                             }

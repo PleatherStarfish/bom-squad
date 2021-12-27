@@ -1,13 +1,13 @@
-{% extends 'splash.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
     <section class="home-module-list">
         <div class="container-fluid h-100">
-            <div class="col-12">
+            <div id="main-content" class="col-12">
                 <div class="row d-flex justify-content-center align-items-center h-100"></div>
                     <div class="card bg-light text-black p-2 p-md-4 mb-4">
-                        <form class="mb-3" action="{% url 'search_results' %}" method="get">
+                        <form class="mb-3" action="{% url 'home:search_results' %}" method="get">
                             <label for="search-bom" class="form-label h4">Search for a BOM:</label>
                             <input id="search-bom" class="form-control" name="q" type="text" placeholder="Search...">
                         </form>
@@ -18,11 +18,11 @@
                             {% if module_list %}
                                 {% for module in module_list %}
                                     <li style="list-style-type: none;">
-                                        <div class="card w-100 mb-3">
+                                        <div class="card mb-3">
                                             <div class="row g-0" style="height:250px">
                                                 <div class="col-md-3 p-4 d-flex justify-content-around" style="height: 250px">
                                                     {% if module.image %}
-                                                        <img class="img-fluid img-thumbnail border-0" src="{{ module.image }}" style="height: 100%" alt="{{ module.name }} panel" />
+                                                        <img class="img-fluid img-thumbnail border-0" src="{% url 'home:splash' %}{{ MEDIA_URL }}{{ module.image }}" style="height: 100%" alt="{{ module.name }} panel" />
                                                     {% endif %}
                                                 </div>
                                                 <div class="col-md-9">
@@ -34,7 +34,7 @@
                                                             <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
                                                                 {% if built and module in built %}
                                                                     <div class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove from my built list">
-                                                                        <a href="{% url 'RemoveFromBuilt' module.id  %}">
+                                                                        <a href="{% url 'home:RemoveFromBuilt' module.id  %}">
                                                                             <button type="button" class="btn btn-outline-secondary m-1 m-md-0 align-right d-flex justify-content-center p-0" style="background-color: hotpink; width: 46px; height: 38px;">
                                                                                 <div class="d-flex flex-column justify-content-center h-100">
                                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-x" viewBox="0 0 16 16">
@@ -46,7 +46,7 @@
                                                                     </div>
                                                                 {% else %}
                                                                     <div class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to my built list">
-                                                                        <a href="{% url 'AddToBuilt' module.id  %}">
+                                                                        <a href="{% if user.is_authenticated %}{% url 'home:AddToBuilt' module.id  %}{% else %}{% url 'home:login'  %}{% endif %}">
                                                                             <button type="button" class="btn btn-outline-secondary m-1 m-md-0 align-right d-flex justify-content-center p-0" style="width: 46px; height: 38px;">
                                                                                 <div class="d-flex flex-column justify-content-center h-100">
                                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
@@ -69,7 +69,7 @@
                                                             </div>
                                                         </div>
                                                         <p class="card-title mb-3"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>
-                                                        <div class="description-wrapped">
+                                                        <div class="card-text description-wrapped">
                                                             <p>{{ module.description }}</p>
                                                         </div>
                                                         {% comment %}

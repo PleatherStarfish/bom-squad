@@ -18,6 +18,28 @@ from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
+def splash(request):
+    module_list = Module.objects.order_by('name')
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(module_list, 10)
+    try:
+        module_list = paginator.page(page)
+    except PageNotAnInteger:
+        module_list = paginator.page(1)
+    except EmptyPage:
+        module_list = paginator.page(paginator.num_pages)
+
+    built = None
+    if request.user.is_authenticated:
+        user = UserExtended.objects.get(user=request.user)
+        built = user.built_modules.all()
+
+    context = {"module_list": module_list, "built": built}
+    return render(request, 'home/splash.html', context)
+
+
+# Create your views here.
 def index(request):
     module_list = Module.objects.order_by('name')
 
@@ -36,14 +58,14 @@ def index(request):
         built = user.built_modules.all()
 
     context = {"module_list": module_list, "built": built}
-    return render(request, 'home/home.html', context)
+    return render(request, 'home/modules.html', context)
 
 def search_results(request):
     query = request.GET.get("q")
     if query:
         module_list = Module.objects.filter(Q(name__icontains=query) | Q(manufacturer__name__icontains=query))
         context = {"module_list": module_list}
-        return render(request, 'home/home.html', context)
+        return render(request, 'home/modules.html', context)
     else:
         return redirect(index)
 
@@ -54,18 +76,17 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            messages.success(request, ('You have successfully logged in.'))
-            return redirect('home')
+            message = f'Hello {user.username}! You have been logged in'
+            return redirect('home:home')
         else:
-            messages.success(request, ('Login attempt unsuccessful.'))
-            return redirect('login')
+            message = 'Login failed!'
     else:
         return render(request, 'home/login.html', {})
 
 def logout_user(request):
     logout(request)
     messages.success(request, ('You have been logged out.'))
-    return redirect('home')
+    return redirect('home:home')
 
 # Create new user
 def register_user(request):

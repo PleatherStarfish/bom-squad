@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <section class="gradient-custom" style="height: calc(100vh - 200px)">
+    <section class="gradient-custom" style="padding: 10vh 0;">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center h-100">
                 <div class="col-12 col-md-10 col-lg-10 col-xl-8">
@@ -13,7 +13,7 @@
                                 <h1 class="h2 text-center m-4">Register</h1>
 
                                 <div class="col-md-8 offset-md-2">
-                                    <form method="POST" action="{% url 'register' %}">
+                                    <form method="POST" action="{% url 'home:register' %}">
                                         {% csrf_token %}
 
                                         {% if form.errors %}

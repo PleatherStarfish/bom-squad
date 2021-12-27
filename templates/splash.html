@@ -22,11 +22,11 @@
     <body id="bootstrap-overrides" class="main-grid">
 
         <header class="main-header">
-            {% if not user.is_authenticated %}
+            {% if not user.is_authenticated and not 'search' in request.path %}
                 <div class="d-flex" style="height: 100vh; width: 100vw;">
                     <div class="selector logo-container">
 
-                        <a id="logo-link" class="navbar-brand" href="{% url 'home' %}" style="z-index: 9999">
+                        <a id="logo-link" class="navbar-brand" href="{% url 'home:home' %}" style="z-index: 9999">
                             <img id="logo-img" src="/media/logo.png" alt="" class="d-inline-block align-text-top logo-img">
                         </a>
                     </div>
@@ -38,17 +38,19 @@
                 <div class="downarrows">
                     <svg id="down-arrow-id" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26.17 8.84"><defs></defs><polyline class="cls-1" points="25.17 1 13.18 7.83 12.99 7.83 1 1"/></svg>
                 </div>
+                <div id="scroll-up-cover-4" class="scroll-up-cover-3 bubble4"></div>
+                <div id="scroll-up-cover-3" class="scroll-up-cover-3 bubble3"></div>
+                <div id="scroll-up-cover-2" class="scroll-up-cover-2 bubble2"></div>
                 <div id="scroll-up-cover-1" class="scroll-up-cover-1"></div>
-                <div id="scroll-up-cover-2" class="scroll-up-cover-2"></div>
             {% endif %}
 
             <div class="row" style="left:0">
-                <nav id="main-nav" class="navbar navbar-expand-lg navbar-dark sticky-top nav-style" style="position: fixed; height: 70px; top: 0; left:0;">
-                    <a id="logo-link-head" class="navbar-brand" href="{% url 'home' %}">
+                <nav id="main-nav" class="navbar navbar-expand-lg navbar-dark sticky-top nav-style">
+                    <a id="logo-link-head" class="navbar-brand" href="{% url 'home:home' %}">
                         <img id="logo-img-head" src="/media/head_logo.png" alt="" class="d-inline-block align-text-top logo-img-head">
                     </a>
-                    <a href="{% url 'home' %}">
-                        <img id="logo-text" src="/media/logo_text.png" alt="" class="d-inline-block logo-text-hidden">
+                    <a href="{% url 'home:home' %}">
+                        <img id="logo-text" src="/media/logo_text2.png" alt="" class="d-inline-block logo-text-hidden">
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -59,17 +61,17 @@
                         <ul class="navbar-nav mr-auto">
                         {% if user.is_authenticated %}
                         <li class="nav-item mr-2">
-                            <a href="{% url 'user_page' request.user.username  %}"><button class="btn btn-outline-secondary" type="button" style="border: none; font-size: 18px; color:#f8f9fa">account</button></a>
+                            <a href="{% url 'user_page' request.user.username  %}"><button class="btn btn-outline-secondary" type="button">account</button></a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'logout' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px; color:#f8f9fa">logout</button></a>
+                            <a href="{% url 'logout' %}"><button class="btn btn-outline-secondary" type="button">logout</button></a>
                         </li>
                         {% else %}
                         <li class="nav-item mr-2">
-                            <a href="{% url 'register' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px; color:#f8f9fa">register</button></a>
+                            <a href="{% url 'home:register' %}"><button class="btn btn-outline-secondary" type="button">register</button></a>
                         </li>
                         <li class="nav-item">
-                        <a href="{% url 'login' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px; color:#f8f9fa">login</button></a>
+                        <a href="{% url 'home:login' %}"><button class="btn btn-outline-secondary" type="button">login</button></a>
                         </li>
                         {% endif %}
                         </ul>
@@ -171,19 +173,21 @@
             var logo_text = document.getElementById("logo-text");
             var scroll_1 = false;
 
-            var percent = getRandomInt(15, 25);
+            var percent1 = getRandomInt(0, 23);
+            var percent2 = getRandomInt(0, 23);
+
             if (getRandomInt(0, 100) < 50) {
-                var polygon1 = 'clip-path: polygon(0 0, 100% ' + percent + '%, 100% 100%, 0% 100%)';
+                var polygon1 = 'clip-path: polygon(0 0, 100% ' + percent1 + '%, 100% 100%, 0% 100%)';
                 scroll_up_cover_1.style.cssText = polygon1;
             } else {
-                var polygon1 = 'clip-path: polygon(0 ' + percent + '%, 100% 0%, 100% 100%, 0% 100%)';
+                var polygon1 = 'clip-path: polygon(0 ' + percent1 + '%, 100% 0%, 100% 100%, 0% 100%)';
                 scroll_up_cover_1.style.cssText = polygon1;
             }
 
             if (getRandomInt(0, 100) < 50) {
-                var polygon2 = 'clip-path: polygon(0 0, 100% ' + percent + '%, 100% 100%, 0% 100%)';
+                var polygon2 = 'clip-path: polygon(0 0, 100% ' + percent2 + '%, 100% 100%, 0% 100%)';
             } else {
-                var polygon2 = 'clip-path: polygon(0 ' + percent + '%, 100% 0%, 100% 100%, 0% 100%)';
+                var polygon2 = 'clip-path: polygon(0 ' + percent2 + '%, 100% 0%, 100% 100%, 0% 100%)';
             }
 
            window.addEventListener("scroll", function(){
@@ -281,6 +285,87 @@
                             [0, "screenHeight/2"],
                             [1, 0]
                         ]
+                    }
+                });
+                lax.addElements(".bubble2", {
+                    scrollY: {
+                        translateY: [
+                            [0, "screenHeight"],
+                            [0, "Math.random()*screenHeight/3"]
+                        ],
+                        opacity: [
+                            [0, "screenHeight/4", "screenHeight/2"],
+                            [0.5, 1, 0]
+                        ],
+                        scale: [[0], ["(Math.random()*0.8)+0.2"]],
+                        translateX: [[0, "screenHeight"], ["screenWidth", "screenWidth*-10"]],
+                        transform: [
+                            [0, 4000],
+                            [0, "(Math.random() + 0.8) * 1000"],
+                            {
+                                cssFn: function (val) {
+                                    return `rotateX(${val % 180}deg)`
+                                }
+                            }
+                        ],
+                        rotate: [
+                            [0, 4000],
+                            [0, "(Math.random() - 0.5) * 1000"],
+                        ],
+                    }
+                });
+                lax.addElements(".bubble3", {
+                    scrollY: {
+                        translateY: [
+                            [0, "screenHeight"],
+                            [-5, "Math.random()*screenHeight/3"]
+                        ],
+                        opacity: [
+                            [0, "screenHeight/4", "screenHeight*.7"],
+                            [0.5, 1, 0]
+                        ],
+                        scale: [[0], ["(Math.random()*0.8)+0.2"]],
+                        translateX: [[0, "screenHeight"], ["screenWidth*-2", "screenWidth*4"]],
+                        transform: [
+                            [0, 4000],
+                            [0, "(Math.random() + 0.8) * 1000"],
+                            {
+                                cssFn: function (val) {
+                                    return `rotateX(${val % 180}deg)`
+                                }
+                            }
+                        ],
+                        rotate: [
+                            [0, 4000],
+                            [0, "(Math.random() - 0.5) * 1000"],
+                        ],
+                    }
+                });
+                lax.addElements(".bubble4", {
+                    scrollY: {
+                        translateY: [
+                            [0, "screenHeight"],
+                            [-5, "Math.random()*screenHeight/3"]
+                        ],
+                        opacity: [
+                            [0, "screenHeight/4", "screenHeight*.7"],
+                            [0.5, 1, 0]
+                        ],
+                        scale: [[0], ["(Math.random()*0.8)+0.2"]],
+                        translateX: [[0, "screenHeight"], ["screenWidth*-2", "screenWidth*4"]],
+                        transform: [
+                            [0, 4000],
+                            [0, "(Math.random() + 0.8) * 1000"],
+                            {
+                                cssFn: function (val) {
+                                    return `rotateX(${val % 180}deg)`
+                                }
+                            }
+                        ],
+                        rotate: [
+                            [0, 4000],
+                            [0, "(Math.random() - 0.5) * 1000"],
+                        ],
                     }
                 });
             };

@@ -22,265 +22,50 @@
     <body id="bootstrap-overrides" class="main-grid">
 
         <header class="main-header">
-            <div>
-                <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top" style="position: fixed; top: 0; width: 100vw">
-                    <div class="container-fluid d-flex justify-content-end">
-                        <a class="navbar-brand visually-hidden" href="{% url 'home' %}">BOM Squad</a>
+            <div class="row" style="left:0">
+                <nav id="main-nav" class="navbar navbar-expand-lg navbar-dark sticky-top nav-style">
+                    <a href="{% url 'home:home' %}">
+                        <img id="logo-img-head-static" src="{% static '/bom_squad/head_logo.png' %}" alt="">
+                    </a>
+                    <a href="{% url 'home:home' %}">
+                        <img id="logo-text-static" src="{% static '/bom_squad/logo_text2.png' %}" alt="">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
                         {% if user.is_authenticated %}
-                        <a href="{% url 'user_page' request.user.username  %}"><button class="btn btn-outline-secondary" type="button" style="border: none; font-size: 18px">account</button></a>
-                        <a href="{% url 'logout' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px">logout</button></a>
+                        <li class="nav-item mr-2">
+                            <a href="{% url 'user_page' request.user.username  %}"><button class="btn btn-outline-secondary" type="button">account</button></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'home:logout' %}"><button class="btn btn-outline-secondary" type="button">logout</button></a>
+                        </li>
                         {% else %}
-                        <a href="{% url 'register' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px">register</button></a>
-                        <a href="{% url 'login' %}"><button class="btn btn-outline-secondary" type="button" style="border: none;font-size: 18px">login</button></a>
+                        <li class="nav-item mr-2">
+                            <a href="{% url 'home:register' %}"><button class="btn btn-outline-secondary" type="button">register</button></a>
+                        </li>
+                        <li class="nav-item">
+                        <a href="{% url 'home:login' %}"><button class="btn btn-outline-secondary" type="button">login</button></a>
+                        </li>
                         {% endif %}
+                        </ul>
                     </div>
                 </nav>
-
-                {% comment %}
-                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                    <div class="container-fluid">
-                        <a class="navbar-brand" href="#">Navbar</a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                                aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Link</a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                       data-bs-toggle="dropdown" aria-expanded="false">
-                                        Dropdown
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <li><a class="dropdown-item" href="#">Action</a></li>
-                                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-                                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                                </li>
-                            </ul>
-                            <form class="d-flex">
-                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                                <button class="btn btn-outline-success" type="submit">Search</button>
-                            </form>
-                        </div>
-                    </div>
-                </nav>
-                {% endcomment %}
-
             </div>
         </header>
 
         <main class="main-content container main-area">
-            <div class="row">
+            <div class="row main-content-row">
                 {% block content %}{% endblock content %}
             </div>
         </main>
 
         {% include 'footer.html' %}
 
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-        <script>
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl)
-            })
-        </script>
-        {% comment %}
-        <script>
-            window.onload = function () {
-                lax.init();
 
-                // Add a driver that we use to control our animations
-                lax.addDriver('scrollY', function () {
-                    return window.scrollY
-                });
-
-                // Add animation bindings to elements
-                lax.addElements('.scroll-up-cover-1', {
-                    scrollY: {
-                        translateY: [
-                            ["elInY", "elCenterY", "elOutY"],
-                            [0, 'screenHeight/2', 'screenHeight'],
-                            { inertia: 30 }
-                        ]
-                    }
-                }, {
-                  transform: '500ms cubic-bezier(0.83, 0, 0.17, 1)'
-                })
-            }
-        </script>
-        {% endcomment %}
-
-        <script>
-
-            function isElementVisible(el) {
-                var rect     = el.getBoundingClientRect(),
-                    vWidth   = window.innerWidth || document.documentElement.clientWidth,
-                    vHeight  = window.innerHeight || document.documentElement.clientHeight,
-                    efp      = function (x, y) { return document.elementFromPoint(x, y) };
-
-                // Return false if it's not in the viewport
-                if (rect.right < 0 || rect.bottom < 0
-                        || rect.left > vWidth || rect.top > vHeight)
-                    return false;
-
-                // Return true if any of its four corners are visible
-                return (
-                      el.contains(efp(rect.left,  rect.top))
-                  ||  el.contains(efp(rect.right, rect.top))
-                  ||  el.contains(efp(rect.right, rect.bottom))
-                  ||  el.contains(efp(rect.left,  rect.bottom))
-                );
-            }
-
-            function getRandomInt(min, max) {
-              min = Math.ceil(min);
-              max = Math.floor(max);
-              return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
-            }
-
-            function getScrollPosition() {
-              var viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0); // Viewport height (px)
-              var scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop; // Current scroll position (px)
-              var documentHeight = $(document).height(); // Document height (px)
-              var scrollPositionRelative = scrollPosition / (documentHeight - viewportHeight); // The document height is reduced by the height of the viewport so that we reach 100% at the bottom
-              return {
-                documentHeight: documentHeight,
-                relative: scrollPositionRelative,
-                absolute: scrollPositionRelative * documentHeight // Yields an "average" pixel position
-              };
-            }
-
-            var threshold1 = document.body.clientHeight * 0.01;
-            var threshold2 = document.body.clientHeight * 0.2;
-            var scroll_up_cover_1 = document.getElementById("scroll-up-cover-1");
-            var logo_img = document.getElementById("logo-img");
-            var logo_img_head = document.getElementById("logo-img-head");
-            var scroll_1 = false;
-
-            var percent = getRandomInt(10, 30);
-            if (getRandomInt(0, 100) < 50) {
-                var polygon1 = 'clip-path: polygon(0 0, 100% ' + percent + '%, 100% 100%, 0% 100%)';
-                scroll_up_cover_1.style.cssText = polygon1;
-            } else {
-                var polygon1 = 'clip-path: polygon(0 ' + percent + '%, 100% 0%, 100% 100%, 0% 100%)';
-                scroll_up_cover_1.style.cssText = polygon1;
-            }
-
-            if (getRandomInt(0, 100) < 50) {
-                var polygon2 = 'clip-path: polygon(0 0, 100% ' + percent + '%, 100% 100%, 0% 100%)';
-            } else {
-                var polygon2 = 'clip-path: polygon(0 ' + percent + '%, 100% 0%, 100% 100%, 0% 100%)';
-            }
-
-           window.addEventListener("scroll", function(){
-               scroll = this.scrollY
-
-               if (scroll >= threshold1) {
-
-                   scroll_up_cover_1.classList.remove("move-down");
-                   scroll_up_cover_1.classList.remove("move-all-the-way-up");
-                   logo_img.classList.remove("logo-img-small");
-                   logo_img_head.classList.remove("logo-img-small-head");
-                   scroll_up_cover_1.classList.add("move-up");
-                   scroll_up_cover_1.style.cssText = polygon2;
-
-                   scroll_1 = true
-               }
-               if (scroll < threshold1) {
-                   scroll_1 = false;
-
-                   scroll_up_cover_1.classList.remove("move-up");
-                   scroll_up_cover_1.classList.remove("move-all-the-way-up");
-                   logo_img.classList.remove("logo-img-small");
-                   logo_img_head.classList.remove("logo-img-small-head");
-                   scroll_up_cover_1.classList.add("move-down");
-               }
-               if (scroll >= threshold2) {
-                   scroll_up_cover_1.classList.remove("move-down");
-                   scroll_up_cover_1.classList.remove("move-up");
-                   scroll_up_cover_1.classList.add("move-all-the-way-up");
-                   logo_img.classList.add("logo-img-small");
-                   logo_img_head.classList.add("logo-img-small-head")
-               }
-               if (scroll < threshold2 && scroll > threshold1) {
-
-               }
-               console.log(scroll_1)
-           })
-
-        </script>
-
-        <script>
-            window.scrollTo(0, 0);
-
-            window.onload = function () {
-
-                lax.init();
-
-                lax.addDriver(
-                    "scrollY",
-                    function () {
-                        return document.documentElement.scrollTop;
-                    },
-                    {frameStep: 1}
-                );
-                lax.addElements(".scrolldown", {
-                    scrollY: {
-                        "letter-spacing": [
-                            [0, "screenHeight"],
-                            [0, 150],
-                            {
-                                cssUnit: "px"
-                            }
-                        ],
-                        opacity: [["screenHeight*0.1", "screenHeight*0.3"], [1, 0]],
-                        blur: [["screenHeight*0.1", "screenHeight*0.3"], [0, 10]],
-                        translateX: [[0, "screenHeight"], [0, 80]],
-                    }
-                });
-                lax.addElements(".subtitle", {
-                    scrollY: {
-                        "letter-spacing": [
-                            [0, "screenHeight/2", "screenHeight*0.6", "screenHeight"],
-                            [50, 0,  0, 50],
-                            {
-                                cssUnit: "px"
-                            }
-                        ],
-                        opacity: [["screenHeight/3", "screenHeight/2", "screenHeight"], [0, 1.2, 0]],
-                        blur: [["screenHeight/3", "screenHeight/2", "screenHeight"], [3, 0, 3]],
-                    }
-                });
-                lax.addElements(".downarrows > *", {
-                    scrollY: {
-                        translateY: [
-                            [0, 200],
-                            [0, 200]
-                        ],
-                        opacity: [
-                            [0, "screenHeight/2"],
-                            [1, 0]
-                        ]
-                    }
-                });
-            };
-        </script>
     </body>
 </html>

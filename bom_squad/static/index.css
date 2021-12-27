@@ -92,6 +92,13 @@
     border: unset;
 }
 
+#main-nav {
+    position: fixed;
+    height: 70px;
+    top: 0;
+    left:0;
+}
+
 .main-grid {
     display: grid;
     grid-template-columns: 100%;
@@ -150,6 +157,12 @@
     .downarrows > * {
         width: 35px;
     }
+    #logo-img-head-static {
+        display: none;
+    }
+    #logo-text-static {
+        left: 15px;
+    }
 }
 
 @media (min-width: 576px) and (max-width: 767.98px) {
@@ -170,6 +183,12 @@
     }
     .downarrows > * {
         width: 35px;
+    }
+    #logo-img-head-static {
+        display: none;
+    }
+    #logo-text-static {
+        left: 15px;
     }
 }
 
@@ -193,6 +212,9 @@
     .downarrows > * {
         width: 45px;
     }
+    #logo-text-static {
+        left: 110px;
+    }
 }
 
 @media (min-width: 992px) and (max-width: 1199.98px) {
@@ -214,6 +236,9 @@
     .downarrows > * {
         width: 50px;
     }
+    #logo-text-static {
+        left: 110px;
+    }
 }
 
 @media (min-width: 1200px) {
@@ -234,6 +259,9 @@
     }
     .downarrows > * {
         width: 70px;
+    }
+    #logo-text-static {
+        left: 110px;
     }
 }
 
@@ -315,11 +343,34 @@
 
 #scroll-up-cover-2 {
     background-color: #538b69;
-    height: 100vh;
-    width: 100vw;
+    height: 200vh;
+    width: 200vw;
     position: fixed;
-    top: 0;
-    right: 100vw;
+    top: -40vh;
+    left: 100vw;
+    opacity: 0;
+    z-index: -9999;
+}
+
+#scroll-up-cover-3 {
+    background-color: #fcda00;
+    height: 200vh;
+    width: 200vw;
+    position: fixed;
+    top: -40vh;
+    left: 0;
+    opacity: 0;
+    z-index: -9999;
+}
+
+#scroll-up-cover-4 {
+    background-color: #cccccc;
+    height: 200vh;
+    width: 200vw;
+    position: fixed;
+    top: -100vh;
+    left: 0;
+    opacity: 0;
     z-index: -9999;
 }
 
@@ -381,4 +432,32 @@
 
 .logo-text-unhidden {
     opacity: 1;
+}
+
+#bootstrap-overrides .nav-item > a > button {
+    color: #64727d;
+    border: none;
+    font-size: 18px;
+    margin-left: 10px
+}
+
+#bootstrap-overrides .nav-item > a > button:hover {
+    color: white;
+}
+
+#logo-img-head-static {
+    top: 35px;
+    left: 55px;
+    width: 80px;
+    opacity: 1;
+}
+
+#logo-text-static {
+    width: 200px;
+    position: fixed;
+    top: 23px;
+}
+
+.main-content-row {
+    min-height:calc(100vh - 351px)
 }

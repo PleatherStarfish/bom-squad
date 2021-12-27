@@ -6,11 +6,11 @@
         <div class="col-xs-12 col-sm-3 mt-4 mt-lg-5" style="height:100%">
             {% if module.image %}
                 <div class="d-flex flex-column justify-content-between w-100 h-100" style="height:100%">
-                    <img src="{% url 'home' %}{{ MEDIA_URL }}{{ module.image }}" style="height: 200px; transform: translateX(-50%);left: 50%; position: absolute;" alt="{{ module.name }} panel" />
+                    <img src="{% url 'home:home' %}{{ MEDIA_URL }}{{ module.image }}" style="height: 200px; transform: translateX(-50%);left: 50%; position: absolute;" alt="{{ module.name }} panel" />
                     <div class="d-flex w-100">
                         {% if built and module in built %}
                             <div class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove from my built list">
-                                <a href="{% url 'RemoveFromBuilt' module.id  %}">
+                                <a href="{% url 'home:RemoveFromBuilt' module.id  %}">
                                     <button type="button" class="btn btn-outline-secondary m-1 m-md-0 align-right d-flex justify-content-center p-0" style="background-color: hotpink; width: 46px; height: 38px;">
                                         <div class="d-flex flex-column justify-content-center h-100">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-x" viewBox="0 0 16 16">
@@ -22,7 +22,7 @@
                             </div>
                         {% else %}
                             <div class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to my built list">
-                                <a href="{% url 'AddToBuilt' module.id  %}">
+                                <a href="{% url 'home:AddToBuilt' module.id  %}">
                                     <button type="button" class="btn btn-outline-secondary m-1 m-md-0 align-right d-flex justify-content-center p-0" style="width: 46px; height: 38px;">
                                         <div class="d-flex flex-column justify-content-center h-100">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">

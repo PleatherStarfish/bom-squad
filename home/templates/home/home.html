@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-    <section class="vh-100 gradient-custom">
+    <section class="gradient-custom">
         <div class="container-fluid py-md-5 h-100" style="padding-right:0; padding-left:0;">
             <div class="col-12">
                 <div class="row d-flex justify-content-center align-items-center h-100"></div>
@@ -34,7 +34,7 @@
                                                             <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
                                                                 {% if built and module in built %}
                                                                     <div class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove from my built list">
-                                                                        <a href="{% url 'RemoveFromBuilt' module.id  %}">
+                                                                        <a href="{% url 'RemoveFromBuilt' module.id  %}?next={{ request.path }}">
                                                                             <button type="button" class="btn btn-outline-secondary m-1 m-md-0 align-right d-flex justify-content-center p-0" style="background-color: hotpink; width: 46px; height: 38px;">
                                                                                 <div class="d-flex flex-column justify-content-center h-100">
                                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-x" viewBox="0 0 16 16">
@@ -46,7 +46,7 @@
                                                                     </div>
                                                                 {% else %}
                                                                     <div class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to my built list">
-                                                                        <a href="{% url 'AddToBuilt' module.id  %}">
+                                                                        <a href="{% url 'AddToBuilt' module.id  %}?next={{ request.path }}">
                                                                             <button type="button" class="btn btn-outline-secondary m-1 m-md-0 align-right d-flex justify-content-center p-0" style="width: 46px; height: 38px;">
                                                                                 <div class="d-flex flex-column justify-content-center h-100">
                                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">

@@ -15,6 +15,7 @@ import json
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.urls import resolve, Resolver404
 
 
 # Create your views here.
@@ -48,6 +49,8 @@ def search_results(request):
         return redirect(index)
 
 def login_user(request):
+    if request.method == 'GET':
+        request.session['login_from'] = request.META.get('HTTP_REFERER', '/')
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -112,7 +115,12 @@ def add_to_built(request, id):
         module = Module.objects.get(id=id)
         user.built_modules.add(module)
         user.save()
-        return HttpResponseRedirect('/')
+        url = request.GET.get("next")
+        try:
+            resolve(url)
+            return HttpResponseRedirect(url)
+        except Resolver404:
+            return redirect("default_view")
 
 @login_required()
 def remove_from_built(request, id):
@@ -122,5 +130,10 @@ def remove_from_built(request, id):
         module = Module.objects.get(id=id)
         user.built_modules.remove(module)
         user.save()
-        return HttpResponseRedirect('/')
+        url = request.GET.get("next")
+        try:
+            resolve(url)
+            return HttpResponseRedirect(url)
+        except Resolver404:
+            return redirect("default_view")
 

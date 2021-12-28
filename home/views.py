@@ -36,7 +36,14 @@ def index(request):
         user = UserExtended.objects.get(user=request.user)
         built = user.built_modules.all()
 
-    context = {"module_list": module_list, "built": built}
+    to_build = None
+    if request.user.is_authenticated:
+        user = UserExtended.objects.get(user=request.user)
+        to_build = user.want_to_build_modules.all()
+
+    print(to_build)
+
+    context = {"module_list": module_list, "built": built, "to_build": to_build}
     return render(request, 'home/home.html', context)
 
 def search_results(request):
@@ -129,6 +136,37 @@ def remove_from_built(request, id):
         user = UserExtended.objects.get(user__id=user_id)
         module = Module.objects.get(id=id)
         user.built_modules.remove(module)
+        user.save()
+        url = request.GET.get("next")
+        try:
+            resolve(url)
+            return HttpResponseRedirect(url)
+        except Resolver404:
+            return redirect("default_view")
+
+@login_required()
+def add_to_to_build(request, id):
+    if request.method == 'GET':
+        print("to_build", id, "..........")
+        user_id = request.user.id
+        user = UserExtended.objects.get(user__id=user_id)
+        module = Module.objects.get(id=id)
+        user.want_to_build_modules.add(module)
+        user.save()
+        url = request.GET.get("next")
+        try:
+            resolve(url)
+            return HttpResponseRedirect(url)
+        except Resolver404:
+            return redirect("default_view")
+
+@login_required()
+def remove_from_to_build(request, id):
+    if request.method == 'GET':
+        user_id = request.user.id
+        user = UserExtended.objects.get(user__id=user_id)
+        module = Module.objects.get(id=id)
+        user.want_to_build_modules.remove(module)
         user.save()
         url = request.GET.get("next")
         try:

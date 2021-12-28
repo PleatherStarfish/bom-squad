@@ -8,14 +8,33 @@ class Types(models.Model):
     notes = models.TextField()
     date_updated = models.DateField(default=timezone.now, blank=False)
 
+    class Meta:
+        verbose_name_plural = "Types"
+
+class ComponentSupplier(models.Model):
+    name = models.CharField(max_length=255)
+    url = models.URLField(max_length=255)
+
+    class Meta:
+        verbose_name_plural = "Component Supplier"
+
+class ComponentManufacturer(models.Model):
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name_plural = "Component Manufacturers"
+
 class Component(models.Model):
     name = models.CharField(max_length=255)
+    manufacturer = models.ManyToManyField(ComponentManufacturer, blank=True)
+    supplier = models.ManyToManyField(ComponentSupplier, blank=True)
     type = models.ForeignKey(Types, on_delete=models.PROTECT)
     notes = models.TextField()
     date_updated = models.DateField(default=timezone.now, blank=False)
 
     class Meta:
         verbose_name_plural = "Components"
+        unique_together = ('name', 'type')
 
     def __str__(self):
         return self.name

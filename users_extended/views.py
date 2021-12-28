@@ -13,4 +13,10 @@ def user_page(request, **kwargs):
     if request.user.is_authenticated:
         user = UserExtended.objects.get(user=request.user)
         built = user.built_modules.all()
-    return render(request, 'users/index.html', {'user': user, "built": built})
+
+    to_build = None
+    if request.user.is_authenticated:
+        user = UserExtended.objects.get(user=request.user)
+        to_build = user.want_to_build_modules.all()
+
+    return render(request, 'users/index.html', {'user': user, "built": built, "to_build": to_build})

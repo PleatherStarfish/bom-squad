@@ -11,5 +11,7 @@ urlpatterns = [
     path('logout/', views.logout_user, name='logout'),
     path('register/', views.register_user, name='register'),
     path('add_to_built/<int:id>', views.add_to_built, name='AddToBuilt'),
-    path('remove_from_built/<int:id>', views.remove_from_built, name='RemoveFromBuilt')
+    path('remove_from_built/<int:id>', views.remove_from_built, name='RemoveFromBuilt'),
+    path('add_to_to_build/<int:id>', views.add_to_to_build, name='AddToToBuild'),
+    path('remove_from_to_build/<int:id>', views.remove_from_to_build, name='RemoveFromToBuild')
 ]

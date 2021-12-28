@@ -1,43 +1,43 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <div class="row">
+        <section class="gradient-custom">
+            <div class="container px-0 py-5 h-100">
+                <div class="row d-flex justify-content-center h-100">
+                    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                        <div class="card bg-light text-black" style="border-radius: 1rem;">
+                            <div class="card-body p-xs-0 p-md-5 text-center">
 
-    <section class="gradient-custom">
-        <div class="container px-0 py-5 h-100">
-            <div class="row d-flex justify-content-center h-100">
-                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-                    <div class="card bg-light text-black" style="border-radius: 1rem;">
-                        <div class="card-body p-xs-0 p-md-5 text-center">
+                                <div class="mb-md-5 mt-md-4 pb-5">
 
-                            <div class="mb-md-5 mt-md-4 pb-5">
+                                    <h1 class="fw-bold m-4 text-uppercase">Login</h1>
 
-                                <h1 class="fw-bold m-4 text-uppercase">Login</h1>
+                                    {% for message in messages %}
+                                        <div class="alert alert-danger" role="alert">{{ message }}</div>
+                                    {% endfor %}
 
-                                {% for message in messages %}
-                                    <div class="alert alert-danger" role="alert">{{ message }}</div>
-                                {% endfor %}
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <div class="form-outline form-white mb-4">
+                                            <label class="form-label" for="username-field">Email</label>
+                                            <input type="text" id="username-field" class="form-control" placeholder="Enter Username" name="username">
+                                        </div>
 
-                                <form method="POST">
-                                    {% csrf_token %}
-                                    <div class="form-outline form-white mb-4">
-                                        <label class="form-label" for="username-field">Email</label>
-                                        <input type="text" id="username-field" class="form-control" placeholder="Enter Username" name="username">
-                                    </div>
+                                        <div class="form-outline form-white mb-4">
+                                            <label class="form-label" for="password-field">Password</label>
+                                            <input type="password" id="password-field" class="form-control" placeholder="Enter Password" name="password">
+                                        </div>
 
-                                    <div class="form-outline form-white mb-4">
-                                        <label class="form-label" for="password-field">Password</label>
-                                        <input type="password" id="password-field" class="form-control" placeholder="Enter Password" name="password">
-                                    </div>
+                                        <button class="btn btn-outline-dark btn-lg px-5" type="submit" style="margin-top: 3vh;">Login</button>
+                                    </form>
 
-                                    <button class="btn btn-outline-dark btn-lg px-5" type="submit" style="margin-top: 3vh;">Login</button>
-                                </form>
-
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
+        </section>
+    </div>
 {% endblock %}

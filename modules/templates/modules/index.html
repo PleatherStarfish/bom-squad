@@ -2,25 +2,32 @@
 
 {% block content %}
     {% for module in module_list %}
-    <div class="d-flex justify-content-between my-3 my-lg-5">
-        <div>
-            <h1>{{ module.name }}</h1>
-        </div>
-        <div class="d-flex align-self-center">
-            <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
-                {% if built and module in built %}
-                    {% include "home/buttons/built_svg_button.html" with add=False module_id=module.id request_path=request.path %}
-                {% else %}
-                    {% include "home/buttons/built_svg_button.html" with add=True module_id=module.id request_path=request.path %}
-                {% endif %}
-                {% if to_build and module in to_build %}
-                    {% include "home/buttons/to_build_svg_button.html" with add=False module_id=module.id request_path=request.path %}
-                {% else %}
-                    {% include "home/buttons/to_build_svg_button.html" with add=True module_id=module.id request_path=request.path %}
-                {% endif %}
+        <div class="row" style="margin-top: 5vh">
+            <div class="col-12 col-md-4"></div>
+            <div class="col-12 col-md-8 d-flex justify-content-between my-3 my-lg-5">
+                <div class="d-flex flex-column">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h1>{{ module.name }}</h1>
+                        </div>
+                        <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
+                            {% if built and module in built %}
+                                {% include "home/buttons/built_svg_button.html" with add=False module_id=module.id request_path=request.path %}
+                            {% else %}
+                                {% include "home/buttons/built_svg_button.html" with add=True module_id=module.id request_path=request.path %}
+                            {% endif %}
+                            {% if to_build and module in to_build %}
+                                {% include "home/buttons/to_build_svg_button.html" with add=False module_id=module.id request_path=request.path %}
+                            {% else %}
+                                {% include "home/buttons/to_build_svg_button.html" with add=True module_id=module.id request_path=request.path %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        <p class="card-text">{{ module.description }}</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <p class="card-text">{{ module.description }}</p>
     {% endfor %}
 {% endblock %}

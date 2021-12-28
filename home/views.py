@@ -121,6 +121,7 @@ def add_to_built(request, id):
         user = UserExtended.objects.get(user__id=user_id)
         module = Module.objects.get(id=id)
         user.built_modules.add(module)
+        user.want_to_build_modules.remove(module)
         user.save()
         url = request.GET.get("next")
         try:
@@ -152,6 +153,7 @@ def add_to_to_build(request, id):
         user = UserExtended.objects.get(user__id=user_id)
         module = Module.objects.get(id=id)
         user.want_to_build_modules.add(module)
+        user.built_modules.remove(module)
         user.save()
         url = request.GET.get("next")
         try:

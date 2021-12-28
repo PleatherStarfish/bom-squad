@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 @login_required()
 def user_page(request, **kwargs):
     user = get_object_or_404(UserExtended, slug=kwargs.get('slug'))
+
     built = None
     if request.user.is_authenticated:
         user = UserExtended.objects.get(user=request.user)

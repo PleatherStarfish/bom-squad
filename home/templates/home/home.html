@@ -30,7 +30,11 @@
                                                         <div class="card-body">
                                                             <div class="d-flex justify-content-between w-100">
                                                                 <div>
-                                                                    <h2 class="card-title"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a></h2>
+                                                                    {% if not module.version or module.version == '0' or module.version == '1' %}
+                                                                        <h2 class="card-title"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a></h2>
+                                                                    {% else %}
+                                                                        <h2 class="card-title"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }} (v{{ module.version }})</a></h2>
+                                                                    {% endif %}
                                                                 </div>
                                                                 <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
                                                                     {% if built and module in built %}

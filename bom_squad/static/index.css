@@ -434,11 +434,11 @@
     opacity: 1;
 }
 
-#bootstrap-overrides .nav-item > a > button {
-    color: #64727d;
+#bootstrap-overrides .nav-item > a > button, #bootstrap-overrides .nav-item button {
+    color: #64727e;
+    /*font-weight: 600;*/
     border: none;
     font-size: 18px;
-    margin-left: 10px
 }
 
 #bootstrap-overrides .nav-item > a > button:hover {
@@ -465,4 +465,16 @@
 
 #rc-anchor-container {
     width: 300px;
+}
+
+.avatar > img {
+    border-radius: 50%;
+}
+
+#menu-dropdown-arrow button {
+    fill: #64727e;
+}
+
+#menu-dropdown-arrow button:hover {
+    fill: white;
 }

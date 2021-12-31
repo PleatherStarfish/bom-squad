@@ -115,3 +115,5 @@ captcha
 captcha.py
 bom_squad/captcha.py
 bom_squad/secrets/captcha.py
+bom_squad/static/bootstrap*
+bom_squad/static/.DS_Store

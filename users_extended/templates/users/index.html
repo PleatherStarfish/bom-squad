@@ -1,8 +1,23 @@
 {% extends 'base.html' %}
+{% load gravatar %}
 
 {% block content %}
     <div class="row" style="margin-top: 5vh;">
-        <h1 class="mb-5 h4" style="margin-top: 5vh">{{ user.first_name }} {{ user.last_name }}</h1>
+        <div class="container mb-5">
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 col-lg-3 col-xl-2 avatar text-center">
+                    {% gravatar user_email 150 %}
+                </div>
+                <div class="col-xs-12 col-sm-8 col-lg-9 col-xl-10 d-flex justify-content-center justify-content-sm-start">
+                    <div class="mb-md-5 mb-xs-3 ">
+                        <h1 class="h2" style="margin-top: 5vh">{{ user.first_name }} {{ user.last_name }}</h1>
+                        {% if not gravatar_exists %}
+                            <small>Avatar image from <a href="https://en.gravatar.com/">Gravatar</a>.</small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
         <nav class="user-page-nav">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
@@ -32,7 +47,11 @@
                                     <div class="card-body py-4 px-0" style="height: 261px">
                                         <div class="d-flex justify-content-between w-100">
                                             <div>
-                                                <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a></h2>
+                                                {% if not module.version or module.version == '0' or module.version == '1' %}
+                                                    <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a></h2>
+                                                {% else %}
+                                                    <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }} (v{{ module.version }})</a></h2>
+                                                {% endif %}
                                             </div>
                                         </div>
                                         <p class="card-title mb-3"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>
@@ -70,7 +89,11 @@
                                     <div class="card-body py-4 px-0" style="height: 261px">
                                         <div class="d-flex justify-content-between w-100">
                                             <div>
-                                                <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a></h2>
+                                                {% if not module.version or module.version == '0' or module.version == '1' %}
+                                                    <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a></h2>
+                                                {% else %}
+                                                    <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }} (v{{ module.version }})</a></h2>
+                                                {% endif %}
                                             </div>
                                         </div>
                                         <p class="card-title mb-3"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>

@@ -12,8 +12,13 @@
             <div class="col-12 col-lg-9 d-flex justify-content-between my-3 my-lg-5">
                 <div class="d-flex flex-column">
                     <div class="d-flex justify-content-between">
-                        <div>
-                            <h1 class="mb-4">{{ module.name }}</h1>
+                        <div class="mb-4">
+                            {% if not module.version or module.version == '0' or module.version == '1' %}
+                                <h1 class="mb-3">{{ module.name }}</h1>
+                            {% else %}
+                                <h1 class="mb-3">{{ module.name }} (v{{ module.version }})</h1>
+                            {% endif %}
+                            <p class="card-title mb-3" style="font-size: 18px"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>
                         </div>
                         <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
                             {% if built and module in built %}

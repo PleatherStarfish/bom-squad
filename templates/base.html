@@ -8,18 +8,25 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <!-- Bootstrap CSS -->
+        {% comment %}
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        {% endcomment %}
+
+        <link href="{% static 'bootstrap-5.0.2-dist/css/bootstrap.css' %}" rel="stylesheet" type="text/css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Extra+Condensed:wght@800&display=swap" rel="stylesheet">
         <link href="{% static 'index.css' %}" rel="stylesheet" type="text/css">
 
         <title>Bom-Squad</title>
+        <script src='{% static 'bootstrap-5.0.2-dist/js/bootstrap.bundle.js' %}'></script>
         <script src='https://www.google.com/recaptcha/api.js'></script>
         <script src="https://cdn.jsdelivr.net/npm/lax.js" ></script>
         <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
     </head>
     <body id="bootstrap-overrides" class="main-grid">
+
+        <img id="logo-img" src="/media/media/logo.png" alt="" class="d-inline-block align-text-top logo-img" style="z-index: 99999">
 
         <header class="main-header">
             <div class="row" style="left: 0">
@@ -37,26 +44,44 @@
                     </button>
                     <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
-                        {% if user.is_authenticated %}
-                        <li class="nav-item mr-2">
-                            <a href="{% url 'user_page' request.user.username  %}"><button class="btn btn-outline-secondary" type="button">account</button></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url 'logout' %}"><button class="btn btn-outline-secondary" type="button">logout</button></a>
-                        </li>
-                        {% else %}
-                        <li class="nav-item mr-2">
-                            <a href="{% url 'register' %}"><button class="btn btn-outline-secondary" type="button">register</button></a>
-                        </li>
-                        <li class="nav-item">
-                        <a href="{% url 'login' %}"><button class="btn btn-outline-secondary" type="button">login</button></a>
-                        </li>
-                        {% endif %}
+                            <li id="menu-dropdown-arrow" class="nav-item">
+                                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                      <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                    </svg>
+                                </button>
+                            </li>
+                            {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a href="{% url 'user_page' request.user.username  %}"><button class="btn btn-outline-secondary" type="button">account</button></a>
+                            </li>
+                            <li class="nav-item" style="margin-left: 10px">
+                                <a href="{% url 'logout' %}"><button class="btn btn-outline-secondary" type="button">logout</button></a>
+                            </li>
+                            {% else %}
+                            <li class="nav-item">
+                                <a href="{% url 'register' %}"><button class="btn btn-outline-secondary" type="button">register</button></a>
+                            </li>
+                            <li class="nav-item">
+                            <a href="{% url 'login' %}" style="margin-left: 10px"><button class="btn btn-outline-secondary" type="button">login</button></a>
+                            </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </nav>
             </div>
         </header>
+        <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop"
+                     aria-labelledby="offcanvasTopLabel" style="background-color: #212529; height: 100vh;">
+            <div class="offcanvas-header">
+                <h5 id="offcanvasTopLabel">Offcanvas top</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                ...
+            </div>
+        </div>
 
         <main id="main-content-area" class="main-content container main-area">
             {% block content %}{% endblock content %}
@@ -68,5 +93,26 @@
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+        <script>
+            window.onload = function() {
+                var logo_img = document.getElementById("logo-img");
+                var logo_img_head = document.getElementById("logo-img-head");
+                var logo_text = document.getElementById("logo-text");
+
+                var offcanvasTop = document.getElementById('offcanvasTop');
+                offcanvasTop.addEventListener('show.bs.offcanvas', function () {
+                    logo_img.classList.add("logo-img-small");
+                    logo_img_head.classList.add("logo-img-small-head");
+                    logo_text.classList.add("logo-text-unhidden");
+                });
+                offcanvasTop.addEventListener('hidden.bs.offcanvas', function () {
+                    logo_img.classList.remove("logo-img-small");
+                    logo_img_head.classList.remove("logo-img-small-head");
+                    logo_text.classList.remove("logo-text-unhidden");
+                });
+            }
+        </script>
+
     </body>
 </html>

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'authenticate',
     'users_extended',
     'captcha',
+    'django_gravatar',
 ]
 
 MIDDLEWARE = [

@@ -5,3 +5,4 @@ sqlparse==0.4.2
 typing-extensions==3.10.0.2
 pillow==8.4.0
 django-simple-captcha==0.5.14
+django-gravatar2==1.4.4

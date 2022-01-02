@@ -23,7 +23,7 @@ class Manufacturer(models.Model):
 # However, in the real world, more than one part can sometimes work for a requested component
 # in the BOM. So we use this table to handle these slots and associate them with a list of actual
 # component that might work for that BOM part in the real world
-class ModuleComponentIdentity(models.Model):
+class ModuleBomListItem(models.Model):
     name = models.CharField(max_length=255, blank=False)
     component = models.ManyToManyField(Component, blank=False, related_name='component_identity_to_component')
     module = models.ForeignKey('Module', blank=False, null=False, on_delete=models.PROTECT)
@@ -32,7 +32,7 @@ class ModuleComponentIdentity(models.Model):
     notes = models.TextField(blank=True)
 
     class Meta:
-        verbose_name_plural = "Module Component Identities"
+        verbose_name_plural = "Module BOM List Items"
         unique_together = ('name', 'module')
 
     def __str__(self):
@@ -50,7 +50,7 @@ class Module(models.Model):
     bom_link = models.URLField(blank=True)
     manual_link = models.URLField(blank=True)
     modulargrid_link = models.URLField(blank=True)
-    component_identities = models.ManyToManyField(ModuleComponentIdentity, blank=True, related_name='module_component_to_identity')
+    component_identities = models.ManyToManyField(ModuleBomListItem, blank=True, related_name='module_component_to_identity')
     slug = models.SlugField(blank=True)
     date_updated = models.DateField(default=timezone.now, blank=False)
 

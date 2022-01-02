@@ -21,17 +21,22 @@ class Manufacturer(models.Model):
 
 # Each modules has a lit of ModuleComponentIdentities (which are the part "slots" in the BOM)
 # However, in the real world, more than one part can sometimes work for a requested component
-# in the BOM. So we use this table to handle these slots and associate them with the actual
-# component that might work for that BOM in the real world
+# in the BOM. So we use this table to handle these slots and associate them with a list of actual
+# component that might work for that BOM part in the real world
 class ModuleComponentIdentity(models.Model):
-    name = models.CharField(max_length=255)
-    bom_order = models.IntegerField(blank=False, null=False, unique=True)
+    name = models.CharField(max_length=255, blank=False)
     component = models.ManyToManyField(Component, blank=False, related_name='component_identity_to_component')
-    module = models.ForeignKey('Module', on_delete=models.PROTECT)
+    module = models.ForeignKey('Module', blank=False, null=False, on_delete=models.PROTECT)
+    designators = models.CharField(max_length=255, blank=True, null=True)
+    quantity = models.IntegerField(blank=False, null=False)
+    notes = models.TextField(blank=True)
 
     class Meta:
         verbose_name_plural = "Module Component Identities"
-        unique_together = ('module', 'bom_order')
+        unique_together = ('name', 'module')
+
+    def __str__(self):
+        return f"{self.module.name} ({self.name})"
 
 
 # Create your models here.

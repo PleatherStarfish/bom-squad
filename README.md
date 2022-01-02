@@ -1,3 +1,5 @@
+![logo600px](https://user-images.githubusercontent.com/10040486/147891147-8701ba36-f03b-4419-9c21-297c6389fd23.jpg)
+
 # Bom-Squad
 An inventory and search tool for DIY Eurorack synthesizer modules and components
 

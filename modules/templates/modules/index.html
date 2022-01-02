@@ -2,23 +2,25 @@
 
 {% block content %}
     {% for module in module_list %}
-        <div class="row" style="margin-top: 5vh">
-            <div class="d-flex justify-content-center mt-0 mb-5 mb-lg-0 col-12 col-lg-3">
-                {% if module.image %}
-                    <img class="img-fluid img-thumbnail border-0" src="{% url 'home' %}{{ MEDIA_URL }}{{ module.image }}" style="max-height: 35vh;"
-                         alt="{{ module.name }} panel"/>
-                {% endif %}
+        <div class="row" style="margin: 10vh 0">
+            <div class="mt-0 mb-5 mb-lg-0 col-12 col-lg-12 px-3">
+                <div class="d-flex justify-content-center mb-5">
+                    {% if module.image %}
+                        <img class="img-fluid img-thumbnail border-0" src="{% url 'home' %}{{ MEDIA_URL }}{{ module.image }}" style="max-height: 35vh;"
+                             alt="{{ module.name }} panel"/>
+                    {% endif %}
+                </div>
             </div>
-            <div class="col-12 col-lg-9 d-flex justify-content-between my-3 my-lg-5">
+            <div class="col-12 col-lg-12 d-flex justify-content-between my-3 my-lg-5 px-3">
                 <div class="d-flex flex-column">
-                    <div class="d-flex justify-content-between">
-                        <div class="mb-4">
+                    <div class="d-flex flex-wrap justify-content-between mb-4 mb-sm-0">
+                        <div style="margin-bottom: 1rem">
                             {% if not module.version or module.version == '0' or module.version == '1' %}
                                 <h1 class="mb-3">{{ module.name }}</h1>
                             {% else %}
                                 <h1 class="mb-3">{{ module.name }} (v{{ module.version }})</h1>
                             {% endif %}
-                            <p class="card-title mb-3" style="font-size: 18px"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>
+                            <p class="card-title mb-3" style="font-size: 20px"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>
                         </div>
                         <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
                             {% if built and module in built %}
@@ -33,9 +35,29 @@
                             {% endif %}
                         </div>
                     </div>
-                    <div>
-                        <p class="card-text">{{ module.description }}</p>
+                    <div class="mb-2">
+                        <h2 class="module-page-headers">Description</h2>
+                        <p class="card-text" style="margin-bottom:2rem">{{ module.description }}</p>
+                        {% include 'modules/links.html' %}
                     </div>
+                </div>
+            </div>
+            <div class="col-12 mb-3 mb-lg-5 px-3">
+                <h2 class="module-page-headers mb-4">Components</h2>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Value</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Components</th>
+                                <th scope="col">Inventory</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

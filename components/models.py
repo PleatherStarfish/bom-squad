@@ -18,11 +18,17 @@ class ComponentSupplier(models.Model):
     class Meta:
         verbose_name_plural = "Component Supplier"
 
+    def __str__(self):
+        return self.name
+
 class ComponentManufacturer(models.Model):
     name = models.CharField(max_length=255)
 
     class Meta:
         verbose_name_plural = "Component Manufacturers"
+
+    def __str__(self):
+        return self.name
 
 class Component(models.Model):
     name = models.CharField(max_length=255)

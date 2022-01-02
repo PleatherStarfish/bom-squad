@@ -30,7 +30,7 @@
     --bs-info: #FFED00;
     --bs-warning: #FF0049;
     --bs-danger: #FF0049;
-    --bs-light: #f8f9fa;
+    --bs-light: #edeff2;
     --bs-dark: #212529;
     --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -477,4 +477,27 @@
 
 #menu-dropdown-arrow button:hover {
     fill: white;
+}
+
+.card-body.link-card-inner {
+    padding: 0.7rem 1rem;
+}
+
+.link-card-outer {
+    border: none;
+    background-color: #edeff2;
+}
+
+.link-card-outer:hover {
+    background-color: #d6dce1;
+}
+
+.link-card-inner {
+    font-family: 'Roboto', sans-serif;
+    color: #505050
+}
+
+.module-page-headers {
+    font-size: 26px;
+    margin-bottom: 18px;
 }

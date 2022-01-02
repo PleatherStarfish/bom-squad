@@ -40,7 +40,6 @@ class Module(models.Model):
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.PROTECT)
     version = models.CharField(max_length=10, default="1")
     description = models.TextField()
-    date_updated = models.DateField(default=timezone.now, blank=False)
     image = models.ImageField(blank=True)
     manufacturer_page_link = models.URLField(blank=True)
     bom_link = models.URLField(blank=True)
@@ -48,6 +47,7 @@ class Module(models.Model):
     modulargrid_link = models.URLField(blank=True)
     component_identities = models.ManyToManyField(ModuleComponentIdentity, blank=True, related_name='module_component_to_identity')
     slug = models.SlugField(blank=True)
+    date_updated = models.DateField(default=timezone.now, blank=False)
 
     class Meta:
         verbose_name_plural = "Modules"

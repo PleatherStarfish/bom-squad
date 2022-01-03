@@ -19,17 +19,20 @@ FARAD_UNITS = (
 # Create your models here.
 class Types(models.Model):
     name = models.CharField(max_length=255, unique=True)
+    order = models.PositiveSmallIntegerField(unique=False)
     notes = models.TextField(blank=True)
     date_updated = models.DateField(default=timezone.now, blank=False)
 
     class Meta:
         verbose_name_plural = "Types"
+        ordering = ['order']
 
     def __str__(self):
-        return self.name
+        return f"{self.name} (Order: {self.order})"
 
 class ComponentSupplier(models.Model):
     name = models.CharField(max_length=255)
+    short_name = models.CharField(max_length=30)
     url = models.URLField(max_length=255)
 
     class Meta:

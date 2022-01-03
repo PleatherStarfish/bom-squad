@@ -1,65 +1,134 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% for module in module_list %}
-        <div class="row" style="margin: 10vh 0">
-            <div class="mt-0 mb-5 mb-lg-0 col-12 col-lg-12 px-3">
-                <div class="d-flex justify-content-center mb-5">
-                    {% if module.image %}
-                        <img class="img-fluid img-thumbnail border-0" src="{% url 'home' %}{{ MEDIA_URL }}{{ module.image }}" style="max-height: 35vh;"
-                             alt="{{ module.name }} panel"/>
-                    {% endif %}
-                </div>
+    <div class="row" style="margin: 10vh 0">
+        <div class="mt-0 mb-5 mb-lg-0 col-12 col-lg-12 px-3">
+            <div class="d-flex justify-content-center mb-5">
+                {% if module.image %}
+                    <img class="img-fluid img-thumbnail border-0" src="{% url 'home' %}{{ MEDIA_URL }}{{ module.image }}" style="max-height: 35vh;"
+                         alt="{{ module.name }} panel"/>
+                {% endif %}
             </div>
-            <div class="col-12 col-lg-12 d-flex justify-content-between my-3 my-lg-5 px-3">
-                <div class="d-flex flex-column">
-                    <div class="d-flex flex-wrap justify-content-between mb-4 mb-sm-0">
-                        <div style="margin-bottom: 1rem">
-                            {% if not module.version or module.version == '0' or module.version == '1' %}
-                                <h1 class="mb-3">{{ module.name }}</h1>
-                            {% else %}
-                                <h1 class="mb-3">{{ module.name }} (v{{ module.version }})</h1>
-                            {% endif %}
-                            <p class="card-title mb-3" style="font-size: 20px"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>
-                        </div>
-                        <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
-                            {% if built and module in built %}
-                                {% include "home/buttons/built_svg_button.html" with add=False module_id=module.id request_path=request.path %}
-                            {% else %}
-                                {% include "home/buttons/built_svg_button.html" with add=True module_id=module.id request_path=request.path %}
-                            {% endif %}
-                            {% if to_build and module in to_build %}
-                                {% include "home/buttons/to_build_svg_button.html" with add=False module_id=module.id request_path=request.path %}
-                            {% else %}
-                                {% include "home/buttons/to_build_svg_button.html" with add=True module_id=module.id request_path=request.path %}
-                            {% endif %}
-                        </div>
+        </div>
+        <div class="col-12 col-lg-12 d-flex justify-content-between my-3 my-lg-5 px-3">
+            <div class="d-flex flex-column">
+                <div class="d-flex flex-wrap justify-content-between mb-4 mb-sm-0">
+                    <div style="margin-bottom: 1rem">
+                        {% if not module.version or module.version == '0' or module.version == '1' %}
+                            <h1 class="mb-3">{{ module.name }}</h1>
+                        {% else %}
+                            <h1 class="mb-3">{{ module.name }} (v{{ module.version }})</h1>
+                        {% endif %}
+                        <p class="card-title mb-3" style="font-size: 20px"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>
                     </div>
-                    <div class="mb-2">
-                        <h2 class="module-page-headers">Description</h2>
-                        <p class="card-text" style="margin-bottom:2rem">{{ module.description }}</p>
-                        {% include 'modules/links.html' %}
+                    <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
+                        {% if built and module in built %}
+                            {% include "home/buttons/built_svg_button.html" with add=False module_id=module.id request_path=request.path %}
+                        {% else %}
+                            {% include "home/buttons/built_svg_button.html" with add=True module_id=module.id request_path=request.path %}
+                        {% endif %}
+                        {% if to_build and module in to_build %}
+                            {% include "home/buttons/to_build_svg_button.html" with add=False module_id=module.id request_path=request.path %}
+                        {% else %}
+                            {% include "home/buttons/to_build_svg_button.html" with add=True module_id=module.id request_path=request.path %}
+                        {% endif %}
                     </div>
                 </div>
-            </div>
-            <div class="col-12 mb-3 mb-lg-5 px-3">
-                <h2 class="module-page-headers mb-4">Components</h2>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Value</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Type</th>
-                                <th scope="col">Components</th>
-                                <th scope="col">Inventory</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+                <div class="mb-2">
+                    <h2 class="module-page-headers">Description</h2>
+                    <p class="card-text" style="margin-bottom:2rem">{{ module.description }}</p>
+                    {% include 'modules/links.html' %}
                 </div>
             </div>
         </div>
-    {% endfor %}
+        {% if components %}
+        <div class="col-12 mb-3 mb-lg-5">
+            <h2 class="module-page-headers mb-4">Components</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Value</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Components</th>
+                            <th scope="col">Inventory</th>
+                            <th scope="col"><span class="sr-only">Sufficient Number in Inventory</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for component in components %}
+                            <tr>
+                                <td>{{component.name}}</td>
+                                <td>{{component.type}}</td>
+                                <td>{{ component.quantity }}</td>
+                                <td style="padding: 5px;">
+                                    <div style="background-color: #edeff2">
+                                        {% if component.components_options and component.components_options.all.count > 1 %}
+                                            <div class="table-responsive">
+                                                <table class="table table-sm table-hover mb-0">
+                                                    <thead class="visually-hidden">
+                                                        <tr>
+                                                            <th scope="col">Name</th>
+                                                            <th scope="col">Supplier and Item Number</th>
+                                                            <th scope="col">Supplier</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for part in component.components_options.all %}
+                                                        <tr style="cursor: pointer; {% if forloop.last %}border-bottom-color: transparent;{% endif %}" onclick="window.location.href='{{part.link}}';">
+                                                            <td class="d-inline-block text-truncate" style="width: 100px;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{ part.name }}">
+                                                                {{ part.name }}
+                                                            </td>
+                                                            <td class="d-inline-block text-truncate" style="width: 200px;" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}">
+                                                                {{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}
+                                                            </td>
+                                                            <td class="d-inline-block text-truncate" style="width: 130px;" data-bs-toggle="tooltip" data-bs-placement="right" title="{{ part.manufacturer.all.first }}">
+                                                                {{ part.manufacturer.all.first }}
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        {% elif component.components_options.all.count == 1 %}
+                                            <div class="table-responsive">
+                                                <table class="table table-sm table-hover mb-0">
+                                                    <thead class="visually-hidden-focusable">
+                                                        <tr>
+                                                            <th scope="col">Name</th>
+                                                            <th scope="col">Supplier and Item Number</th>
+                                                            <th scope="col">Supplier</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for part in component.components_options.all %}
+                                                            <tr style="cursor: pointer; white-space: nowrap; {% if forloop.last %}border-bottom-color: transparent;{% endif %}" onclick="window.location.href='{{part.link}}';">
+                                                                <td class="d-inline-block text-truncate" style="width: 100px;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{ part.name }}">
+                                                                    {{ part.name }}
+                                                                </td>
+                                                                <td class="d-inline-block text-truncate" style="width: 200px;" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}">
+                                                                    {{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}
+                                                                </td>
+                                                                <td class="d-inline-block text-truncate" style="width: 130px;" data-bs-toggle="tooltip" data-bs-placement="right" title="{{ part.manufacturer.all.first }}">
+                                                                    {{ part.manufacturer.all.first }}
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </div>
 {% endblock %}

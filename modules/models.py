@@ -25,9 +25,10 @@ class Manufacturer(models.Model):
 # component that might work for that BOM part in the real world
 class ModuleBomListItem(models.Model):
     name = models.CharField(max_length=255, blank=False)
-    component = models.ManyToManyField(Component, blank=False, related_name='component_identity_to_component')
+    components_options = models.ManyToManyField(Component, blank=False, related_name='component_identity_to_component')
     module = models.ForeignKey('Module', blank=False, null=False, on_delete=models.PROTECT)
-    designators = models.CharField(max_length=255, blank=True, null=True)
+    type = models.CharField(max_length=100, blank=True)
+    designators = models.CharField(max_length=255, blank=True, null=True, help_text="A list of locations on the board.")
     quantity = models.IntegerField(blank=False, null=False)
     notes = models.TextField(blank=True)
 
@@ -37,6 +38,11 @@ class ModuleBomListItem(models.Model):
 
     def __str__(self):
         return f"{self.module.name} ({self.name})"
+
+    def save(self, *args, **kwargs):
+        if not self.type:
+            self.type = self.component.all().first().type.name
+        super(ModuleBomListItem, self).save(*args, **kwargs)
 
 
 # Create your models here.
@@ -50,7 +56,7 @@ class Module(models.Model):
     bom_link = models.URLField(blank=True)
     manual_link = models.URLField(blank=True)
     modulargrid_link = models.URLField(blank=True)
-    component_identities = models.ManyToManyField(ModuleBomListItem, blank=True, related_name='module_component_to_identity')
+    component_bom_list = models.ManyToManyField(ModuleBomListItem, blank=True, related_name='module_component_to_identity')
     slug = models.SlugField(blank=True)
     date_updated = models.DateField(default=timezone.now, blank=False)
 

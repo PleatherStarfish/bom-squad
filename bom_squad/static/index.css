@@ -501,3 +501,12 @@
     font-size: 26px;
     margin-bottom: 18px;
 }
+
+.sr-only {
+    position:absolute;
+    left:-10000px;
+    top:auto;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+}

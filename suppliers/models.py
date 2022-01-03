@@ -4,6 +4,7 @@ from django.utils import timezone
 # Create your models here.
 class Supplier(models.Model):
     name = models.CharField(max_length=255)
+    short_name = models.CharField(max_length=30)
     url = models.URLField(max_length=255, unique=True)
     date_updated = models.DateField(default=timezone.now, blank=False)
 

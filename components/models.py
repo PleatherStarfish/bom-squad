@@ -52,7 +52,7 @@ class ComponentManufacturer(models.Model):
 
 class Component(models.Model):
     name = models.CharField(max_length=255)
-    manufacturer = models.ManyToManyField(ComponentManufacturer, blank=True)
+    manufacturer = models.ForeignKey(ComponentManufacturer, blank=True, on_delete=models.PROTECT)
     supplier = models.ManyToManyField(ComponentSupplier, blank=True)
     supplier_item_no = models.CharField(max_length=100, blank=False, unique=True)
     type = models.ForeignKey(Types, blank=False, on_delete=models.PROTECT)

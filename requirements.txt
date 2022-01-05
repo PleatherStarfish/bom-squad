@@ -9,3 +9,4 @@ django-gravatar2==1.4.4
 beautifulsoup4==4.10.0
 urllib3==1.26.7
 requests==2.27.0
+django-import-export==2.7.1

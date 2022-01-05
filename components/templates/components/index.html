@@ -3,6 +3,46 @@
 {% block content %}
     <div class="row">
         <section class="gradient-custom">
+            <div class="container-fluid py-md-5 h-100" style="padding-right:0; padding-left:0;">
+                <div class="col-12" style="margin-top: 15px;">
+                    <div class="card bg-light text-black p-2 p-md-4 mb-4">
+                        <form class="mb-3" action="{% url 'search_results' %}" method="get">
+                            <label for="search-bom" class="form-label h4">Search for Components:</label>
+                            <input id="search-bom" class="form-control" name="q" type="text" placeholder="Search...">
+                        </form>
+                    </div>
+                    <div>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">Description</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Manufacturer</th>
+                                <th scope="col">Voltage Rating</th>
+                                <th scope="col">Tolerance</th>
+                                <th scope="col">Supplier</th>
+                                <th scope="col">Supplier Item #</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% if components %}
+                                    {% for component in components %}
+                                        <tr>
+                                            <th>{{ component.name }}</th>
+                                            <th>{{ component.type.name }}</th>
+                                            <th>{{ component.manufacturer.name }}</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </section>
     </div>
 {% endblock %}

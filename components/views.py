@@ -1,23 +1,20 @@
 from django.shortcuts import render
-from modules.models import Module
-from users_extended.models import UserExtended, Module
-from bs4 import BeautifulSoup
-import requests
+from components.models import Component
+
 
 # Create your views here.
-def index(request, slug):
-    module = Module.objects.get(slug=slug)
+def index(request):
+    components = Component.objects.order_by('type__order')
 
-    built = None
-    if request.user.is_authenticated:
-        user = UserExtended.objects.get(user=request.user)
-        built = user.built_modules.all()
+    context = {"components": components}
 
-    to_build = None
-    if request.user.is_authenticated:
-        user = UserExtended.objects.get(user=request.user)
-        to_build = user.want_to_build_modules.all()
+    return render(request, 'components/index.html', context)
 
-    components = module.component_bom_list.all()
-
-    return render(request, 'modules/index.html', {"module": module, "built": built, "to_build": to_build, "components": components})
+def search_results(request):
+    query = request.GET.get("q")
+    # if query:
+    #     module_list = Module.objects.filter(Q(name__icontains=query) | Q(manufacturer__name__icontains=query))
+    #     context = {"module_list": module_list}
+    #     return render(request, 'home/home.html', context)
+    # else:
+        # return redirect(index)

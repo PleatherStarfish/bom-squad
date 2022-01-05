@@ -48,7 +48,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">Value</th>
+                            <th scope="col" data-sort="value">Value</th>
                             <th scope="col">Type</th>
                             <th scope="col">Quantity</th>
                             <th scope="col">Components</th>
@@ -63,7 +63,7 @@
                                 <td>{{component.type}}</td>
                                 <td>{{ component.quantity }}</td>
                                 <td style="padding: 5px;">
-                                    <div style="background-color: #edeff2">
+                                    <div>
                                         {% if component.components_options and component.components_options.all.count > 1 %}
                                             <div class="table-responsive">
                                                 <table class="table table-sm table-hover mb-0">
@@ -76,7 +76,7 @@
                                                     </thead>
                                                     <tbody>
                                                         {% for part in component.components_options.all %}
-                                                        <tr style="cursor: pointer; {% if forloop.last %}border-bottom-color: transparent;{% endif %}" onclick="window.location.href='{{part.link}}';">
+                                                        <tr style="background-color: #edeff2; cursor: pointer; {% if forloop.last %}border-bottom-color: transparent;{% endif %}" onclick="window.location.href='{{part.link}}';">
                                                             <td class="d-inline-block text-truncate" style="width: 100px;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{ part.name }}">
                                                                 {{ part.name }}
                                                             </td>
@@ -103,7 +103,7 @@
                                                     </thead>
                                                     <tbody>
                                                         {% for part in component.components_options.all %}
-                                                            <tr style="cursor: pointer; white-space: nowrap; {% if forloop.last %}border-bottom-color: transparent;{% endif %}" onclick="window.location.href='{{part.link}}';">
+                                                            <tr style="background-color: #edeff2; cursor: pointer; white-space: nowrap; {% if forloop.last %}border-bottom-color: transparent;{% endif %}" onclick="window.location.href='{{part.link}}';">
                                                                 <td class="d-inline-block text-truncate" style="width: 100px;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{ part.name }}">
                                                                     {{ part.name }}
                                                                 </td>

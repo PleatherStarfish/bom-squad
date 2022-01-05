@@ -6,93 +6,91 @@
         <section class="gradient-custom">
             <div class="container-fluid py-md-5 h-100" style="padding-right:0; padding-left:0;">
                 <div class="col-12" style="margin-top: 15px;">
-                    <div class="row d-flex justify-content-center align-items-center h-100"></div>
-                        <div class="card bg-light text-black p-2 p-md-4 mb-4">
-                            <form class="mb-3" action="{% url 'search_results' %}" method="get">
-                                <label for="search-bom" class="form-label h4">Search for a BOM:</label>
-                                <input id="search-bom" class="form-control" name="q" type="text" placeholder="Search...">
-                            </form>
+                    <div class="card bg-light text-black p-2 p-md-4 mb-4">
+                        <form class="mb-3" action="{% url 'search_results' %}" method="get">
+                            <label for="search-bom" class="form-label h4">Search for a BOM:</label>
+                            <input id="search-bom" class="form-control" name="q" type="text" placeholder="Search...">
+                        </form>
 
-                        </div>
-                        <div>
-                            <ul class="p-0">
-                                {% if module_list %}
-                                    {% for module in module_list %}
-                                        <li style="list-style-type: none;">
-                                            <div class="card w-100 mb-3">
-                                                <div class="row g-0">
-                                                    <div class="col-md-3 p-4 d-flex justify-content-around" style="height: 250px">
-                                                        {% if module.image %}
-                                                            <img class="img-fluid img-thumbnail border-0" src="{{ module.image }}" style="height: 100%" alt="{{ module.name }} panel" />
-                                                        {% endif %}
-                                                    </div>
-                                                    <div class="col-md-9">
-                                                        <div class="card-body">
-                                                            <div class="d-flex justify-content-between w-100">
-                                                                <div>
-                                                                    {% if not module.version or module.version == '0' or module.version == '1' %}
-                                                                        <h2 class="card-title"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a></h2>
-                                                                    {% else %}
-                                                                        <h2 class="card-title"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }} (v{{ module.version }})</a></h2>
-                                                                    {% endif %}
-                                                                </div>
-                                                                <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
-                                                                    {% if built and module in built %}
-                                                                        {% include "home/buttons/built_svg_button.html" with add=False module_id=module.id request_path=request.path  %}
-                                                                    {% else %}
-                                                                        {% include "home/buttons/built_svg_button.html" with add=True module_id=module.id request_path=request.path  %}
-                                                                    {% endif %}
-                                                                    {% if to_build and module in to_build %}
-                                                                        {% include "home/buttons/to_build_svg_button.html" with add=False module_id=module.id request_path=request.path  %}
-                                                                    {% else %}
-                                                                        {% include "home/buttons/to_build_svg_button.html" with add=True module_id=module.id request_path=request.path  %}
-                                                                    {% endif %}
-                                                                </div>
+                    </div>
+                    <div>
+                        <ul class="p-0">
+                            {% if module_list %}
+                                {% for module in module_list %}
+                                    <li style="list-style-type: none;">
+                                        <div class="card w-100 mb-3">
+                                            <div class="row g-0">
+                                                <div class="col-md-3 p-4 d-flex justify-content-around" style="height: 250px">
+                                                    {% if module.image %}
+                                                        <img class="img-fluid img-thumbnail border-0" src="{{ module.image }}" style="height: 100%" alt="{{ module.name }} panel" />
+                                                    {% endif %}
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="card-body">
+                                                        <div class="d-flex justify-content-between w-100">
+                                                            <div>
+                                                                {% if not module.version or module.version == '0' or module.version == '1' %}
+                                                                    <h2 class="card-title"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a></h2>
+                                                                {% else %}
+                                                                    <h2 class="card-title"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }} (v{{ module.version }})</a></h2>
+                                                                {% endif %}
                                                             </div>
-                                                            <p class="card-title mb-3"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>
-                                                            <div class="description-wrapped">
-                                                                <p>{{ module.description }}</p>
+                                                            <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
+                                                                {% if built and module in built %}
+                                                                    {% include "home/buttons/built_svg_button.html" with add=False module_id=module.id request_path=request.path  %}
+                                                                {% else %}
+                                                                    {% include "home/buttons/built_svg_button.html" with add=True module_id=module.id request_path=request.path  %}
+                                                                {% endif %}
+                                                                {% if to_build and module in to_build %}
+                                                                    {% include "home/buttons/to_build_svg_button.html" with add=False module_id=module.id request_path=request.path  %}
+                                                                {% else %}
+                                                                    {% include "home/buttons/to_build_svg_button.html" with add=True module_id=module.id request_path=request.path  %}
+                                                                {% endif %}
                                                             </div>
-                                                            {% comment %}
-                                                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                                                            {% endcomment %}
                                                         </div>
+                                                        <p class="card-title mb-3"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>
+                                                        <div class="description-wrapped">
+                                                            <p>{{ module.description }}</p>
+                                                        </div>
+                                                        {% comment %}
+                                                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                                        {% endcomment %}
                                                     </div>
                                                 </div>
                                             </div>
-                                        </li>
-                                    {% endfor %}
-                                {% endif %}
-                            </ul>
-                            {% if module_list.has_other_pages %}
-                                <nav class="w-100 mb-4 p-0" role="navigation" aria-label="Pagination Navigation">
-                                    <ul class="pagination d-flex flex-wrap w-100 m-0">
-                                        {% if module_list.has_previous %}
-                                            <li class="p-1 p-md-2"><a href="?page={{ module_list.previous_page_number }}"
-                                                                      style="font-size: 14px" aria-label="Go to previous page.">&lt;</a>
-                                            </li>
-                                        {% else %}
-                                            <li class="disabled p-1 p-md-2"><span style="font-size: 14px">&lt;</span></li>
-                                        {% endif %}
-                                        {% for i in module_list.paginator.page_range %}
-                                            {% if module_list.number == i %}
-                                                <li class="active p-1 p-md-2"><span style="font-size: 14px">{{ i }} <span class="visually-hidden">(current)</span></span></li>
-                                            {% else %}
-                                                <li class="p-1 p-md-2"><a href="?page={{ i }}" style="font-size: 14px"
-                                                                          aria-label="Go to page {{ i }}">{{ i }}</a></li>
-                                            {% endif %}
-                                        {% endfor %}
-                                        {% if module_list.has_next %}
-                                            <li class="p-1 p-md-2"><a href="?page={{ module_list.next_page_number }}"
-                                                                      style="font-size: 14px" aria-label="Go to next page.">&gt;</a>
-                                            </li>
-                                        {% else %}
-                                            <li class="disabled p-1 p-md-2"><span style="font-size: 14px">&gt;</span></li>
-                                        {% endif %}
-                                    </ul>
-                                </nav>
+                                        </div>
+                                    </li>
+                                {% endfor %}
                             {% endif %}
-                        </div>
+                        </ul>
+                        {% if module_list.has_other_pages %}
+                            <nav class="w-100 mb-4 p-0" role="navigation" aria-label="Pagination Navigation">
+                                <ul class="pagination d-flex flex-wrap w-100 m-0">
+                                    {% if module_list.has_previous %}
+                                        <li class="p-1 p-md-2"><a href="?page={{ module_list.previous_page_number }}"
+                                                                  style="font-size: 14px" aria-label="Go to previous page.">&lt;</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="disabled p-1 p-md-2"><span style="font-size: 14px">&lt;</span></li>
+                                    {% endif %}
+                                    {% for i in module_list.paginator.page_range %}
+                                        {% if module_list.number == i %}
+                                            <li class="active p-1 p-md-2"><span style="font-size: 14px">{{ i }} <span class="visually-hidden">(current)</span></span></li>
+                                        {% else %}
+                                            <li class="p-1 p-md-2"><a href="?page={{ i }}" style="font-size: 14px"
+                                                                      aria-label="Go to page {{ i }}">{{ i }}</a></li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if module_list.has_next %}
+                                        <li class="p-1 p-md-2"><a href="?page={{ module_list.next_page_number }}"
+                                                                  style="font-size: 14px" aria-label="Go to next page.">&gt;</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="disabled p-1 p-md-2"><span style="font-size: 14px">&gt;</span></li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        {% endif %}
                     </div>
                 </div>
             </div>

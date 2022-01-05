@@ -6,3 +6,6 @@ typing-extensions==3.10.0.2
 pillow==8.4.0
 django-simple-captcha==0.5.14
 django-gravatar2==1.4.4
+beautifulsoup4==4.10.0
+urllib3==1.26.7
+requests==2.27.0

@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from modules.models import Module
 from users_extended.models import UserExtended, Module
+from bs4 import BeautifulSoup
+import requests
 
 # Create your views here.
 def module_detail(request, slug):
@@ -17,6 +19,5 @@ def module_detail(request, slug):
         to_build = user.want_to_build_modules.all()
 
     components = module.component_bom_list.all()
-    print(components)
 
     return render(request, 'modules/index.html', {"module": module, "built": built, "to_build": to_build, "components": components})

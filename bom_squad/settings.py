@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'suppliers',
     'home',
     'authenticate',
-    'users_extended',
+    'user_profile',
     'captcha',
     'django_gravatar',
     'import_export',

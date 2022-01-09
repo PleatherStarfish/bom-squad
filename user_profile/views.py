@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from users_extended.models import UserExtended, Module
+from user_profile.models import UserProfile, Module
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -10,16 +10,16 @@ from django_gravatar.helpers import get_gravatar_url, has_gravatar, get_gravatar
 # Create your views here.
 @login_required()
 def user_page(request, **kwargs):
-    user = get_object_or_404(UserExtended, slug=kwargs.get('slug'))
+    user = get_object_or_404(UserProfile, slug=kwargs.get('slug'))
 
     built = None
     if request.user.is_authenticated:
-        user = UserExtended.objects.get(user=request.user)
+        user = UserProfile.objects.get(user=request.user)
         built = user.built_modules.all()
 
     to_build = None
     if request.user.is_authenticated:
-        user = UserExtended.objects.get(user=request.user)
+        user = UserProfile.objects.get(user=request.user)
         to_build = user.want_to_build_modules.all()
 
     user_email = request.user.email

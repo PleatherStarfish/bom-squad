@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .forms import SignUpForm
-from users_extended.models import UserExtended
+from user_profile.models import UserProfile
 import urllib
 import json
 from django.conf import settings
@@ -33,12 +33,12 @@ def index(request):
 
     built = None
     if request.user.is_authenticated:
-        user = UserExtended.objects.get(user=request.user)
+        user = UserProfile.objects.get(user=request.user)
         built = user.built_modules.all()
 
     to_build = None
     if request.user.is_authenticated:
-        user = UserExtended.objects.get(user=request.user)
+        user = UserProfile.objects.get(user=request.user)
         to_build = user.want_to_build_modules.all()
 
     print(to_build)
@@ -103,7 +103,7 @@ def register_user(request):
             user = authenticate(username=username, password=password)
             login(request, user)
             messages.success(request, ('You have registered...'))
-            user_extended = UserExtended(user=user,
+            user_extended = UserProfile(user=user,
                                          first_name=form.cleaned_data['first_name'],
                                          last_name=form.cleaned_data['last_name'])
             user_extended.save()
@@ -118,7 +118,7 @@ def register_user(request):
 def add_to_built(request, id):
     if request.method == 'GET':
         user_id = request.user.id
-        user = UserExtended.objects.get(user__id=user_id)
+        user = UserProfile.objects.get(user__id=user_id)
         module = Module.objects.get(id=id)
         user.built_modules.add(module)
         user.want_to_build_modules.remove(module)
@@ -134,7 +134,7 @@ def add_to_built(request, id):
 def remove_from_built(request, id):
     if request.method == 'GET':
         user_id = request.user.id
-        user = UserExtended.objects.get(user__id=user_id)
+        user = UserProfile.objects.get(user__id=user_id)
         module = Module.objects.get(id=id)
         user.built_modules.remove(module)
         user.save()
@@ -150,7 +150,7 @@ def add_to_to_build(request, id):
     if request.method == 'GET':
         print("to_build", id, "..........")
         user_id = request.user.id
-        user = UserExtended.objects.get(user__id=user_id)
+        user = UserProfile.objects.get(user__id=user_id)
         module = Module.objects.get(id=id)
         user.want_to_build_modules.add(module)
         user.built_modules.remove(module)
@@ -166,7 +166,7 @@ def add_to_to_build(request, id):
 def remove_from_to_build(request, id):
     if request.method == 'GET':
         user_id = request.user.id
-        user = UserExtended.objects.get(user__id=user_id)
+        user = UserProfile.objects.get(user__id=user_id)
         module = Module.objects.get(id=id)
         user.want_to_build_modules.remove(module)
         user.save()

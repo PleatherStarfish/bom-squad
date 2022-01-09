@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from modules.models import Module
-from users_extended.models import UserExtended, Module
+from user_profile.models import UserProfile, Module
 from bs4 import BeautifulSoup
 import requests
 
@@ -10,12 +10,12 @@ def module_detail(request, slug):
 
     built = None
     if request.user.is_authenticated:
-        user = UserExtended.objects.get(user=request.user)
+        user = UserProfile.objects.get(user=request.user)
         built = user.built_modules.all()
 
     to_build = None
     if request.user.is_authenticated:
-        user = UserExtended.objects.get(user=request.user)
+        user = UserProfile.objects.get(user=request.user)
         to_build = user.want_to_build_modules.all()
 
     components = module.component_bom_list.all()

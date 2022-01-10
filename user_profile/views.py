@@ -23,6 +23,7 @@ def user_page(request, **kwargs):
         to_build = user.want_to_build_modules.all()
 
     user_email = request.user.email
+    username = request.user.username
 
     gravatar_exists = has_gravatar(user_email)
 
@@ -31,5 +32,6 @@ def user_page(request, **kwargs):
         'built': built,
         'to_build': to_build,
         'user_email': user_email,
-        'gravatar_exists': gravatar_exists
+        'gravatar_exists': gravatar_exists,
+        'username': username,
     })

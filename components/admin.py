@@ -8,9 +8,15 @@ class ComponentAdmin(ImportExportModelAdmin):
 class ComponentManufacturerAdmin(ImportExportModelAdmin):
     model = ComponentManufacturer
 
+class ComponentSupplierAdmin(ImportExportModelAdmin):
+    model = ComponentSupplier
+
+class TypesAdmin(ImportExportModelAdmin):
+    model = Types
+
 
 # Register your models here.
 admin.site.register(Component, ComponentAdmin)
-admin.site.register(Types)
-admin.site.register(ComponentSupplier)
+admin.site.register(Types, TypesAdmin)
+admin.site.register(ComponentSupplier, ComponentSupplierAdmin)
 admin.site.register(ComponentManufacturer, ComponentManufacturerAdmin)

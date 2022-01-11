@@ -20,107 +20,123 @@
         </div>
         <nav class="user-page-nav">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
-                        type="button" role="tab" aria-controls="nav-home" aria-selected="true">Built
+                <button class="nav-link active" id="built-modules-tab" data-bs-toggle="tab" data-bs-target="#built-modules"
+                        type="button" role="tab" aria-controls="built-modules" aria-selected="true">Built
                 </button>
-                <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
-                        type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Want to Build
+                <button class="nav-link" id="want-to-build-tab" data-bs-toggle="tab" data-bs-target="#want-to-build"
+                        type="button" role="tab" aria-controls="want-to-build" aria-selected="false">Want to Build
                 </button>
-                <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact"
-                        type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Components Inventory
+                <button class="nav-link" id="inventory-tab" data-bs-toggle="tab" data-bs-target="#inventory"
+                        type="button" role="tab" aria-controls="inventory" aria-selected="false">Components Inventory
                 </button>
-                <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact"
-                        type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Shopping List
+                <button class="nav-link" id="shopping-list-tab" data-bs-toggle="tab" data-bs-target="#shopping-list"
+                        type="button" role="tab" aria-controls="shopping-list" aria-selected="false">Shopping List
                 </button>
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+            <div class="tab-pane fade show active" id="built-modules" role="tabpanel" aria-labelledby="built-modules-tab">
                 <div class="container py-5 px-0">
-                    <div class="row w-100">
-                        {% for module in user.built_modules.all %}
-                            <div class="card col-xs-12 col-sm-12 col-md-4 col-lg-3  py-4 m-2 d-flex justify-content-around" style="min-width: 270px; max-height: 548px">
-                                {% if module.image %}
-                                    <img src="{% url 'home' %}{{ MEDIA_URL }}{{ module.image }}" style="height: 200px; width: 100%; object-fit: contain" alt="{{ module.name }} panel" />
-                                {% endif %}
-                                <div class="d-flex flex-column justify-content-around">
-                                    <div class="card-body py-4 px-0" style="height: 261px">
-                                        <div class="d-flex justify-content-between w-100">
-                                            <div>
-                                                {% if not module.version or module.version == '0' or module.version == '1' %}
-                                                    <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a></h2>
-                                                {% else %}
-                                                    <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }} (v{{ module.version }})</a></h2>
-                                                {% endif %}
+                    {% if user.built_modules.all %}
+                        <div class="row w-100">
+                            {% for module in user.built_modules.all %}
+                                <div class="card col-xs-12 col-sm-12 col-md-4 col-lg-3  py-4 m-2 d-flex justify-content-around" style="min-width: 270px; max-height: 548px">
+                                    {% if module.image %}
+                                        <img src="{% url 'home' %}{{ MEDIA_URL }}{{ module.image }}" style="height: 200px; width: 100%; object-fit: contain" alt="{{ module.name }} panel" />
+                                    {% endif %}
+                                    <div class="d-flex flex-column justify-content-around">
+                                        <div class="card-body py-4 px-0" style="height: 261px">
+                                            <div class="d-flex justify-content-between w-100">
+                                                <div>
+                                                    {% if not module.version or module.version == '0' or module.version == '1' %}
+                                                        <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a></h2>
+                                                    {% else %}
+                                                        <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }} (v{{ module.version }})</a></h2>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <p class="card-title mb-3"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>
+                                            <div class="description-wrapped">
+                                                <p>{{ module.description }}</p>
                                             </div>
                                         </div>
-                                        <p class="card-title mb-3"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>
-                                        <div class="description-wrapped">
-                                            <p>{{ module.description }}</p>
+                                        <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
+                                            {% if built and module in built %}
+                                                {% include "home/buttons/built_svg_button.html" with add=False module_id=module.id request_path=request.path %}
+                                            {% else %}
+                                                {% include "home/buttons/built_svg_button.html" with add=True module_id=module.id request_path=request.path %}
+                                            {% endif %}
+                                            {% if to_build and module in to_build %}
+                                                {% include "home/buttons/to_build_svg_button.html" with add=False module_id=module.id request_path=request.path %}
+                                            {% else %}
+                                                {% include "home/buttons/to_build_svg_button.html" with add=True module_id=module.id request_path=request.path %}
+                                            {% endif %}
                                         </div>
                                     </div>
-                                    <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
-                                        {% if built and module in built %}
-                                            {% include "home/buttons/built_svg_button.html" with add=False module_id=module.id request_path=request.path %}
-                                        {% else %}
-                                            {% include "home/buttons/built_svg_button.html" with add=True module_id=module.id request_path=request.path %}
-                                        {% endif %}
-                                        {% if to_build and module in to_build %}
-                                            {% include "home/buttons/to_build_svg_button.html" with add=False module_id=module.id request_path=request.path %}
-                                        {% else %}
-                                            {% include "home/buttons/to_build_svg_button.html" with add=True module_id=module.id request_path=request.path %}
-                                        {% endif %}
-                                    </div>
                                 </div>
-                            </div>
-                        {% endfor %}
-                    </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning" role="alert">There are no modules in your Built Modules list.</div>
+                    {% endif %}
                 </div>
             </div>
-            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+            <div class="tab-pane fade" id="want-to-build" role="tabpanel" aria-labelledby="want-to-build-tab">
                 <div class="container py-5 px-0">
-                    <div class="row w-100">
-                        {% for module in user.want_to_build_modules.all %}
-                            <div class="card col-xs-12 col-sm-12 col-md-4 col-lg-3  py-4 m-2 d-flex justify-content-around" style="min-width: 270px; max-height: 548px">
-                                {% if module.image %}
-                                    <img src="{% url 'home' %}{{ MEDIA_URL }}{{ module.image }}" style="height: 200px; width: 100%; object-fit: contain" alt="{{ module.name }} panel" />
-                                {% endif %}
-                                <div class="d-flex flex-column justify-content-around">
-                                    <div class="card-body py-4 px-0" style="height: 261px">
-                                        <div class="d-flex justify-content-between w-100">
-                                            <div>
-                                                {% if not module.version or module.version == '0' or module.version == '1' %}
-                                                    <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a></h2>
-                                                {% else %}
-                                                    <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }} (v{{ module.version }})</a></h2>
-                                                {% endif %}
+                    {% if user.want_to_build_modules.all %}
+                        <div class="row w-100">
+                            {% for module in user.want_to_build_modules.all %}
+                                <div class="card col-xs-12 col-sm-12 col-md-4 col-lg-3  py-4 m-2 d-flex justify-content-around" style="min-width: 270px; max-height: 548px">
+                                    {% if module.image %}
+                                        <img src="{% url 'home' %}{{ MEDIA_URL }}{{ module.image }}" style="height: 200px; width: 100%; object-fit: contain" alt="{{ module.name }} panel" />
+                                    {% endif %}
+                                    <div class="d-flex flex-column justify-content-around">
+                                        <div class="card-body py-4 px-0" style="height: 261px">
+                                            <div class="d-flex justify-content-between w-100">
+                                                <div>
+                                                    {% if not module.version or module.version == '0' or module.version == '1' %}
+                                                        <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a></h2>
+                                                    {% else %}
+                                                        <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }} (v{{ module.version }})</a></h2>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <p class="card-title mb-3"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>
+                                            <div class="description-wrapped">
+                                                <p>{{ module.description }}</p>
                                             </div>
                                         </div>
-                                        <p class="card-title mb-3"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>
-                                        <div class="description-wrapped">
-                                            <p>{{ module.description }}</p>
+                                        <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
+                                            {% if built and module in built %}
+                                                {% include "home/buttons/built_svg_button.html" with add=False module_id=module.id request_path=request.path %}
+                                            {% else %}
+                                                {% include "home/buttons/built_svg_button.html" with add=True module_id=module.id request_path=request.path %}
+                                            {% endif %}
+                                            {% if to_build and module in to_build %}
+                                                {% include "home/buttons/to_build_svg_button.html" with add=False module_id=module.id request_path=request.path %}
+                                            {% else %}
+                                                {% include "home/buttons/to_build_svg_button.html" with add=True module_id=module.id request_path=request.path %}
+                                            {% endif %}
                                         </div>
                                     </div>
-                                    <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
-                                        {% if built and module in built %}
-                                            {% include "home/buttons/built_svg_button.html" with add=False module_id=module.id request_path=request.path %}
-                                        {% else %}
-                                            {% include "home/buttons/built_svg_button.html" with add=True module_id=module.id request_path=request.path %}
-                                        {% endif %}
-                                        {% if to_build and module in to_build %}
-                                            {% include "home/buttons/to_build_svg_button.html" with add=False module_id=module.id request_path=request.path %}
-                                        {% else %}
-                                            {% include "home/buttons/to_build_svg_button.html" with add=True module_id=module.id request_path=request.path %}
-                                        {% endif %}
-                                    </div>
                                 </div>
-                            </div>
-                        {% endfor %}
-                    </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning" role="alert">There are no modules in your Want to Build list.</div>
+                    {% endif %}
                 </div>
             </div>
-            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
-            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+            <div class="tab-pane fade" id="inventory" role="tabpanel" aria-labelledby="inventory-tab">
+                <div class="container py-5 px-0">
+                    <div class="alert alert-warning" role="alert">Go to the <a href="{% url 'components' %}">Components page</a> to add components to your personal inventory.</div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="shopping-list" role="tabpanel" aria-labelledby="shopping-list-tab">
+                <div class="container py-5 px-0">
+                    <div class="alert alert-warning" role="alert">To add components to your shopping list, add modules to your Want to Build list.</div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

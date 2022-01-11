@@ -36,7 +36,7 @@
                         <img id="logo-img-head-static" src="{% static '/bom_squad/head_logo.png' %}" alt="">
                     </a>
                     <a href="{% url 'home' %}">
-                        <img id="logo-text-static" src="{% static '/bom_squad/logo_text2.png' %}" alt="">
+                        <img id="logo-text" src="{% static '/bom_squad/logo_text2.png' %}" alt="">
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -72,15 +72,21 @@
                 </nav>
             </div>
         </header>
-        <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop"
-                     aria-labelledby="offcanvasTopLabel" style="background-color: #212529; height: 100vh;">
+        <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel" style="background-color: #212529; height: 100vh;">
             <div class="offcanvas-header">
-                <h5 id="offcanvasTopLabel">Offcanvas top</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
-                        aria-label="Close"></button>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" style="background-color: #64727e; margin: 10vh;"></button>
             </div>
             <div class="offcanvas-body">
-                ...
+                <a href="{% url 'home' %}">
+                    <img class="logo-img" src="{% static '/bom_squad/logo.png' %}" alt="BOM Squad logo">
+                </a>
+                <ul style="list-style-type: none; display: inline;">
+                    <li style="color: #64727e; font-size: 7vh"><b>/modules</b></li>
+                    <li style="color: #64727e; font-size: 7vh"><b>/components</b></li>
+                    <li style="color: #64727e; font-size: 7vh"><b>/inventory</b></li>
+                    <li style="color: #64727e; font-size: 7vh"><b>/shopping list</b></li>
+                    <li style="color: #64727e; font-size: 7vh"><b>/user page</b></li>
+                </ul>
             </div>
         </div>
 
@@ -101,33 +107,56 @@
               return new bootstrap.Tooltip(tooltipTriggerEl)
             })
         </script>
+
         <script>
             window.onload = function() {
+                var offcanvasTop = document.getElementById('offcanvasTop');
+
                 var logo_img = document.getElementById("logo-img");
                 var logo_img_head = document.getElementById("logo-img-head");
                 var logo_text = document.getElementById("logo-text");
 
-                var offcanvasTop = document.getElementById('offcanvasTop');
-                offcanvasTop.addEventListener('show.bs.offcanvas', function () {
-                    logo_img.classList.add("logo-img-small");
-                    logo_img_head.classList.add("logo-img-small-head");
-                    logo_text.classList.add("logo-text-unhidden");
-                });
-                offcanvasTop.addEventListener('hidden.bs.offcanvas', function () {
+                offcanvasTop.addEventListener('hide.bs.offcanvas', function () {
                     logo_img.classList.remove("logo-img-small");
                     logo_img_head.classList.remove("logo-img-small-head");
                     logo_text.classList.remove("logo-text-unhidden");
                 });
+                offcanvasTop.addEventListener('show.bs.offcanvas', function () {
+                    logo_img.classList.add("logo-img-small");
+                    logo_img_head.classList.add("logo-img-small-head");
+                    logo_text.classList.add("logo-text-unhidden");
+                    logo_img.classList.remove("logo-img-small");
+                })
             }
         </script>
 
-        <script>
-            var options = {
-              valueNames: [ 'value', ]
-            };
-
-            var userList = new List('value', options);
-        </script>
+{#        <script>#}
+{#            window.onload = function() {#}
+{#                var logo_img = document.getElementById("logo-img");#}
+{#                var logo_img_head = document.getElementById("logo-img-head");#}
+{#                var logo_text = document.getElementById("logo-text");#}
+{##}
+{#                var offcanvasTop = document.getElementById('offcanvasTop');#}
+{#                offcanvasTop.addEventListener('show.bs.offcanvas', function () {#}
+{#                    logo_img.classList.add("logo-img-small");#}
+{#                    logo_img_head.classList.add("logo-img-small-head");#}
+{#                    logo_text.classList.add("logo-text-unhidden");#}
+{#                });#}
+{#                offcanvasTop.addEventListener('hidden.bs.offcanvas', function () {#}
+{#                    logo_img.classList.remove("logo-img-small");#}
+{#                    logo_img_head.classList.remove("logo-img-small-head");#}
+{#                    logo_text.classList.remove("logo-text-unhidden");#}
+{#                });#}
+{#            }#}
+{#        </script>#}
+{##}
+{#        <script>#}
+{#            var options = {#}
+{#              valueNames: [ 'value', ]#}
+{#            };#}
+{##}
+{#            var userList = new List('value', options);#}
+{#        </script>#}
 
     </body>
 </html>

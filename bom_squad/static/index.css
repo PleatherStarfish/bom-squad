@@ -219,7 +219,7 @@
 
 @media (min-width: 992px) and (max-width: 1199.98px) {
     .logo-img {
-        width: 275px;
+        width: 300px;
     }
     #bootstrap-overrides .scrolldown {
         bottom: 70px;
@@ -267,8 +267,8 @@
 
 .logo-img {
     position: fixed;
-    top: 20%;
-    left: 50%;
+    top: 50%;
+    left: 20%;
     transform: translate(-50%, -50%);
     height: auto;
     opacity: 1;
@@ -511,3 +511,34 @@
     overflow:hidden;
 }
 
+.menu-text {
+    font-family: 'Roboto', sans-serif;
+    color: #64727e;
+    font-size: 12vh;
+    letter-spacing: 5px;
+}
+
+.menu-text > a {
+    color: #64727e;
+    text-decoration: none;
+}
+
+.menu-text > a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.full-screen-menu-container {
+    width: 100%;
+    margin-top: 3vh;
+}
+
+.full-screen-menu-left {
+    width: 50vw;
+    border-right: 1px solid #64727e;
+}
+
+.full-screen-menu-right {
+    list-style-type: none;
+    font-weight: 900;
+}

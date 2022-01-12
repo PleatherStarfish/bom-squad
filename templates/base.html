@@ -16,6 +16,15 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300&family=Roboto&display=swap" rel="stylesheet">
+{#        <link rel="preconnect" href="https://fonts.googleapis.com">#}
+{#        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>#}
+{#        <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">#}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Roboto:wght@500&display=swap" rel="stylesheet">
+
         <link href="{% static 'index.css' %}" rel="stylesheet" type="text/css">
 
         <title>Bom-Squad</title>
@@ -73,20 +82,23 @@
             </div>
         </header>
         <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel" style="background-color: #212529; height: 100vh;">
-            <div class="offcanvas-header">
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" style="background-color: #64727e; margin: 10vh;"></button>
-            </div>
+{#            <div class="offcanvas-header">#}
+{#                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" style="background-color: #64727e; margin: 10vh;"></button>#}
+{#            </div>#}
             <div class="offcanvas-body">
                 <a href="{% url 'home' %}">
                     <img class="logo-img" src="{% static '/bom_squad/logo.png' %}" alt="BOM Squad logo">
                 </a>
-                <ul style="list-style-type: none; display: inline;">
-                    <li style="color: #64727e; font-size: 7vh"><b>/modules</b></li>
-                    <li style="color: #64727e; font-size: 7vh"><b>/components</b></li>
-                    <li style="color: #64727e; font-size: 7vh"><b>/inventory</b></li>
-                    <li style="color: #64727e; font-size: 7vh"><b>/shopping list</b></li>
-                    <li style="color: #64727e; font-size: 7vh"><b>/user page</b></li>
-                </ul>
+                <div class="d-flex flex-row justify-content-between align-items-center full-screen-menu-container">
+                    <div class="full-screen-menu-left"></div>
+                    <ul class="full-screen-menu-right">
+                        <li class="text-end menu-text"><a href="/about/">about</a></li>
+                        <li class="text-end menu-text"><a href="/">modules</a></li>
+                        <li class="text-end menu-text"><a href="/components/">components</a></li>
+                        <li class="text-end menu-text"><a href="/components/">inventory</a></li>
+                        <li class="text-end menu-text"><a href="/components/">account</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -115,17 +127,22 @@
                 var logo_img = document.getElementById("logo-img");
                 var logo_img_head = document.getElementById("logo-img-head");
                 var logo_text = document.getElementById("logo-text");
+                var menu_text = document.querySelector('.menu_text');
+                var logo_img_head_static = document.getElementById('logo-img-head-static');
 
                 offcanvasTop.addEventListener('hide.bs.offcanvas', function () {
                     logo_img.classList.remove("logo-img-small");
                     logo_img_head.classList.remove("logo-img-small-head");
                     logo_text.classList.remove("logo-text-unhidden");
+                    logo_img_head_static.classList.remove("invisible");
                 });
                 offcanvasTop.addEventListener('show.bs.offcanvas', function () {
                     logo_img.classList.add("logo-img-small");
                     logo_img_head.classList.add("logo-img-small-head");
                     logo_text.classList.add("logo-text-unhidden");
+                    logo_img_head_static.classList.add("invisible");
                     logo_img.classList.remove("logo-img-small");
+
                 })
             }
         </script>

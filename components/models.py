@@ -28,7 +28,7 @@ class Types(models.Model):
         ordering = ['order']
 
     def __str__(self):
-        return f"{self.name} (Order: {self.order})"
+        return f"{self.name}"
 
 class ComponentSupplier(models.Model):
     name = models.CharField(max_length=255)

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_tags %}
 
 {% block content %}
     <div class="row" style="margin: 10vh 0">
@@ -42,93 +43,156 @@
             </div>
         </div>
         {% if components %}
-        <div class="col-12 mb-3 mb-lg-5">
-            <h2 class="module-page-headers mb-4">Components</h2>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col" data-sort="value">Description</th>
-                            <th scope="col">Type</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Components</th>
-                            <th scope="col">Inventory</th>
-                            <th scope="col"><span class="sr-only">Sufficient Number in Inventory</span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for component in components %}
+            <div class="col-12 mb-3 mb-lg-5">
+                <h2 class="module-page-headers mb-4">Components</h2>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td>{{component.name}}</td>
-                                <td>{{component.type}}</td>
-                                <td>{{ component.quantity }}</td>
-                                <td style="padding: 5px;">
-                                    <div>
-                                        {% if component.components_options and component.components_options.all.count > 1 %}
-                                            <div class="table-responsive">
-                                                <table class="table table-sm table-hover mb-0">
-                                                    <thead class="visually-hidden">
-                                                        <tr>
-                                                            <th scope="col">Description</th>
-                                                            <th scope="col">Supplier and Item Number</th>
-                                                            <th scope="col">Supplier</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {% for part in component.components_options.all %}
-                                                        <tr style="background-color: #edeff2; cursor: pointer; {% if forloop.last %}border-bottom-color: transparent;{% endif %}" onclick="window.location.href='{{part.link}}';">
-                                                            <td class="d-inline-block text-truncate" style="width: 100px;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{ part.name }}">
-                                                                {{ part.name }}
-                                                            </td>
-                                                            <td class="d-inline-block text-truncate" style="width: 200px;" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}">
-                                                                {{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}
-                                                            </td>
-                                                            <td class="d-inline-block text-truncate" style="width: 130px;" data-bs-toggle="tooltip" data-bs-placement="right" title="{{ part.manufacturer }}">
-                                                                {{ part.manufacturer }}
-                                                            </td>
-                                                        </tr>
-                                                        {% endfor %}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        {% elif component.components_options.all.count == 1 %}
-                                            <div class="table-responsive">
-                                                <table class="table table-sm table-hover mb-0">
-                                                    <thead class="visually-hidden-focusable">
-                                                        <tr>
-                                                            <th scope="col">Description</th>
-                                                            <th scope="col">Supplier and Item Number</th>
-                                                            <th scope="col">Supplier</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {% for part in component.components_options.all %}
-                                                            <tr style="background-color: #edeff2; cursor: pointer; white-space: nowrap; {% if forloop.last %}border-bottom-color: transparent;{% endif %}" onclick="window.location.href='{{part.link}}';">
-                                                                <td class="d-inline-block text-truncate" style="width: 100px;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{ part.name }}">
+                                <th scope="col" data-sort="value">Description</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Components</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% comment %}
+                            ******************************************************
+                            The "components" list is pre-filtered to include
+                            just components in this module's BOM list. Create
+                            one row in the table for each component in the BOM.
+                            ******************************************************
+                            {% endcomment %}
+
+                            {% for component in components %}
+                                <tr>
+                                    <td>{{component.name}}</td>
+                                    <td>{{component.type}}</td>
+                                    <td>{{ component.quantity }}</td>
+                                    <td style="padding: 5px;">
+                                        <div>
+
+                                            {% comment %}
+                                            ******************************************************
+                                            Check if there are any "components_options". Only
+                                            create a sub-table if there are more than one option
+                                            in the "components_options" list.
+                                            ******************************************************
+                                            {% endcomment %}
+
+                                            {% if component.components_options and component.components_options.all.count > 1 %}
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm table-hover mb-0">
+                                                        <thead class="visually-hidden">
+                                                            <tr>
+                                                                <th scope="col">Description</th>
+                                                                <th scope="col">Supplier and Item Number</th>
+                                                                <th scope="col">Supplier</th>
+                                                                <th scope="col">Inventory</th>
+                                                                <th scope="col"><span class="sr-only">Sufficient Number in Inventory</span></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                            {% comment %}
+                                                            ******************************************************
+                                                            Get the "components_options" list from the "component".
+                                                            That is, get all possible component/parts for each BOM
+                                                            item in BOM list.
+                                                            ******************************************************
+                                                            {% endcomment %}
+
+                                                            {% for part in component.components_options.all %}
+                                                            <tr style="background-color: #edeff2; cursor: pointer; {% if forloop.last %}border-bottom-color: transparent;{% endif %}" onclick="window.location.href='{{part.link}}';">
+                                                                <td class="d-inline-block text-truncate"
+                                                                    style="width: 100px;"
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-bs-placement="left"
+                                                                    title="{{ part.name }}"
+                                                                >
                                                                     {{ part.name }}
                                                                 </td>
-                                                                <td class="d-inline-block text-truncate" style="width: 200px;" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}">
+                                                                <td class="d-inline-block text-truncate"
+                                                                    style="width: 200px;"
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-bs-placement="top"
+                                                                    title="{{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}"
+                                                                >
                                                                     {{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}
                                                                 </td>
-                                                                <td class="d-inline-block text-truncate" style="width: 130px;" data-bs-toggle="tooltip" data-bs-placement="right" title="{{ part.manufacturer }}">
+                                                                <td class="d-inline-block text-truncate"
+                                                                    style="width: 130px;"
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-bs-placement="right"
+                                                                    title="{{ part.manufacturer }}"
+                                                                >
                                                                     {{ part.manufacturer }}
                                                                 </td>
+                                                                <td>
+                                                                {% for item in inventory %}
+                                                                    {% if part.id == item.component.id %}
+                                                                        {{ item.number }}
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                                </td>
+                                                                <td></td>
                                                             </tr>
-                                                        {% endfor %}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            {% elif component.components_options.all.count == 1 %}
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm table-hover mb-0">
+                                                        <thead class="visually-hidden-focusable">
+                                                            <tr>
+                                                                <th scope="col">Description</th>
+                                                                <th scope="col">Supplier and Item Number</th>
+                                                                <th scope="col">Supplier</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for part in component.components_options.all %}
+                                                                <tr style="background-color: #edeff2; cursor: pointer; white-space: nowrap; {% if forloop.last %}border-bottom-color: transparent;{% endif %}" onclick="window.location.href='{{part.link}}';">
+                                                                    <td class="d-inline-block text-truncate"
+                                                                        style="width: 100px;"
+                                                                        data-bs-toggle="tooltip"
+                                                                        data-bs-placement="left"
+                                                                        title="{{ part.name }}"
+                                                                    >
+                                                                        {{ part.name }}
+                                                                    </td>
+                                                                    <td class="d-inline-block text-truncate"
+                                                                        style="width: 200px;"
+                                                                        data-bs-toggle="tooltip"
+                                                                        data-bs-placement="top"
+                                                                        title="{{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}"
+                                                                    >
+                                                                        {{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}
+                                                                    </td>
+                                                                    <td class="d-inline-block text-truncate"
+                                                                        style="width: 130px;"
+                                                                        data-bs-toggle="tooltip"
+                                                                        data-bs-placement="right"
+                                                                        title="{{ part.manufacturer }}"
+                                                                    >
+                                                                        {{ part.manufacturer }}
+                                                                    </td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
         {% endif %}
     </div>
 {% endblock %}

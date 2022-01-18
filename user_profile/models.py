@@ -33,6 +33,9 @@ class UserProfileComponentInventoryData(models.Model):
     class Meta:
         verbose_name_plural = "User Component Inventory"
 
+    def __str__(self):
+        return f'[ {self.profile} ] - {self.component}'
+
 class UserProfileShoppingListData(models.Model):
     component = models.ForeignKey(Component, null=True, on_delete=models.SET_NULL)
     profile = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL)
@@ -40,3 +43,6 @@ class UserProfileShoppingListData(models.Model):
 
     class Meta:
         verbose_name_plural = "User Shopping List"
+
+    def __str__(self):
+        return f'[ {self.profile} ] - {self.component}'

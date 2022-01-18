@@ -41,7 +41,7 @@ class ModuleBomListItem(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.type:
-            self.type = self.component.all().first().type.name
+            self.type = self.components_options.all().first().type.name
         super(ModuleBomListItem, self).save(*args, **kwargs)
 
 

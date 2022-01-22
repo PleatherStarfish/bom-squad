@@ -46,13 +46,23 @@
             <div class="col-12 mb-3 mb-lg-5">
                 <h2 class="module-page-headers mb-4">Components</h2>
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table" style="overflow: visible;">
                         <thead>
                             <tr>
                                 <th scope="col" data-sort="value">Description</th>
                                 <th scope="col">Type</th>
                                 <th scope="col">Quantity</th>
-                                <th scope="col">Components</th>
+                                <th scope="col">
+                                    {% if user.is_authenticated %}
+                                        <span class="sr-only">Components</span>
+                                        <div class="d-flex" aria-hidden="true">
+                                            <div style="width: 430px;">Component Options</div>
+                                            <div style="width: 80px;">Inventory</div>
+                                            <div style="width: 30px;">Add</div>
+                                        </div>
+                                    {% else %}Components
+                                    {% endif %}
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -92,6 +102,7 @@
                                                                 {% if user.is_authenticated %}
                                                                     <th scope="col">Inventory</th>
                                                                     <th scope="col">Sufficient Number in Inventory</th>
+                                                                    <th scope="col">Add</th>
                                                                 {% endif %}
                                                             </tr>
                                                         </thead>
@@ -133,7 +144,15 @@
                                                                 </td>
                                                                 {% if user.is_authenticated %}
                                                                     <td class="d-inline-block text-truncate" style="text-align: center; width: 50px;">
-                                                                        <b>{{ inventory|get_item:part.id }}</b>
+                                                                        <b>
+                                                                            {% with inv_num=inventory|get_item:part.id %}
+                                                                                {% if inv_num == 0 %}
+                                                                                    <span style="color: #b4b4b4">{{ inv_num }}</span>
+                                                                                {% else %}
+                                                                                    <span>{{ inv_num }}</span>
+                                                                                {% endif %}
+                                                                            {% endwith %}
+                                                                        </b>
                                                                     </td>
                                                                     <td class="d-inline-block text-truncate" style="width: 30px;">
 
@@ -158,6 +177,12 @@
                                                                             {% endif %}
                                                                         {% endwith %}
                                                                     </td>
+                                                                    <td style="padding: 0; width: 50px;">
+                                                                        <form method="POST" action="{% url 'modules:ModuleDetail' module.slug component.id %}">
+                                                                            {% csrf_token %}
+                                                                            <button type="submit" class="btn btn-success btn-sm" style="font-size: 11px; padding: 2px 7px; background-color: #548b6a;"><b>+</b></button>
+                                                                        </form>
+                                                                    </td>
                                                                 {% endif %}
                                                             </tr>
                                                             {% endfor %}
@@ -175,6 +200,7 @@
                                                                 {% if user.is_authenticated %}
                                                                     <th scope="col">Inventory</th>
                                                                     <th scope="col">Sufficient Number in Inventory</th>
+                                                                    <th scope="col">Add</th>
                                                                 {% endif %}
                                                             </tr>
                                                         </thead>
@@ -207,7 +233,15 @@
                                                                     </td>
                                                                     {% if user.is_authenticated %}
                                                                         <td class="d-inline-block text-truncate" style="text-align: center; width: 50px;">
-                                                                            <b>{{ inventory|get_item:part.id }}</b>
+                                                                            {% with inv_num=inventory|get_item:part.id %}
+                                                                                <b>
+                                                                                    {% if inv_num == 0 %}
+                                                                                        <span style="color: #b4b4b4">{{ inv_num }}</span>
+                                                                                    {% else %}
+                                                                                        <span>{{ inv_num }}</span>
+                                                                                    {% endif %}
+                                                                                </b>
+                                                                            {% endwith %}
                                                                         </td>
                                                                         <td class="d-inline-block text-truncate" style="width: 30px;">
                                                                             {% with inv_num=inventory|get_item:part.id %}
@@ -223,6 +257,12 @@
                                                                                     </svg>
                                                                                 {% endif %}
                                                                             {% endwith %}
+                                                                        </td>
+                                                                        <td style="padding: 0; width: 50px;">
+                                                                            <form method="POST">
+                                                                                {% csrf_token %}
+                                                                                <button type="submit" class="btn btn-success btn-sm" style="font-size: 11px; padding: 2px 7px; background-color: #548b6a;"><b>+</b></button>
+                                                                            </form>
                                                                         </td>
                                                                     {% endif %}
                                                                 </tr>

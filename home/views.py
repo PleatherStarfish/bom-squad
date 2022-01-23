@@ -103,9 +103,7 @@ def register_user(request):
             user = authenticate(username=username, password=password)
             login(request, user)
             messages.success(request, ('You have registered...'))
-            user_extended = UserProfile(user=user,
-                                         first_name=form.cleaned_data['first_name'],
-                                         last_name=form.cleaned_data['last_name'])
+            user_extended = UserProfile(user=user)
             user_extended.save()
             return redirect('home')
     else:

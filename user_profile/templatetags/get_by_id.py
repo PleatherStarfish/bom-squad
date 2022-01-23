@@ -4,7 +4,7 @@ register = template.Library()
 
 
 @register.filter
-def get_item(queryset, key):
+def get_by_id(queryset, key):
     try:
         return queryset.get(id=key).name
     except:

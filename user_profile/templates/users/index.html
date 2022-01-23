@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load gravatar %}
+{% load custom_tags %}
 
 {% block content %}
     <div class="row" style="margin-top: 5vh;">
@@ -59,12 +60,19 @@
             </div>
             <div class="tab-pane fade" id="inventory" role="tabpanel" aria-labelledby="inventory-tab">
                 <div class="container py-5 px-0">
-                    <div class="alert alert-warning" role="alert">Go to the <a href="{% url 'components' %}">Components page</a> to add components to your personal inventory.</div>
+                    <div class="alert alert-warning" role="alert">
+                        Go to the <a href="{% url 'components' %}">Components page</a> to add components to your personal inventory.
+                    </div>
                 </div>
             </div>
             <div class="tab-pane fade" id="shopping-list" role="tabpanel" aria-labelledby="shopping-list-tab">
+                <div class="container-fluid" style="width: 100%; overflow:scroll; overflow-x: auto;">
+                    {% include "users/profile_tabs/shopping-list.html" %}
+                </div>
                 <div class="container py-5 px-0">
-                    <div class="alert alert-warning" role="alert">To add components to your shopping list, add modules to your Want to Build list.</div>
+                    <div class="alert alert-warning" role="alert">
+                        To add components to your shopping list, add modules to your Want to Build list.
+                    </div>
                 </div>
             </div>
         </div>

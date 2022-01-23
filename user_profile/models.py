@@ -36,12 +36,25 @@ class UserProfileComponentInventoryData(models.Model):
     def __str__(self):
         return f'[ {self.profile} ] - {self.component}'
 
+# Allows users to add modules to a named list
+# All modules are also in a default "all" list which is just
+class UserShoppingLists(models.Model):
+    name = models.CharField(max_length=255, blank=False)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "User-Defined, Named Shopping Lists"
+
+    def __str__(self):
+        return f'[ {self.user} ] - {self.name}'
+
 class UserProfileShoppingListData(models.Model):
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
     bom_item = models.ForeignKey(ModuleBomListItem, on_delete=models.CASCADE)
     component = models.ForeignKey(Component, on_delete=models.CASCADE)
     profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     number = models.PositiveIntegerField(default=0, blank=False)
+    shopping_list = models.ForeignKey(UserShoppingLists, null=True, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "User Shopping List"

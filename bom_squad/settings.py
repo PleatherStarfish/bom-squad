@@ -81,7 +81,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bom_squad.wsgi.application'
 
-RECAPTCHA_PUBLIC_KEY = '6LeoW3wdAAAAANIQ5Q7Kg6Y7hWbEa2ObIKvMZJF0'
+RECAPTCHA_PUBLIC_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 LOGIN_URL = 'login'
 
 

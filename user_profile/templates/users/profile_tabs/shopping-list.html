@@ -1,0 +1,30 @@
+<div class="row flex-nowrap my-4">
+    {% for module in shopping_list_modules %}
+        <div class="col-3 p-0">
+            <div class="card card-block border-0 border-right" style="min-height: 30vh">
+                <h1>{{ module }}</h1>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Description</th>
+                            <th scope="col">Item #</th>
+                            <th scope="col">quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>
+                        <tr>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endfor %}
+</div>

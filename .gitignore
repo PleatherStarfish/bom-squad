@@ -106,5 +106,3 @@ GitHub.sublime-settings
 .history
 
 bom_squad/secrets/*
-bom_squad/static/bootstrap*
-bom_squad/static/.DS_Store

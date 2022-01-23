@@ -105,6 +105,4 @@ GitHub.sublime-settings
 !.vscode/extensions.json
 .history
 
-bom_squad/secrets/secrets.py
-bom_squad/static/bootstrap*
-bom_squad/static/.DS_Store
+bom_squad/secrets/*

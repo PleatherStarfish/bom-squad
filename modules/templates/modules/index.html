@@ -92,7 +92,7 @@
                                             {% endcomment %}
 
                                             <div class="table-responsive">
-                                                <table class="table table-sm table-hover mb-0">
+                                                <table class="table table-sm table-hover mb-0" style="table-layout: fixed;">
                                                     <thead class="visually-hidden">
                                                         <tr>
                                                             <th scope="col">Description</th>
@@ -101,7 +101,7 @@
                                                             {% if user.is_authenticated %}
                                                                 <th scope="col">Inventory</th>
                                                                 <th scope="col">Sufficient Number in Inventory</th>
-                                                                <th scope="col">Add</th>
+                                                                <th scope="col" style="width: 5%">Add</th>
                                                             {% endif %}
                                                         </tr>
                                                     </thead>
@@ -116,90 +116,85 @@
                                                         {% endcomment %}
 
                                                         {% for part in component.components_options.all %}
-                                                        <tr style="background-color: #edeff2; cursor: pointer; {% if forloop.last %}border-bottom-color: transparent;{% endif %}" onclick="window.location.href='{{part.link}}';">
-                                                            <td class="d-inline-block text-truncate"
-                                                                style="width: 100px;"
-                                                                data-bs-toggle="tooltip"
-                                                                data-bs-placement="left"
-                                                                title="{{ part.name }}"
-                                                            >
-                                                                {{ part.name }}
-                                                            </td>
-                                                            <td class="d-inline-block text-truncate"
-                                                                style="width: 200px;"
-                                                                data-bs-toggle="tooltip"
-                                                                data-bs-placement="top"
-                                                                title="{{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}"
-                                                            >
-                                                                {{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}
-                                                            </td>
-                                                            <td class="d-inline-block text-truncate"
-                                                                style="width: 130px;"
-                                                                data-bs-toggle="tooltip"
-                                                                data-bs-placement="right"
-                                                                title="{{ part.manufacturer }}"
-                                                            >
-                                                                {{ part.manufacturer }}
-                                                            </td>
-                                                            {% if user.is_authenticated %}
-                                                                <td class="d-inline-block text-truncate"
-                                                                    style="text-align: center; width: 50px;"
+                                                            <tr style="background-color: #edeff2; cursor: pointer; {% if forloop.last %}border-bottom-color: transparent;{% endif %}" onclick="window.location.href='{{part.link}}';">
+                                                                <td class="w-10"
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-bs-placement="left"
+                                                                    title="{{ part.name }}"
+                                                                >
+                                                                    {{ part.name }}
+                                                                </td>
+                                                                <td
                                                                     data-bs-toggle="tooltip"
                                                                     data-bs-placement="top"
-                                                                    title="Quantity in your inventory"
+                                                                    title="{{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}"
                                                                 >
-                                                                    <b>
+                                                                    {{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}
+                                                                </td>
+                                                                <td
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-bs-placement="right"
+                                                                    title="{{ part.manufacturer }}"
+                                                                >
+                                                                    {{ part.manufacturer }}
+                                                                </td>
+                                                                {% if user.is_authenticated %}
+                                                                    <td
+                                                                        data-bs-toggle="tooltip"
+                                                                        data-bs-placement="top"
+                                                                        title="Quantity in your inventory"
+                                                                    >
+                                                                        <b>
+                                                                            {% with inv_num=inventory|get_item:part.id %}
+                                                                                {% if inv_num == 0 %}
+                                                                                    <span style="color: #b4b4b4">{{ inv_num }}</span>
+                                                                                {% else %}
+                                                                                    <span>{{ inv_num }}</span>
+                                                                                {% endif %}
+                                                                            {% endwith %}
+                                                                        </b>
+                                                                    </td>
+                                                                    <td
+                                                                        data-bs-toggle="tooltip"
+                                                                        data-bs-placement="top"
                                                                         {% with inv_num=inventory|get_item:part.id %}
-                                                                            {% if inv_num == 0 %}
-                                                                                <span style="color: #b4b4b4">{{ inv_num }}</span>
+                                                                            {% if inv_num >= component.quantity %}
+                                                                                title="Sufficient quantity in your inventory"
                                                                             {% else %}
-                                                                                <span>{{ inv_num }}</span>
+                                                                                title="Insufficient quantity in your inventory"
                                                                             {% endif %}
                                                                         {% endwith %}
-                                                                    </b>
-                                                                </td>
-                                                                <td class="d-inline-block text-truncate"
-                                                                    style="width: 30px;"
-                                                                    data-bs-toggle="tooltip"
-                                                                    data-bs-placement="top"
-                                                                    {% with inv_num=inventory|get_item:part.id %}
-                                                                        {% if inv_num >= component.quantity %}
-                                                                            title="Sufficient quantity in your inventory"
-                                                                        {% else %}
-                                                                            title="Insufficient quantity in your inventory"
-                                                                        {% endif %}
-                                                                    {% endwith %}
-                                                                >
+                                                                    >
 
-                                                                    {% comment %}
-                                                                    ******************************************************
-                                                                    Check whether the user has enough of a certain
-                                                                    component in their inventory
-                                                                    ******************************************************
-                                                                    {% endcomment %}
+                                                                        {% comment %}
+                                                                        ******************************************************
+                                                                        Check whether the user has enough of a certain
+                                                                        component in their inventory
+                                                                        ******************************************************
+                                                                        {% endcomment %}
 
-                                                                    {% with inv_num=inventory|get_item:part.id %}
-                                                                        {% if inv_num >= component.quantity %}
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#548b6a" class="bi bi-check-circle" viewBox="0 0 16 16">
-                                                                              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                                              <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                                                                            </svg>
-                                                                        {% else %}
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
-                                                                              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                                              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                                                            </svg>
-                                                                        {% endif %}
-                                                                    {% endwith %}
-                                                                </td>
-                                                                <td style="padding: 0; width: 50px;">
-                                                                    <form method="POST" action="{% url 'modules:AddToShoppingList' module.slug component.id %}">
-                                                                        {% csrf_token %}
-                                                                        <button type="submit" class="btn btn-success btn-sm" style="font-size: 11px; padding: 2px 7px; background-color: #548b6a;"><b>+</b></button>
-                                                                    </form>
-                                                                </td>
-                                                            {% endif %}
-                                                        </tr>
+                                                                        {% with inv_num=inventory|get_item:part.id %}
+                                                                            {% if inv_num >= component.quantity %}
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#548b6a" class="bi bi-check-circle" viewBox="0 0 16 16">
+                                                                                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                                                  <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                                                                </svg>
+                                                                            {% else %}
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                                                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                                                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                                                </svg>
+                                                                            {% endif %}
+                                                                        {% endwith %}
+                                                                    </td>
+                                                                    <td style="width: 5%">
+                                                                        <form method="POST" action="{% url 'modules:AddToShoppingList' module.slug component.id %}">
+                                                                            {% csrf_token %}
+                                                                            <button type="submit" class="btn btn-success btn-sm" style="font-size: 11px; padding: 2px 7px; background-color: #548b6a;"><b>+</b></button>
+                                                                        </form>
+                                                                    </td>
+                                                                {% endif %}
+                                                            </tr>
                                                         {% endfor %}
                                                     </tbody>
                                                 </table>

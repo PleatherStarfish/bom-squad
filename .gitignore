@@ -105,4 +105,4 @@ GitHub.sublime-settings
 !.vscode/extensions.json
 .history
 
-bom_squad/secrets/*
+/bom_squad/secrets/*

@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.template.defaultfilters import slugify
-from modules.models import Module, Component
+from modules.models import Module, Component, ModuleBomListItem
 from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
@@ -37,6 +37,8 @@ class UserProfileComponentInventoryData(models.Model):
         return f'[ {self.profile} ] - {self.component}'
 
 class UserProfileShoppingListData(models.Model):
+    module = models.ForeignKey(Module, null=True, on_delete=models.SET_NULL)
+    bom_item = models.ForeignKey(ModuleBomListItem, null=True, on_delete=models.SET_NULL)
     component = models.ForeignKey(Component, null=True, on_delete=models.SET_NULL)
     profile = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL)
     number = models.PositiveIntegerField(default=0, blank=False)

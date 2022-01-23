@@ -178,7 +178,7 @@
                                                                         {% endwith %}
                                                                     </td>
                                                                     <td style="padding: 0; width: 50px;">
-                                                                        <form method="POST" action="{% url 'modules:ModuleDetail' module.slug component.id %}">
+                                                                        <form method="POST" action="{% url 'modules:AddToShoppingList' module.slug component.id %}">
                                                                             {% csrf_token %}
                                                                             <button type="submit" class="btn btn-success btn-sm" style="font-size: 11px; padding: 2px 7px; background-color: #548b6a;"><b>+</b></button>
                                                                         </form>
@@ -259,7 +259,7 @@
                                                                             {% endwith %}
                                                                         </td>
                                                                         <td style="padding: 0; width: 50px;">
-                                                                            <form method="POST">
+                                                                            <form method="POST" action="{% url 'modules:AddToShoppingList' module.slug component.id %}">
                                                                                 {% csrf_token %}
                                                                                 <button type="submit" class="btn btn-success btn-sm" style="font-size: 11px; padding: 2px 7px; background-color: #548b6a;"><b>+</b></button>
                                                                             </form>

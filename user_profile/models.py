@@ -37,10 +37,10 @@ class UserProfileComponentInventoryData(models.Model):
         return f'[ {self.profile} ] - {self.component}'
 
 class UserProfileShoppingListData(models.Model):
-    module = models.ForeignKey(Module, null=True, on_delete=models.SET_NULL)
-    bom_item = models.ForeignKey(ModuleBomListItem, null=True, on_delete=models.SET_NULL)
-    component = models.ForeignKey(Component, null=True, on_delete=models.SET_NULL)
-    profile = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL)
+    module = models.ForeignKey(Module, on_delete=models.CASCADE)
+    bom_item = models.ForeignKey(ModuleBomListItem, on_delete=models.CASCADE)
+    component = models.ForeignKey(Component, on_delete=models.CASCADE)
+    profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     number = models.PositiveIntegerField(default=0, blank=False)
 
     class Meta:

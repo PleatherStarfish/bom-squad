@@ -38,44 +38,7 @@
             <div class="tab-pane fade show active" id="built-modules" role="tabpanel" aria-labelledby="built-modules-tab">
                 <div class="container py-5 px-0">
                     {% if user.built_modules.all %}
-                        <div class="row w-100">
-                            {% for module in user.built_modules.all %}
-                                <div class="card col-xs-12 col-sm-12 col-md-4 col-lg-3  py-4 m-2 d-flex justify-content-around" style="min-width: 270px; max-height: 548px">
-                                    {% if module.image %}
-                                        <img src="{% url 'home' %}{{ MEDIA_URL }}{{ module.image }}" style="height: 200px; width: 100%; object-fit: contain" alt="{{ module.name }} panel" />
-                                    {% endif %}
-                                    <div class="d-flex flex-column justify-content-around">
-                                        <div class="card-body py-4 px-0" style="height: 261px">
-                                            <div class="d-flex justify-content-between w-100">
-                                                <div>
-                                                    {% if not module.version or module.version == '0' or module.version == '1' %}
-                                                        <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a></h2>
-                                                    {% else %}
-                                                        <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }} (v{{ module.version }})</a></h2>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                            <p class="card-title mb-3"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>
-                                            <div class="description-wrapped">
-                                                <p>{{ module.description }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
-                                            {% if built and module in built %}
-                                                {% include "home/buttons/built_svg_button.html" with add=False module_id=module.id request_path=request.path %}
-                                            {% else %}
-                                                {% include "home/buttons/built_svg_button.html" with add=True module_id=module.id request_path=request.path %}
-                                            {% endif %}
-                                            {% if to_build and module in to_build %}
-                                                {% include "home/buttons/to_build_svg_button.html" with add=False module_id=module.id request_path=request.path %}
-                                            {% else %}
-                                                {% include "home/buttons/to_build_svg_button.html" with add=True module_id=module.id request_path=request.path %}
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
+                        {% include "users/profile_tabs/built-modules.html" %}
                     {% else %}
                         <div class="alert alert-warning" role="alert">There are no modules in your Built Modules list.</div>
                     {% endif %}
@@ -86,40 +49,7 @@
                     {% if user.want_to_build_modules.all %}
                         <div class="row w-100">
                             {% for module in user.want_to_build_modules.all %}
-                                <div class="card col-xs-12 col-sm-12 col-md-4 col-lg-3  py-4 m-2 d-flex justify-content-around" style="min-width: 270px; max-height: 548px">
-                                    {% if module.image %}
-                                        <img src="{% url 'home' %}{{ MEDIA_URL }}{{ module.image }}" style="height: 200px; width: 100%; object-fit: contain" alt="{{ module.name }} panel" />
-                                    {% endif %}
-                                    <div class="d-flex flex-column justify-content-around">
-                                        <div class="card-body py-4 px-0" style="height: 261px">
-                                            <div class="d-flex justify-content-between w-100">
-                                                <div>
-                                                    {% if not module.version or module.version == '0' or module.version == '1' %}
-                                                        <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a></h2>
-                                                    {% else %}
-                                                        <h2 class="card-title h4"><a class="home-card-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }} (v{{ module.version }})</a></h2>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                            <p class="card-title mb-3"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>
-                                            <div class="description-wrapped">
-                                                <p>{{ module.description }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
-                                            {% if built and module in built %}
-                                                {% include "home/buttons/built_svg_button.html" with add=False module_id=module.id request_path=request.path %}
-                                            {% else %}
-                                                {% include "home/buttons/built_svg_button.html" with add=True module_id=module.id request_path=request.path %}
-                                            {% endif %}
-                                            {% if to_build and module in to_build %}
-                                                {% include "home/buttons/to_build_svg_button.html" with add=False module_id=module.id request_path=request.path %}
-                                            {% else %}
-                                                {% include "home/buttons/to_build_svg_button.html" with add=True module_id=module.id request_path=request.path %}
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
+                                {% include "users/profile_tabs/want-to-build.html" %}
                             {% endfor %}
                         </div>
                     {% else %}

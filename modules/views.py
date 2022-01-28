@@ -4,7 +4,15 @@ from user_profile.models import UserProfile, Module, UserProfileShoppingListData
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.http import JsonResponse
+from django.core import serializers
+import itertools
+import json
 
+
+# Merge lists into list-of-lists, flatten, and make values unique
+def unique_flatten(listOfDicts, *args):
+    return list(set(itertools.chain.from_iterable([ sub[args[0]][args[1]] for sub in listOfDicts ])))
 
 # Create your views here.
 def module_detail(request, slug):
@@ -20,13 +28,6 @@ def module_detail(request, slug):
         to_build = user.want_to_build_modules.all()
         inventory = user.userprofilecomponentinventorydata_set.all()
 
-        # for item in components:
-        #     if user.component_inventory.filter(id=item.id).exists():
-        #         item["number"] = 9
-
-        # for item in user.userprofilecomponentinventorydata_set.all():
-        #     print(item.number)
-
     return render(request, 'modules/index.html', {
         "module": module,
         "built": built,
@@ -34,6 +35,36 @@ def module_detail(request, slug):
         "components": components,
         "inventory": inventory
     })
+
+def data(request, slug):
+    module = Module.objects.get(slug=slug)
+    components = module.component_bom_list.all()
+    result = {
+        "module": json.loads(serializers.serialize('json', [module])),
+        "module_bom_list": json.loads(serializers.serialize('json', components)),
+    }
+
+    # Since module_bom_list is the BOM item, not the actual component, each entry in module_bom_list
+    # has an components_options list, which is a ManyToMany field and is represented as a list of
+    # component pk ids. Here we iterate over this list and create a dictionary keying the pk
+    # to a JSON representing the component itself. This is used in the react app to display
+    # components_options as a nested table under each BOM item
+    components_options_dict = {}
+    for comp_id in unique_flatten(result["module_bom_list"], "fields", "components_options"):
+        if not str(comp_id) in components_options_dict:
+            components_options_dict[str(comp_id)] = json.loads(
+                serializers.serialize('json', [Component.objects.get(id=comp_id)]))
+
+    result["components_options_dict"] = components_options_dict
+
+    # If a user is not logged in, there is no inventory data to display
+    result["inventory"] = None
+    if request.user.is_authenticated:
+        user = UserProfile.objects.get(user=request.user)
+        inventory = user.userprofilecomponentinventorydata_set.all()
+        result["inventory"] = json.loads(serializers.serialize('json', inventory))
+
+    return JsonResponse(result)
 
 
 @login_required()

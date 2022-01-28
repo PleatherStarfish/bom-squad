@@ -106,3 +106,5 @@ GitHub.sublime-settings
 .history
 
 /bom_squad/secrets/*
+
+node_modules

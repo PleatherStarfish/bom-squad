@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load custom_tags %}
+{% load static custom_tags %}
 
 {% block content %}
     <div class="row" style="margin: 10vh 0">
@@ -42,6 +42,9 @@
                 </div>
             </div>
         </div>
+        <div id="_react"></div>
+
+        {% comment %}
         {% if components %}
             <div class="col-12 mb-3 mb-lg-5">
                 <h2 class="module-page-headers mb-4">Components</h2>
@@ -67,13 +70,11 @@
                         </thead>
                         <tbody>
 
-                            {% comment %}
                             ******************************************************
                             The "components" list is pre-filtered to include
                             just components in this module's BOM list. Create
                             one row in the table for each component in the BOM.
                             ******************************************************
-                            {% endcomment %}
 
                             {% for component in components %}
                                 <tr>
@@ -83,60 +84,73 @@
                                     <td style="padding: 5px;">
                                         <div>
 
-                                            {% comment %}
                                             ******************************************************
                                             Check if there are any "components_options". Only
                                             create a sub-table if there are more than one option
                                             in the "components_options" list.
                                             ******************************************************
-                                            {% endcomment %}
 
                                             <div class="table-responsive">
-                                                <table class="table table-sm table-hover mb-0" style="table-layout: fixed;">
+                                                <table class="table table-sm table-hover mb-0">
                                                     <thead class="visually-hidden">
                                                         <tr>
-                                                            <th scope="col">Description</th>
-                                                            <th scope="col">Supplier and Item Number</th>
-                                                            <th scope="col">Supplier</th>
+                                                            <th scope="col">
+                                                                <div style="width: 50px;">Description</div>
+                                                            </th>
+                                                            <th scope="col">
+                                                                <div style="width: 210px;">Supplier and Item Number</div>
+                                                            </th>
+                                                            <th scope="col">
+                                                                <div style="width: 100px;">Supplier</div>
+                                                            </th>
                                                             {% if user.is_authenticated %}
-                                                                <th scope="col">Inventory</th>
-                                                                <th scope="col">Sufficient Number in Inventory</th>
-                                                                <th scope="col" style="width: 5%">Add</th>
+                                                                <th scope="col">
+                                                                    <div style="width: 35px;">Inventory</div>
+                                                                </th>
+                                                                <th scope="col">
+                                                                    <div style="width: 30px;">Sufficient Number in Inventory</div>
+                                                                </th>
+                                                                <th scope="col">
+                                                                    <div style="width: 35px;">Add</div>
+                                                                </th>
                                                             {% endif %}
                                                         </tr>
                                                     </thead>
                                                     <tbody>
 
-                                                        {% comment %}
                                                         ******************************************************
                                                         Get the "components_options" list from the "component".
                                                         That is, get all possible component/parts for each BOM
                                                         item in BOM list.
                                                         ******************************************************
-                                                        {% endcomment %}
 
                                                         {% for part in component.components_options.all %}
                                                             <tr style="background-color: #edeff2; cursor: pointer; {% if forloop.last %}border-bottom-color: transparent;{% endif %}" onclick="window.location.href='{{part.link}}';">
-                                                                <td class="w-10"
-                                                                    data-bs-toggle="tooltip"
+                                                                <td data-bs-toggle="tooltip"
                                                                     data-bs-placement="left"
                                                                     title="{{ part.name }}"
                                                                 >
-                                                                    {{ part.name }}
+                                                                    <div style="width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                                        {{ part.name }}
+                                                                    </div>
                                                                 </td>
                                                                 <td
                                                                     data-bs-toggle="tooltip"
                                                                     data-bs-placement="top"
                                                                     title="{{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}"
                                                                 >
-                                                                    {{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}
+                                                                    <div style="width: 210px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                                        {{ part.supplier.all.first.short_name  }} {{ part.supplier_item_no }}
+                                                                    </div>
                                                                 </td>
                                                                 <td
                                                                     data-bs-toggle="tooltip"
                                                                     data-bs-placement="right"
                                                                     title="{{ part.manufacturer }}"
                                                                 >
-                                                                    {{ part.manufacturer }}
+                                                                    <div style="width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                                        {{ part.manufacturer }}
+                                                                    </div>
                                                                 </td>
                                                                 {% if user.is_authenticated %}
                                                                     <td
@@ -144,18 +158,19 @@
                                                                         data-bs-placement="top"
                                                                         title="Quantity in your inventory"
                                                                     >
-                                                                        <b>
-                                                                            {% with inv_num=inventory|get_item:part.id %}
-                                                                                {% if inv_num == 0 %}
-                                                                                    <span style="color: #b4b4b4">{{ inv_num }}</span>
-                                                                                {% else %}
-                                                                                    <span>{{ inv_num }}</span>
-                                                                                {% endif %}
-                                                                            {% endwith %}
-                                                                        </b>
+                                                                        <div class="d-flex justify-content-center" style="width: 35px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                                            <b>
+                                                                                {% with inv_num=inventory|get_item:part.id %}
+                                                                                    {% if inv_num == 0 %}
+                                                                                        <span style="color: #b4b4b4">{{ inv_num }}</span>
+                                                                                    {% else %}
+                                                                                        <span>{{ inv_num }}</span>
+                                                                                    {% endif %}
+                                                                                {% endwith %}
+                                                                            </b>
+                                                                        </div>
                                                                     </td>
-                                                                    <td
-                                                                        data-bs-toggle="tooltip"
+                                                                    <td data-bs-toggle="tooltip"
                                                                         data-bs-placement="top"
                                                                         {% with inv_num=inventory|get_item:part.id %}
                                                                             {% if inv_num >= component.quantity %}
@@ -166,13 +181,12 @@
                                                                         {% endwith %}
                                                                     >
 
-                                                                        {% comment %}
                                                                         ******************************************************
                                                                         Check whether the user has enough of a certain
                                                                         component in their inventory
                                                                         ******************************************************
-                                                                        {% endcomment %}
 
+                                                                        <div class="d-flex justify-content-center" style="width: 30px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                                                         {% with inv_num=inventory|get_item:part.id %}
                                                                             {% if inv_num >= component.quantity %}
                                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#548b6a" class="bi bi-check-circle" viewBox="0 0 16 16">
@@ -186,12 +200,15 @@
                                                                                 </svg>
                                                                             {% endif %}
                                                                         {% endwith %}
+                                                                        </div>
                                                                     </td>
-                                                                    <td style="width: 5%">
-                                                                        <form method="POST" action="{% url 'modules:AddToShoppingList' module.slug component.id %}">
-                                                                            {% csrf_token %}
-                                                                            <button type="submit" class="btn btn-success btn-sm" style="font-size: 11px; padding: 2px 7px; background-color: #548b6a;"><b>+</b></button>
-                                                                        </form>
+                                                                    <td>
+                                                                        <div style="width: 35px">
+                                                                            <form method="POST" action="{% url 'modules:AddToShoppingList' module.slug component.id %}">
+                                                                                {% csrf_token %}
+                                                                                <button type="submit" class="btn btn-success btn-sm" style="font-size: 11px; padding: 2px 7px; background-color: #548b6a;"><b>+</b></button>
+                                                                            </form>
+                                                                        </div>
                                                                     </td>
                                                                 {% endif %}
                                                             </tr>
@@ -208,5 +225,11 @@
                 </div>
             </div>
         {% endif %}
+        {% endcomment %}
     </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static "bundles/module_detail_bundle.js" %}"></script>
 {% endblock %}

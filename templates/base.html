@@ -36,59 +36,11 @@
     </head>
     <body id="bootstrap-overrides" class="main-grid">
 
-        <img id="logo-img" src="/media/media/logo.png" alt="" class="d-inline-block align-text-top logo-img" style="z-index: 99999">
+        {% include 'header.html' %}
 
-        <header class="main-header">
-            <div class="row" style="left: 0">
-                <nav id="main-nav" class="navbar navbar-expand-lg navbar-dark sticky-top nav-style">
-                    <a href="{% url 'home' %}">
-                        <img id="logo-img-head-static" src="{% static '/bom_squad/head_logo.png' %}" alt="">
-                    </a>
-                    <a href="{% url 'home' %}">
-                        <img id="logo-text" src="{% static '/bom_squad/logo_text2.png' %}" alt="">
-                    </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-                        <ul class="navbar-nav mr-auto">
-                            <li id="menu-dropdown-arrow" class="nav-item">
-                                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                      <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                    </svg>
-                                </button>
-                            </li>
-                            {% if user.is_authenticated %}
-                            <li class="nav-item">
-                                <a href="{% url 'user_page' request.user.username  %}"><button class="btn btn-outline-secondary" type="button">account</button></a>
-                            </li>
-                            <li class="nav-item" style="margin-left: 10px">
-                                <a href="{% url 'logout' %}"><button class="btn btn-outline-secondary" type="button">logout</button></a>
-                            </li>
-                            {% else %}
-                            <li class="nav-item">
-                                <a href="{% url 'register' %}"><button class="btn btn-outline-secondary" type="button">register</button></a>
-                            </li>
-                            <li class="nav-item">
-                            <a href="{% url 'login' %}" style="margin-left: 10px"><button class="btn btn-outline-secondary" type="button">login</button></a>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </nav>
-            </div>
-        </header>
         <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel" style="background-color: #212529; height: 100vh;">
-{#            <div class="offcanvas-header">#}
-{#                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" style="background-color: #64727e; margin: 10vh;"></button>#}
-{#            </div>#}
+
             <div class="offcanvas-body">
-                <a href="{% url 'home' %}">
-                    <img class="logo-img" src="{% static '/bom_squad/logo.png' %}" alt="BOM Squad logo">
-                </a>
                 <div class="d-flex flex-row justify-content-between align-items-center full-screen-menu-container">
                     <div class="full-screen-menu-left"></div>
                     <ul class="full-screen-menu-right">
@@ -120,60 +72,70 @@
             })
         </script>
 
-        <script>
-            window.onload = function() {
-                var offcanvasTop = document.getElementById('offcanvasTop');
+        {% block scripts %}{% endblock %}
 
-                var logo_img = document.getElementById("logo-img");
-                var logo_img_head = document.getElementById("logo-img-head");
-                var logo_text = document.getElementById("logo-text");
-                var menu_text = document.querySelector('.menu_text');
-                var logo_img_head_static = document.getElementById('logo-img-head-static');
+        <script>
+            window.onload = function () {
+                var offcanvasTop = document.getElementById('offcanvasTop');
+                var logoImg = document.getElementById('logo-img-head-static');
+                var headLogo = document.getElementById('head-logo');
 
                 offcanvasTop.addEventListener('hide.bs.offcanvas', function () {
-                    logo_img.classList.remove("logo-img-small");
-                    logo_img_head.classList.remove("logo-img-small-head");
-                    logo_text.classList.remove("logo-text-unhidden");
-                    logo_img_head_static.classList.remove("invisible");
+                    headLogo.classList.remove("hide-logo-img");
+                    logoImg.classList.remove("hide-logo-img");
                 });
                 offcanvasTop.addEventListener('show.bs.offcanvas', function () {
-                    logo_img.classList.add("logo-img-small");
-                    logo_img_head.classList.add("logo-img-small-head");
-                    logo_text.classList.add("logo-text-unhidden");
-                    logo_img_head_static.classList.add("invisible");
-                    logo_img.classList.remove("logo-img-small");
+                    headLogo.classList.add("hide-logo-img");
+                    logoImg.classList.add("hide-logo-img");
+                });
 
+                // Thanks to StackOverflow user Phil Ricketts https://stackoverflow.com/a/8028584
+                // for this getScrollPercent function.
+                function getScrollPercent() {
+                    var h = document.documentElement,
+                        b = document.body,
+                        st = 'scrollTop',
+                        sh = 'scrollHeight';
+                    return (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
+                }
+
+                window.addEventListener("scroll", function(e){
+                    if (getScrollPercent() > 60) {
+                        headLogo.classList.add("head-logo-shown");
+                        logoImg.classList.add("logo-img-hidden")
+                    } else {
+                        headLogo.classList.remove("head-logo-shown");
+                        logoImg.classList.remove("logo-img-hidden")
+                    }
+                });
+
+
+                lax.init();
+
+                // Add a driver that we use to control our animations
+                lax.addDriver('scrollY', function () {
+                  return window.scrollY
+                });
+
+                lax.addElements('.logo-img-head-static', {
+                  scrollY: {
+                    scale: [[0, 'screenHeight/3'], [1, 0.6], {easing: 'easeInOutQuint', inertia: 10}]
+                  }
+                });
+                lax.addElements('.head-logo', {
+                  scrollY: {
+                    scale: [[0, 'screenHeight/3'], [1, 0.6], {easing: 'easeInOutQuint', inertia: 10}]
+                  }
+                });
+
+
+                lax.addElements('#main-nav', {
+                  scrollY: {
+                    height: [[0, 'screenHeight/3'], [90, 70], {cssUnit: "px", easing: 'easeInOutQuint', inertia: 10}]
+                  }
                 })
             }
         </script>
-
-{#        <script>#}
-{#            window.onload = function() {#}
-{#                var logo_img = document.getElementById("logo-img");#}
-{#                var logo_img_head = document.getElementById("logo-img-head");#}
-{#                var logo_text = document.getElementById("logo-text");#}
-{##}
-{#                var offcanvasTop = document.getElementById('offcanvasTop');#}
-{#                offcanvasTop.addEventListener('show.bs.offcanvas', function () {#}
-{#                    logo_img.classList.add("logo-img-small");#}
-{#                    logo_img_head.classList.add("logo-img-small-head");#}
-{#                    logo_text.classList.add("logo-text-unhidden");#}
-{#                });#}
-{#                offcanvasTop.addEventListener('hidden.bs.offcanvas', function () {#}
-{#                    logo_img.classList.remove("logo-img-small");#}
-{#                    logo_img_head.classList.remove("logo-img-small-head");#}
-{#                    logo_text.classList.remove("logo-text-unhidden");#}
-{#                });#}
-{#            }#}
-{#        </script>#}
-{##}
-{#        <script>#}
-{#            var options = {#}
-{#              valueNames: [ 'value', ]#}
-{#            };#}
-{##}
-{#            var userList = new List('value', options);#}
-{#        </script>#}
 
     </body>
 </html>

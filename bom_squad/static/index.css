@@ -92,9 +92,10 @@
     border: unset;
 }
 
+/* Main navbar at the top of the page */
 #main-nav {
     position: fixed;
-    height: 70px;
+    height: 90px;
     top: 0;
     left:0;
 }
@@ -136,170 +137,6 @@
 
 .footer-bottom {
     grid-area: footer-bottom;
-}
-
-@media (max-width: 575.98px) {
-    .logo-img {
-        width: 150px;
-    }
-    #bootstrap-overrides .scrolldown {
-        bottom: 40px;
-        height: 40px;
-        font-size: 20px;
-    }
-    .downarrows {
-        bottom: 15px;
-        left: 55vw;
-        width: 35px;
-        margin-left: -35px;
-        height: 26px;
-    }
-    .downarrows > * {
-        width: 35px;
-    }
-    #logo-img-head-static {
-        display: none;
-    }
-    #logo-text-static {
-        left: 15px;
-    }
-}
-
-@media (min-width: 576px) and (max-width: 767.98px) {
-    .logo-img {
-        width: 200px;
-    }
-    #bootstrap-overrides .scrolldown {
-        bottom: 40px;
-        height: 40px;
-        font-size: 20px;
-    }
-    .downarrows {
-        bottom: 15px;
-        left: 52vw;
-        width: 35px;
-        margin-left: -35px;
-        height: 26px;
-    }
-    .downarrows > * {
-        width: 35px;
-    }
-    #logo-img-head-static {
-        display: none;
-    }
-    #logo-text-static {
-        left: 15px;
-    }
-}
-
-@media (min-width: 768px) and (max-width: 991.98px) {
-    .logo-img {
-        width: 240px;
-    }
-    #bootstrap-overrides .scrolldown {
-        bottom: 60px;
-        height: 40px;
-        font-size: 30px;
-    }
-    .downarrows {
-        bottom: 25px;
-        position: fixed;
-        left: 52vw;
-        width: 45px;
-        margin-left: -34px;
-        height: 26px;
-    }
-    .downarrows > * {
-        width: 45px;
-    }
-    #logo-text-static {
-        left: 110px;
-    }
-}
-
-@media (min-width: 992px) and (max-width: 1199.98px) {
-    .logo-img {
-        width: 300px;
-    }
-    #bootstrap-overrides .scrolldown {
-        bottom: 70px;
-        height: 40px;
-        font-size: 30px;
-    }
-    .downarrows {
-        bottom: 25px;
-        left: 51vw;
-        width: 50px;
-        margin-left: -34px;
-        height: 26px;
-    }
-    .downarrows > * {
-        width: 50px;
-    }
-    #logo-text-static {
-        left: 110px;
-    }
-}
-
-@media (min-width: 1200px) {
-    .logo-img {
-        width: 275px;
-    }
-    #bootstrap-overrides .scrolldown {
-        bottom: 90px;
-        height: 40px;
-        font-size: 40px;
-    }
-    .downarrows {
-        bottom: 40px;
-        left: 50vw;
-        width: 70px;
-        margin-left: -34px;
-        height: 26px;
-    }
-    .downarrows > * {
-        width: 70px;
-    }
-    #logo-text-static {
-        left: 110px;
-    }
-}
-
-.logo-img {
-    position: fixed;
-    top: 50%;
-    left: 20%;
-    transform: translate(-50%, -50%);
-    height: auto;
-    opacity: 1;
-    transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.logo-img-head {
-    position: fixed;
-    top: calc(50% - 60px);
-    left: calc(50% + 6px);
-    transform: translate(-50%, -50%);
-    width: 230px;
-    height: auto;
-    opacity: 0;
-    transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.logo-img-small {
-    top: 55px;
-    left: 55px;
-    width: 100px;
-    opacity: 0;
-    transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.logo-img-small-head {
-    top: 35px;
-    left: 55px;
-    width: 80px;
-    opacity: 1;
-    transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 #bootstrap-overrides header {
@@ -423,6 +260,7 @@
     left: 110px;
     position: fixed;
     top: 23px;
+    opacity: 0;
 }
 
 .logo-text-hidden {
@@ -445,18 +283,25 @@
     color: white;
 }
 
-#logo-img-head-static {
-    top: 35px;
-    left: 55px;
-    width: 80px;
+.logo-img-head-static {
+    position: fixed;
+    top: 10px;
+    left: 30px;
+    width: 280px;
     opacity: 1;
+    transform-origin: top left;
+    transition: opacity 1.3s, width 1.3s, left 1.3s, top .5s;
 }
 
-#logo-text-static {
-    width: 200px;
-    position: fixed;
-    top: 23px;
+.hide-logo-img {
+    top: -300px !important;
 }
+
+/*#logo-text-static {*/
+/*    width: 200px;*/
+/*    position: fixed;*/
+/*    top: 23px;*/
+/*}*/
 
 #main-content-area {
     padding-top: 70px;
@@ -541,4 +386,27 @@
 .full-screen-menu-right {
     list-style-type: none;
     font-weight: 900;
+}
+
+.head-logo {
+    z-index: 9999;
+    width: 228px;
+    left: 55px;
+    top: 8px;
+    position: fixed;
+    opacity: 0;
+    transform-origin: top left;
+    transition: opacity 1.3s, width 1.3s, left 1.3s, top .3s;
+}
+
+.head-logo-shown {
+    opacity: 1;
+    width: 140px;
+    left: 15px;
+}
+
+.logo-img-hidden {
+    opacity: 0;
+    width: 180px;
+    left: 0;
 }

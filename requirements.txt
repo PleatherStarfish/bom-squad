@@ -6,3 +6,4 @@ typing-extensions==3.10.0.2
 pillow==8.4.0
 django-gravatar2==1.4.4
 django-import-export==2.7.1
+django-webpack-loader==1.4.1

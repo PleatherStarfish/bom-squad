@@ -2,13 +2,20 @@
 
 <header class="main-header">
     <div class="row" style="left: 0">
-        <nav id="main-nav" class="navbar navbar-expand-lg navbar-dark sticky-top nav-style">
+        <nav id="topnav__main" class="topnav__main navbar navbar-expand-lg navbar-dark sticky-top nav-style">
+
+            {% if not 'users' in request.path %}
+                <a href="{% url 'home' %}">
+                    <img id="logo__main" class="logo__main" src="{% static '/bom_squad/logo.png' %}"
+                         alt="Bom Squad logo">
+                </a>
+            {% endif %}
+
             <a href="{% url 'home' %}">
-                <img id="logo__main" class="logo__main" src="{% static '/bom_squad/logo.png' %}"
-                     alt="Bom Squad logo">
-            </a>
-            <a href="{% url 'home' %}">
-                <img id="head-logo" style="z-index: 9999" class="head-logo" src="{% static '/bom_squad/head_logo.png' %}"
+                <img id="logo__secondary"
+                     style="z-index: 9999"
+                     class="{% if not 'users' in request.path %}logo__secondary{% else %}logo__secondary--main-hidden{% endif %}"
+                     src="{% static '/bom_squad/head_logo.png' %}"
                      alt="Bom Squad logo">
             </a>
 {#            <a href="{% url 'home' %}">#}
@@ -23,7 +30,7 @@
                 <ul class="navbar-nav mr-auto">
                     <li id="menu-dropdown-arrow" class="nav-item"  style="margin-right: 15px">
                         <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas"
-                                data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">
+                                data-bs-target="#fullscreen-menu__container" aria-controls="fullscreen-menu__container">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-caret-down-fill"
                                  viewBox="0 0 16 16">
                                 <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>

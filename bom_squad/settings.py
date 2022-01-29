@@ -79,6 +79,10 @@ TEMPLATES = [
     },
 ]
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'bom_squad', 'static'),
+)
+
 WSGI_APPLICATION = 'bom_squad.wsgi.application'
 
 RECAPTCHA_PUBLIC_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
@@ -138,10 +142,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/media')
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'bom_squad', 'static'),
-)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

@@ -1,0 +1,256 @@
+#bootstrap-overrides p,
+#bootstrap-overrides label,
+#bootstrap-overrides h1,
+#bootstrap-overrides h2,
+#bootstrap-overrides h3,
+#bootstrap-overrides h4,
+#bootstrap-overrides h5,
+#bootstrap-overrides h6 {
+    color: #505050;
+    text-decoration: none;
+}
+
+:root #bootstrap-overrides {
+    --bs-blue: #03178C;
+    --bs-indigo: #6610f2;
+    --bs-purple: #6f42c1;
+    --bs-pink: #d63384;
+    --bs-red: #dc3545;
+    --bs-orange: #fd7e14;
+    --bs-yellow: #F2CB07;
+    --bs-green: #198754;
+    --bs-teal: #20c997;
+    --bs-cyan: #0dcaf0;
+    --bs-white: #fff;
+    --bs-gray: #6c757d;
+    --bs-gray-dark: #343a40;
+    --bs-primary: #0088B3;
+    --bs-secondary: #6c757d;
+    --bs-success: #50AFCC;
+    --bs-info: #FFED00;
+    --bs-warning: #FF0049;
+    --bs-danger: #FF0049;
+    --bs-light: #edeff2;
+    --bs-dark: #212529;
+    --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+}
+
+#bootstrap-overrides .home-card-link {
+    color: #505050;
+    text-decoration: none;
+}
+
+/* Card text in account */
+#bootstrap-overrides .description-wrapped > p {
+    width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* User page active tabs */
+#bootstrap-overrides .user-page-nav > div > button.active {
+    border-top: unset;
+    border-left: unset;
+    border-right: unset;
+    border-bottom: 5px solid #50AFCC;
+    border-radius: unset;
+    color: #50AFCC;
+}
+
+#bootstrap-overrides .user-page-nav > div > button:hover {
+    border-top: unset;
+    border-left: unset;
+    border-right: unset;
+    border-bottom: 5px solid #50AFCC;
+    border-radius: unset;
+    color: #50AFCC;
+}
+
+#bootstrap-overrides .user-page-nav > div > button {
+    color: #495057;
+    border: unset;
+}
+
+/* Main navbar at the top of the page */
+#main-nav {
+    position: fixed;
+    height: 90px;
+    top: 0;
+    left:0;
+}
+
+/* CSS Grid used to format page footer */
+.footer-grid {
+    display: grid;
+    grid-template-columns: 50% 50% auto;
+    grid-template-rows: auto auto;
+    gap: 15px 15px;
+    grid-template-areas: "footer-left footer-right" "footer-bottom footer-bottom";
+}
+
+.footer-left {
+    grid-area: footer-left;
+}
+
+.footer-right {
+    grid-area: footer-right;
+}
+
+.footer-bottom {
+    grid-area: footer-bottom;
+}
+
+.nav-style {
+    background-color: #212529;
+    transition: background-color 2s cubic-bezier(0.85, 0, 0.15, 1)
+}
+
+.home-module-list {
+    margin: calc(10vh + 55px) 0 10vh 0;
+}
+
+.logo-text-hidden {
+    opacity: 0;
+    transition: opacity 0.5s linear;
+}
+
+.logo-text-unhidden {
+    opacity: 1;
+}
+
+#bootstrap-overrides .nav-item > a > button, #bootstrap-overrides .nav-item button {
+    color: #64727e;
+    /*font-weight: 600;*/
+    border: none;
+    font-size: 18px;
+}
+
+#bootstrap-overrides .nav-item > a > button:hover {
+    color: white;
+}
+
+.logo-img-head-static {
+    position: fixed;
+    top: 10px;
+    left: 30px;
+    width: 280px;
+    opacity: 1;
+    transform-origin: top left;
+    transition: opacity 1.3s, width 1.3s, left 1.3s, top .5s;
+}
+
+.hide-logo-img {
+    top: -300px !important;
+}
+
+#main-content-area {
+    padding-top: 70px;
+    min-height:calc(100vh - 351px)
+}
+
+#rc-anchor-container {
+    width: 300px;
+}
+
+.avatar > img {
+    border-radius: 50%;
+}
+
+#menu-dropdown-arrow button {
+    fill: #64727e;
+}
+
+#menu-dropdown-arrow button:hover {
+    fill: white;
+}
+
+.card-body.link-card-inner {
+    padding: 0.7rem 1rem;
+}
+
+.link-card-outer {
+    border: none;
+    background-color: #edeff2;
+}
+
+.link-card-outer:hover {
+    background-color: #d6dce1;
+}
+
+.link-card-inner {
+    font-family: 'Roboto', sans-serif;
+    color: #505050
+}
+
+.module-page-headers {
+    font-size: 26px;
+    margin-bottom: 18px;
+}
+
+.sr-only {
+    position:absolute;
+    left:-10000px;
+    top:auto;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+}
+
+.menu-text {
+    font-family: 'Roboto', sans-serif;
+    color: #64727e;
+    font-size: 12vh;
+    letter-spacing: 5px;
+}
+
+.menu-text > a {
+    color: #64727e;
+    text-decoration: none;
+}
+
+.menu-text > a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.full-screen-menu-container {
+    width: 100%;
+    margin-top: 3vh;
+}
+
+.full-screen-menu-left {
+    width: 50vw;
+    border-right: 1px solid #64727e;
+}
+
+.full-screen-menu-right {
+    list-style-type: none;
+    font-weight: 900;
+}
+
+.head-logo {
+    z-index: 9999;
+    width: 228px;
+    left: 55px;
+    top: 8px;
+    position: fixed;
+    opacity: 0;
+    transform-origin: top left;
+    transition: opacity 1.3s, width 1.3s, left 1.3s, top .3s;
+}
+
+.head-logo-shown {
+    opacity: 1;
+    width: 140px;
+    left: 15px;
+}
+
+.logo-img-hidden {
+    opacity: 0;
+    width: 180px;
+    left: 0;
+}

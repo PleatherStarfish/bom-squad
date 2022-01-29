@@ -1,41 +1,50 @@
-#bootstrap-overrides p,
-#bootstrap-overrides label,
-#bootstrap-overrides h1,
-#bootstrap-overrides h2,
-#bootstrap-overrides h3,
-#bootstrap-overrides h4,
-#bootstrap-overrides h5,
-#bootstrap-overrides h6 {
-    color: #505050;
-    text-decoration: none;
-}
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "abstracts/all";
+@import "components/all";
+@import "core/all";
+@import "layout/all";
+@import "pages/all";
+@import "sections/all";
 
-:root #bootstrap-overrides {
-    --bs-blue: #03178C;
-    --bs-indigo: #6610f2;
-    --bs-purple: #6f42c1;
-    --bs-pink: #d63384;
-    --bs-red: #dc3545;
-    --bs-orange: #fd7e14;
-    --bs-yellow: #F2CB07;
-    --bs-green: #198754;
-    --bs-teal: #20c997;
-    --bs-cyan: #0dcaf0;
-    --bs-white: #fff;
-    --bs-gray: #6c757d;
-    --bs-gray-dark: #343a40;
-    --bs-primary: #0088B3;
-    --bs-secondary: #6c757d;
-    --bs-success: #50AFCC;
-    --bs-info: #FFED00;
-    --bs-warning: #FF0049;
-    --bs-danger: #FF0049;
-    --bs-light: #edeff2;
-    --bs-dark: #212529;
-    --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
-}
+
+//#bootstrap-overrides p,
+//#bootstrap-overrides label,
+//#bootstrap-overrides h1,
+//#bootstrap-overrides h2,
+//#bootstrap-overrides h3,
+//#bootstrap-overrides h4,
+//#bootstrap-overrides h5,
+//#bootstrap-overrides h6 {
+//    color: #505050;
+//    text-decoration: none;
+//}
+
+//:root #bootstrap-overrides {
+//    --bs-blue: #03178C;
+//    --bs-indigo: #6610f2;
+//    --bs-purple: #6f42c1;
+//    --bs-pink: #d63384;
+//    --bs-red: #dc3545;
+//    --bs-orange: #fd7e14;
+//    --bs-yellow: #F2CB07;
+//    --bs-green: #198754;
+//    --bs-teal: #20c997;
+//    --bs-cyan: #0dcaf0;
+//    --bs-white: #fff;
+//    --bs-gray: #6c757d;
+//    --bs-gray-dark: #343a40;
+//    --bs-primary: #0088B3;
+//    --bs-secondary: #6c757d;
+//    --bs-success: #50AFCC;
+//    --bs-info: #FFED00;
+//    --bs-warning: #FF0049;
+//    --bs-danger: #FF0049;
+//    --bs-light: #edeff2;
+//    --bs-dark: #212529;
+//    --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+//    --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+//    --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+//}
 
 #bootstrap-overrides .home-card-link {
     color: #505050;
@@ -254,3 +263,11 @@
     width: 180px;
     left: 0;
 }
+
+@include media-breakpoint-between(xs, lg) {
+    .logo-img-head-static {
+        visibility: hidden;
+    }
+}
+
+@import "node_modules/bootstrap/scss/bootstrap";

@@ -1,0 +1,15 @@
+.logo__main {
+    position: fixed;
+    top: 10px;
+    left: 30px;
+    width: 280px;
+    opacity: 1;
+    transform-origin: top left;
+    transition: opacity 1.3s, width 1.3s, left 1.3s, top .5s;
+}
+
+@include media-breakpoint-between(xs, lg) {
+    .logo__main {
+        visibility: hidden;
+    }
+}

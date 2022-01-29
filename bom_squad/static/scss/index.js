@@ -1,3 +1,6 @@
+import "./index.scss";
+import 'bootstrap'
+
 window.onload = function () {
 
     // Thanks to StackOverflow user Phil Ricketts https://stackoverflow.com/a/8028584
@@ -10,36 +13,26 @@ window.onload = function () {
         return (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
     }
 
-    // var width = screen.width;
-    // var height = screen.height;
-    //
-    // function onresize(e) {
-    //    width = e.target.outerWidth;
-    //    height = e.target.outerHeight;
-    // }
-    //
-    // window.addEventListener("resize", onresize);
-
     var offcanvasTop = document.getElementById('offcanvasTop');
-    var logoImg = document.getElementById('logo-img-head-static');
+    var mainLogoImg = document.getElementById('logo__main');
     var headLogo = document.getElementById('head-logo');
 
     offcanvasTop.addEventListener('hide.bs.offcanvas', function () {
         headLogo.classList.remove("hide-logo-img");
-        logoImg.classList.remove("hide-logo-img");
+        mainLogoImg.classList.remove("hide-logo-img");
     });
     offcanvasTop.addEventListener('show.bs.offcanvas', function () {
         headLogo.classList.add("hide-logo-img");
-        logoImg.classList.add("hide-logo-img");
+        mainLogoImg.classList.add("hide-logo-img");
     });
 
     window.addEventListener("scroll", function (e) {
         if (getScrollPercent() > 70) {
             headLogo.classList.add("head-logo-shown");
-            logoImg.classList.add("logo-img-hidden")
+            mainLogoImg.classList.add("logo-img-hidden")
         } else {
             headLogo.classList.remove("head-logo-shown");
-            logoImg.classList.remove("logo-img-hidden")
+            mainLogoImg.classList.remove("logo-img-hidden")
         }
     });
 
@@ -50,7 +43,7 @@ window.onload = function () {
         return window.scrollY
     });
 
-    lax.addElements('.logo-img-head-static', {
+    lax.addElements('.logo__main', {
         scrollY: {
             scale: [[0, 'screenHeight/3'], [1, 0.6], {easing: 'easeInOutQuint', inertia: 10}]
         }

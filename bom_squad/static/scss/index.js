@@ -68,6 +68,12 @@ window.onload = function () {
         }
     });
 
+    lax.addElements('.module-list__subtitle', {
+        scrollY: {
+            opacity: [[0, 'screenHeight/6'], [1.0, 0.0], {inertia: 10}]
+        }
+    });
+
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
 
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {

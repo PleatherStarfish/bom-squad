@@ -27,7 +27,7 @@
     }
 }
 
-@include media-breakpoint-down(md) {
+@include media-breakpoint-down(lg) {
     .logo__secondary {
         left: 18px;
         opacity: 1 !important;

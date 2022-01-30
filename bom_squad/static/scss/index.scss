@@ -84,27 +84,6 @@
     border: unset;
 }
 
-/* CSS Grid used to format page footer */
-.footer-grid {
-    display: grid;
-    grid-template-columns: 50% 50% auto;
-    grid-template-rows: auto auto;
-    gap: 15px 15px;
-    grid-template-areas: "footer-left footer-right" "footer-bottom footer-bottom";
-}
-
-.footer-left {
-    grid-area: footer-left;
-}
-
-.footer-right {
-    grid-area: footer-right;
-}
-
-.footer-bottom {
-    grid-area: footer-bottom;
-}
-
 .nav-style {
     background-color: #212529;
     transition: background-color 2s cubic-bezier(0.85, 0, 0.15, 1)

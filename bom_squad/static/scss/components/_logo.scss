@@ -8,15 +8,35 @@
     transition: opacity 1.3s, width 1.3s, left 1.3s, top .5s;
 }
 
-.logo__secondary {
-    z-index: 9999;
-    width: 228px;
-    left: 55px;
-    top: 8px;
-    position: fixed;
-    opacity: 0;
-    transform-origin: top left;
-    transition: opacity 1.3s, width 1.3s, left 1.3s, top .3s;
+@include media-breakpoint-between(xs, lg) {
+    .logo__main {
+        visibility: hidden;
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    .logo__secondary {
+        z-index: 9999;
+        width: 228px;
+        left: 55px;
+        top: 8px;
+        position: fixed;
+        opacity: 0;
+        transform-origin: top left;
+        transition: opacity 1.3s, width 1.3s, left 1.3s, top .3s;
+    }
+}
+
+@include media-breakpoint-down(md) {
+    .logo__secondary {
+        left: 18px;
+        opacity: 1 !important;
+        position: fixed;
+        top: 13px;
+        transform-origin: top left;
+        transition: opacity 1.3s, width 1.3s, left 1.3s, top .3s;
+        width: 100px;
+    }
 }
 
 .logo__secondary--visible {
@@ -43,10 +63,4 @@
 
 .logo__main--off-canvas, .logo__secondary--off-canvas {
     top: -300px !important;
-}
-
-@include media-breakpoint-between(xs, lg) {
-    .logo__main {
-        visibility: hidden;
-    }
 }

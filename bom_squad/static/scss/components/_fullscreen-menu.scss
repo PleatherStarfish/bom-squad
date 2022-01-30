@@ -1,0 +1,94 @@
+$offcanvas-vertical-height: 100vh;
+$offcanvas-transition-duration: .5s;
+$offcanvas-bg-color: #212529;
+
+$btn-close-width:  15vw;
+$btn-close-height: $btn-close-width;
+$btn-close-color: red;
+
+.fullscreen-menu__body-inner-flex {
+  width: 100%;
+  margin-top: 3vh;
+}
+
+.fullscreen-menu__container {
+  z-index: -9999;
+}
+
+.fullscreen-menu__close-btn {
+  position: absolute;
+  top: 2vw;
+  left: 2vw;
+  visibility: hidden;
+}
+
+.fullscreen-menu__close-btn:hover {
+  fill:red;
+}
+
+.fullscreen-menu__left {
+  width: 50vw;
+  border-right: 1px solid #64727e;
+}
+
+.fullscreen-menu__right {
+  list-style-type: none;
+  font-weight: 900;
+}
+
+.fullscreen-menu__item {
+  transform: rotateX(90deg);
+  transition: all .4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fullscreen-menu__item > a {
+  font-family: 'Roboto', sans-serif;
+  color: #64727e;
+  font-size: 12vh;
+  letter-spacing: 5px;
+  text-decoration: none;
+  transition: color .2s, font-size 0.4s;
+}
+
+.fullscreen-menu__item > a:hover {
+  color: white;
+  text-decoration: none;
+  font-size: calc(12vh + 5px);
+}
+
+.fullscreen-menu__item--rotate-in {
+  transform: rotateX(0deg);
+}
+
+#fullscreen-menu__item--outline {
+  opacity: 1;
+  text-shadow:
+   -2px -2px 0 #fff,
+    2px -2px 0 #fff,
+    -2px 2px 0 #fff,
+     2px 2px 0 #fff;
+}
+
+#fullscreen-menu__item--outline > a {
+  color: #212529;
+}
+
+#fullscreen-menu__item--outline > a:hover {
+  color: #fff;
+  font-size: calc(12vh + 5px);
+}
+
+#fullscreen-menu__item--highlight > a {
+  color: #fff;
+}
+
+#fullscreen-menu__item--highlight > a:hover {
+  opacity: 1;
+  text-shadow:
+   -2px -2px 0 #fff,
+    2px -2px 0 #fff,
+    -2px 2px 0 #fff,
+     2px 2px 0 #fff;
+  color: #212529;
+  font-size: calc(12vh + 5px);
+}

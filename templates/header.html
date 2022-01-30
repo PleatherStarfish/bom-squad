@@ -28,7 +28,7 @@
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                    <li id="menu-dropdown-arrow" class="nav-item"  style="margin-right: 15px">
+                    <li class="topnav__dropdown-arrow nav-item">
                         <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas"
                                 data-bs-target="#fullscreen-menu__container" aria-controls="fullscreen-menu__container">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-caret-down-fill"
@@ -40,23 +40,23 @@
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a href="{% url 'user_page' request.user.username %}">
-                                <button class="btn btn-outline-secondary" type="button">account</button>
+                                <button class="topnav__button btn btn-outline-secondary" type="button"><b>account</b></button>
                             </a>
                         </li>
                         <li class="nav-item" style="margin-left: 10px">
                             <a href="{% url 'logout' %}">
-                                <button class="btn btn-outline-secondary" type="button">logout</button>
+                                <button class="topnav__button btn btn-outline-secondary" type="button"><b>logout</b></button>
                             </a>
                         </li>
                     {% else %}
                         <li class="nav-item">
                             <a href="{% url 'register' %}">
-                                <button class="btn btn-outline-secondary" type="button">register</button>
+                                <button class="topnav__button btn btn-outline-secondary" type="button"><b>register</b></button>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'login' %}" style="margin-left: 10px">
-                                <button class="btn btn-outline-secondary" type="button">login</button>
+                                <button class="topnav__button btn btn-outline-secondary" type="button"><b>login</b></button>
                             </a>
                         </li>
                     {% endif %}

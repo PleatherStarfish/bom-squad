@@ -10,7 +10,7 @@
   }
 }
 
-@include media-breakpoint-down(sm) {
+@include media-breakpoint-down(md) {
   .module__container {
     margin-top: 45px;
   }
@@ -66,4 +66,14 @@
 
 .module-list__search-label {
   color: #505050;
+}
+
+a.module-list__card-title-link {
+    color: #505050;
+    text-decoration: none;
+}
+
+a.module-list__card-title-link:hover {
+    color: #505050;
+    text-decoration: underline;
 }

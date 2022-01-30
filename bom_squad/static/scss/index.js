@@ -1,5 +1,6 @@
 import "./index.scss";
-import 'bootstrap'
+import 'bootstrap';
+import 'animate.css';
 
 window.onload = function () {
 
@@ -7,24 +8,69 @@ window.onload = function () {
     // for this getScrollPercent function.
     // (https://stackoverflow.com/a/8028584)
     function getScrollPercent() {
-        var h = document.documentElement,
+        const h = document.documentElement,
             b = document.body,
             st = 'scrollTop',
             sh = 'scrollHeight';
         return (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
     }
 
-    var fullscreenMenu = document.getElementById('fullscreen-menu__container');
-    var mainLogoImg = document.getElementById('logo__main');
-    var secondaryLogo = document.getElementById('logo__secondary');
+    const animateCSS = (element, animation, prefix = 'animate__') =>
+      // We create a Promise and return it
+      new Promise((resolve, reject) => {
+        const animationName = `${prefix}${animation}`;
+        const node = document.getElementById(element);
+        node.style.visibility = "visible";
+
+        node.classList.add(`${prefix}animated`, animationName);
+
+        // When the animation ends, we clean the classes and resolve the Promise
+        function handleAnimationEnd(event) {
+          event.stopPropagation();
+          node.classList.remove(`${prefix}animated`, animationName);
+          resolve('Animation ended');
+        }
+
+        node.addEventListener('animationend', handleAnimationEnd, {once: true});
+      });
+
+    const fullscreenMenu = document.getElementById('fullscreen-menu__container');
+    const fullscreenMenuItems = document.getElementsByClassName("fullscreen-menu__item");
+    const mainLogoImg = document.getElementById('logo__main');
+    const secondaryLogo = document.getElementById('logo__secondary');
 
     fullscreenMenu.addEventListener('hide.bs.offcanvas', function () {
         secondaryLogo.classList.remove("logo__secondary--off-canvas");
         mainLogoImg.classList.remove("logo__main--off-canvas");
+        const closeBtn = document.getElementById('fullscreen-menu__close-btn');
+        closeBtn.style.visibility = 'hidden'
+
+        const itemsLength = fullscreenMenuItems !== null ? fullscreenMenuItems.length : 0;
+        for(let i = 0; i < itemsLength; i++) {
+            fullscreenMenuItems[i].style.transition = "all .2s cubic-bezier(0.16, 1, 0.3, 1)";
+            fullscreenMenuItems[i].classList.remove("fullscreen-menu__item--rotate-in");
+        }
     });
+
     fullscreenMenu.addEventListener('show.bs.offcanvas', function () {
         secondaryLogo.classList.add("logo__secondary--off-canvas");
         mainLogoImg.classList.add("logo__main--off-canvas");
+    });
+
+    fullscreenMenu.addEventListener('shown.bs.offcanvas', function () {
+
+        setTimeout(function() {
+            animateCSS('fullscreen-menu__close-btn', "bounceIn");
+        }, 1000);
+
+        setTimeout(function() {
+            const itemsLength = fullscreenMenuItems !== null ? fullscreenMenuItems.length : 0;
+            // fullscreenMenuItems[i].style.transition = "all .2s cubic-bezier(0.55, 0, 1, 0.45)";
+            for(let i = 0; i < itemsLength; i++) {
+                fullscreenMenuItems[i].classList.add("fullscreen-menu__item--rotate-in");
+            }
+         }, 600);
+
     });
 
     window.addEventListener("scroll", function (e) {
@@ -74,9 +120,9 @@ window.onload = function () {
         }
     });
 
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
 
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     });
 };

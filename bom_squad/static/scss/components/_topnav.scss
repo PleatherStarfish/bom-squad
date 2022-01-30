@@ -1,7 +1,23 @@
 // Main navbar at the top of the page
 #topnav__main {
-    position: fixed;
-    height: 90px;
-    top: 0;
-    left:0;
+  position: fixed;
+  height: 90px;
+  top: 0;
+  left: 0;
+}
+
+.topnav__dropdown-arrow button {
+  fill: #A2AAB1;
+  margin-right: 15px
+}
+
+.topnav__dropdown-arrow button:hover {
+  fill: #A2AAB1;
+  margin-right: 15px;
+}
+
+.topnav__button > b {
+  color: #A2AAB1;
+  font-size: 18px;
+  font-family: 'Righteous', "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif !important;
 }

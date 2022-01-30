@@ -1,15 +1,13 @@
 @import "node_modules/bootstrap/scss/bootstrap";
+
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+
 @import "abstracts/all";
 @import "components/all";
 @import "core/all";
 @import "layout/all";
 @import "pages/all";
 @import "sections/all";
-
-#bootstrap-overrides .home-card-link {
-    color: #505050;
-    text-decoration: none;
-}
 
 /* Card text in account */
 #bootstrap-overrides .description-wrapped > p {
@@ -77,14 +75,6 @@
     border-radius: 50%;
 }
 
-#menu-dropdown-arrow button {
-    fill: #64727e;
-}
-
-#menu-dropdown-arrow button:hover {
-    fill: white;
-}
-
 .card-body.link-card-inner {
     padding: 0.7rem 1rem;
 }
@@ -106,53 +96,6 @@
 .module-page-headers {
     font-size: 26px;
     margin-bottom: 18px;
-}
-
-.sr-only {
-    position: absolute;
-    left: -10000px;
-    top: auto;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-}
-
-.menu-text {
-    font-family: 'Roboto', sans-serif;
-    color: #64727e;
-    font-size: 12vh;
-    letter-spacing: 5px;
-}
-
-.menu-text > a {
-    color: #64727e;
-    text-decoration: none;
-}
-
-.menu-text > a:hover {
-    color: white;
-    text-decoration: none;
-}
-
-.full-screen-menu-container {
-    width: 100%;
-    margin-top: 3vh;
-}
-
-.full-screen-menu-left {
-    width: 50vw;
-    border-right: 1px solid #64727e;
-}
-
-.full-screen-menu-right {
-    list-style-type: none;
-    font-weight: 900;
-}
-
-@include media-breakpoint-between(xs, lg) {
-    .logo-img-head-static {
-        visibility: hidden;
-    }
 }
 
 @import "node_modules/bootstrap/scss/bootstrap";

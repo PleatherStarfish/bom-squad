@@ -21,6 +21,9 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Roboto:wght@500&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
 
         <link rel="shortcut icon" type="image/png" href="{% static '/bom_squad/favicon.ico' %}"/>
 
@@ -37,21 +40,7 @@
 
         {% include 'header.html' %}
 
-        <div class="offcanvas offcanvas-top" tabindex="-1" id="fullscreen-menu__container" aria-labelledby="fullscreen-menu__container-label" style="background-color: #212529; height: 100vh;">
-
-            <div class="offcanvas-body">
-                <div class="d-flex flex-row justify-content-between align-items-center full-screen-menu-container">
-                    <div class="full-screen-menu-left"></div>
-                    <ul class="full-screen-menu-right">
-                        <li class="text-end menu-text"><a href="/about/">about</a></li>
-                        <li class="text-end menu-text"><a href="/">modules</a></li>
-                        <li class="text-end menu-text"><a href="/components/">components</a></li>
-                        <li class="text-end menu-text"><a href="/components/">inventory</a></li>
-                        <li class="text-end menu-text"><a href="/components/">account</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        {% include 'fullscreen-menu.html' %}
 
         <main id="main-content-area" class="main-content container main-area">
             {% block content %}{% endblock content %}

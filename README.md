@@ -34,10 +34,6 @@ npx webpack
 
 in the `bom_squad/static/static_editable/scss` directory. 
 
-To edit SCSS files, find or create an appropriate file in the `bom_squad/static/static_editable/scss` directories, and ensure that the file is imported into the `all.scss` file in the same directory. 
-
-To edit miscellaneous JavaSript (as apposed to the React apps which are stored in certain app directories), edit in the `bom_squad/static/static_editable/js` directory. Note that the `package.json` file and `webpack.config.js`, etc. are all in the `/scss/` directory, so you will need to run `npx webpack` in that directory in order to emit the transpiled JavaScript bundle which is loaded from static by the `base.py` template in Django.
-
 ### Preparing your environment
 
 Copy the files from `_prereqs` into `bom_squad/secrets`. In each file, replace the redacted API keys with your own API keys. (**TODO: issue [#9](https://github.com/PleatherStarfish/bom-squad/issues/9) needs to be done so that this is true for all secrets**)
@@ -63,3 +59,9 @@ python manage.py createsuperuser
 ```
 
 You can now access the admin console at `http://127.0.0.1:8000/admin`.
+
+### Editing SCSS/CSS and JavaScript Files
+
+To edit SCSS files, find or create an appropriate file in the `bom_squad/static/static_editable/scss` directories, and ensure that the file is imported into the `all.scss` file in the same directory. 
+
+To edit miscellaneous JavaSript (as apposed to the React apps which are stored in certain app directories), edit in the `bom_squad/static/static_editable/js` directory. Note that the `package.json` file and `webpack.config.js`, etc. are all in the `/scss/` directory, so you will need to run `npx webpack` in that directory in order to emit the transpiled JavaScript bundle which is loaded from static by the `base.py` template in Django.

@@ -32,7 +32,7 @@ in the `bom_squad/static/static_editable/scss` directory, which will download th
 npx webpack 
 ```
 
-in the `bom_squad/static/ tatic_editable/scss` directory. 
+in the `bom_squad/static/static_editable/scss` directory. 
 
 To edit SCSS files, find or create an appropriate file in the `bom_squad/static/static_editable/scss` directories, and ensure that the file is imported into the `all.scss` file in the same directory. 
 

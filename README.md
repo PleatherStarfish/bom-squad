@@ -20,7 +20,23 @@ The site is built using [Django](https://www.djangoproject.com/). In order to ge
 python -m pip install -r requirements.txt
 ```
 
-You will also need to [download Bootstrap 5.0.2](https://getbootstrap.com/docs/5.0/getting-started/download/) and extract the contents to `bom_squad/static`. You should now have `css` and `js` directories in `bom_squad/static/bootstrap-5.0.2-dist`.
+Do not directly edit `bom_squad/static/index.css` or `bom_squad/static/index.js`. All CSS and Bootstrap is served from the `bom_squad/static/index.css` file, which is compiled from SCSS by Webpack. All ES6 is transpiled to `bom_squad/static/index.js` by the same Webpack config, which has multiple entry point for SCSS and JS files. To edit the SCSS styles you need to run 
+
+```
+npm install 
+```
+
+in the `bom_squad/static/static_editable/scss` directory, which will download the required `node_modules` folder and install all the dependencies in `bom_squad/static/static_editable/scss/package.json`. You can then compile SCSS and transpile ES6 by running 
+
+```
+npx webpack 
+```
+
+in the `bom_squad/static/ tatic_editable/scss` directory. 
+
+To edit SCSS files, find or create an appropriate file in the `bom_squad/static/static_editable/scss` directories, and ensure that the file is imported into the `all.scss` file in the same directory. 
+
+To edit miscellaneous JavaSript (as apposed to the React apps which are stored in certain app directories), edit in the `bom_squad/static/static_editable/js` directory. Note that the `package.json` file and `webpack.config.js`, etc. are all in the `/scss/` directory, so you will need to run `npx webpack` in that directory in order to emit the transpiled JavaScript bundle which is loaded from static by the `base.py` template in Django.
 
 ### Preparing your environment
 

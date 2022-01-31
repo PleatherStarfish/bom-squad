@@ -1,6 +1,6 @@
-import "./index.scss";
-import 'bootstrap';
-import 'animate.css';
+import "../scss/index.scss";
+import '../scss/node_modules/bootstrap';
+import '../scss/node_modules/animate.css';
 
 window.onload = function () {
 

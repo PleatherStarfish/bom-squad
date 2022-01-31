@@ -2,7 +2,7 @@ $offcanvas-vertical-height: 100vh;
 $offcanvas-transition-duration: .5s;
 $offcanvas-bg-color: #212529;
 
-$btn-close-width:  15vw;
+$btn-close-width:  12vw;
 $btn-close-height: $btn-close-width;
 $btn-close-color: red;
 
@@ -47,13 +47,14 @@ $btn-close-color: red;
   font-size: 12vh;
   letter-spacing: 5px;
   text-decoration: none;
-  transition: color .2s, font-size 0.4s;
+  transition: color .5s, letter-spacing 0.5s;
 }
 
 .fullscreen-menu__item > a:hover {
   color: white;
   text-decoration: none;
-  font-size: calc(12vh + 5px);
+  letter-spacing: 1.1rem;
+  //font-size: calc(12vh + 5px);
 }
 
 .fullscreen-menu__item--rotate-in {
@@ -75,7 +76,8 @@ $btn-close-color: red;
 
 #fullscreen-menu__item--outline > a:hover {
   color: #fff;
-  font-size: calc(12vh + 5px);
+  letter-spacing: 1.1rem;
+  //font-size: calc(12vh + 5px);
 }
 
 #fullscreen-menu__item--highlight > a {
@@ -90,5 +92,6 @@ $btn-close-color: red;
     -2px 2px 0 #fff,
      2px 2px 0 #fff;
   color: #212529;
-  font-size: calc(12vh + 5px);
+  letter-spacing: 1.1rem;
+  //font-size: calc(12vh + 5px);
 }

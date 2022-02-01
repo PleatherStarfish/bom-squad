@@ -51,7 +51,7 @@ class ComponentManufacturer(models.Model):
         return self.name
 
 class Component(models.Model):
-    name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
     manufacturer = models.ForeignKey(ComponentManufacturer, blank=True, on_delete=models.PROTECT)
     supplier = models.ManyToManyField(ComponentSupplier, blank=True)
     supplier_item_no = models.CharField(max_length=100, blank=False, unique=True)
@@ -71,13 +71,13 @@ class Component(models.Model):
 
     def __str__(self):
         if self.type.name == "Potentiometers":
-            return f"{self.name} {self.type.name} ({self.supplier.all().first().name} {self.supplier_item_no})"
+            return f"{self.description} {self.type.name} ({self.supplier.all().first().name} {self.supplier_item_no})"
         elif self.ohms and self.ohms_unit:
             return f"{self.ohms} {self.ohms_unit} {self.type} ({self.supplier.all().first().name} {self.supplier_item_no})"
         elif self.farads and self.farads_unit:
             return f"{self.farads} {self.farads_unit} {self.type} ({self.supplier.all().first().name} {self.supplier_item_no})"
         else:
-            return f"{self.name} {self.type.name} ({self.supplier.all().first().name} {self.supplier_item_no})"
+            return f"{self.description} {self.type.name} ({self.supplier.all().first().name} {self.supplier_item_no})"
 
     def clean(self):
 

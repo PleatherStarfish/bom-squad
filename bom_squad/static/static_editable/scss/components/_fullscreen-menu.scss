@@ -53,7 +53,7 @@ $btn-close-color: red;
 .fullscreen-menu__item > a:hover {
   color: white;
   text-decoration: none;
-  letter-spacing: 1.1rem;
+  letter-spacing: 0.08em;
   //font-size: calc(12vh + 5px);
 }
 
@@ -76,7 +76,7 @@ $btn-close-color: red;
 
 #fullscreen-menu__item--outline > a:hover {
   color: #fff;
-  letter-spacing: 1.1rem;
+  letter-spacing: 0.08em;
   //font-size: calc(12vh + 5px);
 }
 
@@ -92,6 +92,6 @@ $btn-close-color: red;
     -2px 2px 0 #fff,
      2px 2px 0 #fff;
   color: #212529;
-  letter-spacing: 1.1rem;
+  letter-spacing: 0.08em;
   //font-size: calc(12vh + 5px);
 }

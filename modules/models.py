@@ -24,7 +24,7 @@ class Manufacturer(models.Model):
 # in the BOM. So we use this table to handle these slots and associate them with a list of actual
 # component that might work for that BOM part in the real world
 class ModuleBomListItem(models.Model):
-    name = models.CharField(max_length=255, blank=False)
+    description = models.CharField(max_length=255, blank=False)
     components_options = models.ManyToManyField(Component, blank=False, related_name='component_identity_to_component')
     module = models.ForeignKey('Module', blank=False, null=False, on_delete=models.PROTECT)
     type = models.CharField(max_length=100, blank=True)
@@ -34,10 +34,10 @@ class ModuleBomListItem(models.Model):
 
     class Meta:
         verbose_name_plural = "Module BOM List Items"
-        unique_together = ('name', 'module')
+        unique_together = ('description', 'module')
 
     def __str__(self):
-        return f"{self.module.name} ({self.name})"
+        return f"{self.module.name} ({self.description})"
 
     def save(self, *args, **kwargs):
         if not self.type:

@@ -51,9 +51,10 @@ def data(request, slug):
     # components_options as a nested table under each BOM item
     components_options_dict = {}
     for comp_id in unique_flatten(result["module_bom_list"], "fields", "components_options"):
-        if not str(comp_id) in components_options_dict:
-            components_options_dict[str(comp_id)] = json.loads(
-                serializers.serialize('json', [Component.objects.get(id=comp_id)]))
+        if not comp_id in components_options_dict:
+            components_options_dict[comp_id] = json.loads(
+                serializers.serialize('json', [Component.objects.get(id=comp_id)])
+            )
 
     result["components_options_dict"] = components_options_dict
 

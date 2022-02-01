@@ -4,21 +4,23 @@ import BOMListTable from "./components/Table";
 function App() {
     
     // A list of columns in the outer (BOM list) table
-    const [moduleBOMList, setModuleBOMList] = useState({});
+    const [moduleBOMList, setModuleBOMList] = useState(null);
 
     // A list of columns in the outer (BOM list) table
-    const [componentsOptionsDict, setComponentsOptionsDict] = useState({});
+    const [componentsOptionsDict, setComponentsOptionsDict] = useState(null);
 
     // User inventory; only populated if user is logged in
-    const [userInventory, setUserInventory] = useState({});
+    const [userInventory, setUserInventory] = useState(null);
+
+    useEffect(() => console.log(componentsOptionsDict), [componentsOptionsDict]);
 
     useEffect(() => {
         fetch('data/')
             .then(res => res.json())
             .then((json) => {
-                setModuleBOMList({...json["module_bom_list"]});
+                setModuleBOMList([...json["module_bom_list"]]);
                 setComponentsOptionsDict({...json["components_options_dict"]});
-                setUserInventory({...json["inventory"]})
+                setUserInventory([...json["inventory"]])
             })
             .catch((error) => {
               console.log(error)
@@ -28,7 +30,7 @@ function App() {
     return (
         <>
             <h2 className={"mb-4"}>Components</h2>
-            <BOMListTable />
+            {moduleBOMList && <BOMListTable moduleList={moduleBOMList} compLookup={componentsOptionsDict} />}
         </>
     );
 };

@@ -1,46 +1,39 @@
 import React from "react";
-import DataTable from "react-data-table-component";
+import DataTable, { expandableRowsComponentProps } from "react-data-table-component";
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import InnerTable from "./InnerTable";
 
 const ExpandedComponent = ({data, ...props}) => {
     return (
-        <InnerTable data={data} {...props} />
+        // For each item in data
+        <InnerTable data={data} compLookup={props} />
     )
 };
 
 const columns = [
     {
-        name: 'Title',
-        selector: row => row.title,
+        name: 'Description',
+        selector: row => row.description,
         sortable: true,
     },
     {
-        name: 'Year',
-        selector: row => row.year,
+        name: 'Type',
+        selector: row => row.type,
         sortable: true,
     },
-];
-
-const data = [
     {
-        id: 1,
-        title: 'Beetlejuice',
-        year: '1988',
-    },
-    {
-        id: 2,
-        title: 'Ghostbusters',
-        year: '1984',
-    },
-    {
-        id: 3,
-        title: 'Whatever',
-        year: '1989',
+        name: 'Quantity',
+        selector: row => row.quantity,
+        sortable: true,
     },
 ];
 
 const BOMListTable = (props) => {
+
+    const data = props.moduleList.map((obj) => {
+        return Object.assign({}, obj, obj.fields);
+    });
+
     return (
         <div className="module-table">
             <DataTable
@@ -50,7 +43,7 @@ const BOMListTable = (props) => {
                 expandableRowsComponent={ExpandedComponent}
                 // noTableHead={!!data}
                 // noHeader={!!data}
-                {...props}
+                expandableRowsComponentProps={props.compLookup}
             />
         </div>
     );

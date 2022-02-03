@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from components.models import Component
+from components.models import Component, ComponentSupplier
 from user_profile.models import UserProfile, Module, UserProfileShoppingListData
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
@@ -38,9 +38,21 @@ def module_detail(request, slug):
 
 def data(request, slug):
     module = Module.objects.get(slug=slug)
+    suppliers = ComponentSupplier.objects.all().values()
+
+    suppliers_lookup = {}
+    keys = set([i['id'] for i in suppliers])
+
+    for key in keys:
+        for l in suppliers:
+            if l['id'] == key:
+                suppliers_lookup[key] = l
+
+
     components = module.component_bom_list.all()
     result = {
         "module": json.loads(serializers.serialize('json', [module])),
+        "suppliers": suppliers_lookup,
         "module_bom_list": json.loads(serializers.serialize('json', components)),
     }
 

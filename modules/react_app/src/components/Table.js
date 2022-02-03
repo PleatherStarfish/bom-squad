@@ -6,7 +6,7 @@ import InnerTable from "./InnerTable";
 const ExpandedComponent = ({data, ...props}) => {
     return (
         // For each item in data
-        <InnerTable data={data} compLookup={props} />
+        <InnerTable data={data} compLookup={props.compLookup} suppliersLookup={props.suppliersLookup} />
     )
 };
 
@@ -43,7 +43,7 @@ const BOMListTable = (props) => {
                 expandableRowsComponent={ExpandedComponent}
                 // noTableHead={!!data}
                 // noHeader={!!data}
-                expandableRowsComponentProps={props.compLookup}
+                expandableRowsComponentProps={{"compLookup": props.compLookup, "suppliersLookup": props.suppliersLookup}}
             />
         </div>
     );

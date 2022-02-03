@@ -77,3 +77,16 @@ a.module-list__card-title-link:hover {
     color: #505050;
     text-decoration: underline;
 }
+
+#bootstrap-overrides .rdt_TableCol_Sortable {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+#bootstrap-overrides .rdt_TableHeadRow {
+  border-bottom: 2px black solid;
+}
+
+#bootstrap-overrides .rdt_TableCell {
+  font-size: 16px;
+}

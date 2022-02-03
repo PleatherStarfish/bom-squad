@@ -1,3 +1,4 @@
+from djmoney.models.fields import MoneyField
 from django.db import models
 from suppliers.models import Supplier
 from django.utils import timezone
@@ -62,6 +63,7 @@ class Component(models.Model):
     farads_unit = models.CharField(max_length=2, choices=FARAD_UNITS, blank=True, null=True, help_text="If the component type involves capacitance, this value MUST be set.")
     voltage_rating = models.CharField(max_length=3, blank=True)
     tolerance = models.CharField(max_length=3, blank=True)
+    price = MoneyField(max_digits=4, decimal_places=2, default_currency=None, null=True)
     notes = models.TextField(blank=True)
     link = models.URLField(blank=False)
     date_updated = models.DateField(default=timezone.now, blank=False)

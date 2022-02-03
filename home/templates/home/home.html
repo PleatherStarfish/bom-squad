@@ -6,6 +6,7 @@
         <section class="gradient-custom">
             <div class="container-fluid py-md-5 h-100" style="padding-right:0; padding-left:0;">
                 <div class="module__container col-12">
+                    {% comment %}
                     <div class="module-list__subtitle-container d-none d-md-block w-100">
                         <b>
                             <i>
@@ -15,6 +16,7 @@
                             </i>
                         </b>
                     </div>
+                    {% endcomment %}
                     <div class="module-list__search-box card bg-light text-black p-2 p-md-4 mb-4">
                         <form class="mb-3" action="{% url 'search_results' %}" method="get">
                             <label for="search-bom" class="module-list__search-label form-label h4">Search for a BOM:</label>

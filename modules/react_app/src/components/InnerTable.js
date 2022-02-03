@@ -8,16 +8,24 @@ const InnerTable = (props) => {
         return (
             <Tr>
                 <Td>{props.compLookup[key][0].fields["description"]}</Td>
+                <Td>{props.compLookup[key][0].fields["voltage_rating"]}</Td>
+                <Td>{props.compLookup[key][0].fields["tolerance"]}</Td>
+                <Td>{props.compLookup[key][0].fields["supplier"]}</Td>
+                <Td>{props.compLookup[key][0].fields["supplier_item_no"]}</Td>
             </Tr>
         )
     });
 
     return (
         <div style={{padding: "0 0 0 48px"}}>
-            <Table className={"table table-success"} style={{paddingLeft: "48px"}}>
+            <Table className={"table"} style={{paddingLeft: "48px", backgroundColor: "#f8f9fa"}}>
                 <Thead>
                     <Tr>
                         <Th>Description</Th>
+                        <Th>Voltage Rating</Th>
+                        <Th>Tolerance</Th>
+                        <Th>Supplier</Th>
+                        <Th>Supplier Item #</Th>
                     </Tr>
                 </Thead>
                 <Tbody>

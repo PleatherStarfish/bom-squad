@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'captcha',
     'django_gravatar',
     'import_export',
+    'djmoney',
 ]
 
 MIDDLEWARE = [

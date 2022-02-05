@@ -15,8 +15,10 @@ const InnerTable = (props) => {
                 <Td>{props.compLookup[key][0].fields["voltage_rating"]}</Td>
                 <Td>{props.compLookup[key][0].fields["tolerance"]}</Td>
                 <Td>{props.suppliersLookup[supplierKey].short_name}</Td>
-                <Td>{props.compLookup[key][0].fields["supplier_item_no"]}</Td>
+                <Td><a href={props.compLookup[key][0].fields["link"]}>{props.compLookup[key][0].fields["supplier_item_no"]}</a></Td>
                 <Td>{props.compLookup[key][0].fields["price"]}</Td>
+                { props.userInventory && <Td></Td> }
+                { props.userInventory && <Td></Td> }
             </Tr>
         )
     });
@@ -32,6 +34,8 @@ const InnerTable = (props) => {
                         <Th>Supplier</Th>
                         <Th>Supplier Item #</Th>
                         <Th>Unit Price</Th>
+                        { props.userInventory && <Th>Inventory</Th> }
+                        { props.userInventory && <Th><span className={"sr-only"}>Add</span></Th> }
                     </Tr>
                 </Thead>
                 <Tbody>

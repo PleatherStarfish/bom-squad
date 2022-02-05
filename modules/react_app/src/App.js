@@ -33,13 +33,18 @@ function App() {
     }, []);
 
     return (
-        <>
-            <h2 className={"mb-4"}>Components</h2>
-            {moduleBOMList && <BOMListTable moduleList={moduleBOMList}
-                                            compLookup={compLookup}
-                                            suppliersLookup={suppliersLookup}
-            />}
-        </>
+        <div style={{position: "relative"}}>
+            {moduleBOMList ?
+                <BOMListTable moduleList={moduleBOMList}
+                                                compLookup={compLookup}
+                                                suppliersLookup={suppliersLookup}
+                                                userInventory={userInventory}
+                /> :
+                <div className="spinner-border text-secondary my-4" role="status">
+                    <span className="sr-only">Loading...</span>
+                </div>
+            }
+        </div>
     );
 };
 

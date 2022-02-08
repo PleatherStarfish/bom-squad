@@ -17,7 +17,7 @@
                                         <div class="alert alert-danger" role="alert">{{ message }}</div>
                                     {% endfor %}
 
-                                    <form method="POST" action="{% url 'login' %}">
+                                    <form method="post" action="{% url 'login' %}">
                                         {% csrf_token %}
                                         <div class="form-outline form-white mb-4">
                                             <label class="form-label" for="username-field">Email</label>
@@ -30,6 +30,7 @@
                                         </div>
 
                                         <button class="btn btn-outline-dark btn-lg px-5" type="submit" style="margin-top: 3vh;">Login</button>
+                                        <p class="mt-4"><a href="{% url 'password_reset' %}">Lost password?</a></p>
                                     </form>
 
                                 </div>

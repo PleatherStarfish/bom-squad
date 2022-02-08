@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <section class="gradient-custom">
+        <div class="container px-0 py-5 h-100">
+            <div class="row d-flex justify-content-center h-100">
+                <div class="col-12 col-md-10 col-lg-10 col-xl-8">
+                    <div class="card bg-light text-black" style="border-radius: 1rem;">
+                        <div class="card-body p-0 p-sm-3 p-md-5">
+
+                            <div class="mb-md-5 mt-md-4">
+
+                                <h1 class="h2 text-center m-4">Register</h1>
+
+                                <div class="col-md-8 offset-md-2">
+                                    <form method="POST" action="{% url 'accounts-register' %}">
+                                        {% csrf_token %}
+
+                                        {% if form.errors %}
+                                            <p>Please correct the errors on the form.</p>
+                                        {% endif %}
+
+                                        <div class="m-2">
+                                            <label class="text-start">{{ form.username.label }}: <span style="color: hotpink">*</span></label>
+                                            {{ form.username }}
+                                        </div>
+
+                                        <div class="m-2">
+                                            <label>{{ form.email.label }}: <span style="color: hotpink">*</span></label>
+                                            {{ form.email }}
+                                        </div>
+
+                                        <div class="m-2">
+                                            <label>{{ form.password1.label }}: <span style="color: hotpink">*</span></label>
+                                            {{ form.password1 }}
+                                        </div>
+
+                                        <div class="m-2">
+                                            <label>{{ form.password2.label }}: <span style="color: hotpink">*</span></label>
+                                            {{ form.password2 }}
+                                        </div>
+
+                                        <div class="my-4 mx-2">
+                                            <div class="g-recaptcha" data-sitekey="6LeoW3wdAAAAANIQ5Q7Kg6Y7hWbEa2ObIKvMZJF0"></div>
+                                        </div>
+
+                                        <div class="mx-2 my-2 mt-md-3 mb-md-3">
+                                            <input type="submit" value="Register" class="btn btn-secondary">
+                                        </div>
+                                    </form>
+
+                                     <span style="color: hotpink">*</span><small> required</small>
+                                </div>
+
+                                {% if messages %}
+                                    <ul class="messages">
+                                        {% for message in messages %}
+                                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

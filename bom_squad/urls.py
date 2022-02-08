@@ -15,19 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django import views
 from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    path('', include('home.urls')),
-    # path('login/', views.login_user, name='login'),
-    # path('logout/', views.logout_user, name='logout'),
-    # path('register/', views.register_user, name='register'),
+    path('admin/', admin.site.urls),
+    path('accounts/', include("accounts.urls")),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('users/', include('user_profile.urls')),
     path('modules/', include('modules.urls')),
     path('components/', include('components.urls')),
-    path('users/', include('user_profile.urls')),
-    path('admin/', admin.site.urls),
+    path('', include('home.urls')),
 ]
 
 if settings.DEBUG is True:

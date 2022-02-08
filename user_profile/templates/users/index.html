@@ -38,7 +38,7 @@
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="built-modules" role="tabpanel" aria-labelledby="built-modules-tab">
                 <div class="container py-5 px-0">
-                    {% if user.built_modules.all %}
+                    {% if current_user.built_modules.all %}
                         {% include "users/profile_tabs/built-modules.html" %}
                     {% else %}
                         <div class="alert alert-warning" role="alert">There are no modules in your Built Modules list.</div>
@@ -47,9 +47,9 @@
             </div>
             <div class="tab-pane fade" id="want-to-build" role="tabpanel" aria-labelledby="want-to-build-tab">
                 <div class="container py-5 px-0">
-                    {% if user.want_to_build_modules.all %}
+                    {% if current_user.want_to_build_modules.all %}
                         <div class="row w-100">
-                            {% for module in user.want_to_build_modules.all %}
+                            {% for module in current_user.want_to_build_modules.all %}
                                 {% include "users/profile_tabs/want-to-build.html" %}
                             {% endfor %}
                         </div>

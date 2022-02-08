@@ -10,13 +10,13 @@ from django_gravatar.helpers import get_gravatar_url, has_gravatar, get_gravatar
 # Create your views here.
 @login_required()
 def user_page(request, **kwargs):
-    user = get_object_or_404(UserProfile, slug=kwargs.get('slug'))
 
     built = None
     to_build = None
-    user = UserProfile.objects.get(user=request.user)
-    built = user.built_modules.all()
-    to_build = user.want_to_build_modules.all()
+
+    current_user = UserProfile.objects.get(user=request.user)
+    built = current_user.built_modules.all()
+    to_build = current_user.want_to_build_modules.all()
     shopping_list_modules = UserProfileShoppingListData.objects.values("module").distinct()
     all_components_for_shopping_list = UserProfileShoppingListData.objects.values("component").distinct()
 
@@ -26,7 +26,7 @@ def user_page(request, **kwargs):
     gravatar_exists = has_gravatar(user_email)
 
     return render(request, 'users/index.html', {
-        'user': user,
+        'current_user': current_user,
         'built': built,
         'to_build': to_build,
         'shopping_list_modules': shopping_list_modules,

@@ -15,24 +15,6 @@ const ExpandedComponent = ({data, ...props}) => {
     )
 };
 
-const columns = [
-    {
-        name: 'Description',
-        selector: row => row.description,
-        sortable: true,
-    },
-    {
-        name: 'Type',
-        selector: row => row.type,
-        sortable: true,
-    },
-    {
-        name: 'Quantity',
-        selector: row => row.quantity,
-        sortable: true,
-    }
-];
-
 
 const BOMListTable = (props) => {
 
@@ -63,8 +45,6 @@ const BOMListTable = (props) => {
             setColumns((prev) => [...prev, {name: 'Sufficient # in Inventory', sortable: true}])
         }
     }, [props.userInventory]);
-
-    console.log(columns)
 
     return (
         <div className="module-table">

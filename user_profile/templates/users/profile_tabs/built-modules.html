@@ -11,17 +11,17 @@
                     <div class="d-flex justify-content-between w-100">
                         <div>
                             {% if not module.version or module.version == '0' or module.version == '1' %}
-                                <h2 class="card-title h4"><a class="home-card-link"
+                                <h2 class="card-title h4"><a class="user-profile__card-title-link"
                                                              href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a>
                                 </h2>
                             {% else %}
-                                <h2 class="card-title h4"><a class="home-card-link"
+                                <h2 class="card-title h4"><a class="user-profile__card-title-link"
                                                              href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}
                                     (v{{ module.version }})</a></h2>
                             {% endif %}
                         </div>
                     </div>
-                    <p class="card-title mb-3"><b><a class="home-card-link">{{ module.manufacturer }}</a></b></p>
+                    <p class="card-title mb-3"><b><a class="user-profile__manufacturer-link">{{ module.manufacturer }}</a></b></p>
                     <div class="description-wrapped">
                         <p>{{ module.description }}</p>
                     </div>

@@ -68,12 +68,14 @@
   color: #505050;
 }
 
-a.module-list__card-title-link {
+a.module-list__card-title-link,
+a.module-detail__manufacturer-link {
     color: #505050;
     text-decoration: none;
 }
 
-a.module-list__card-title-link:hover {
+a.module-list__card-title-link:hover,
+a.module-detail__manufacturer-link:hover {
     color: #505050;
     text-decoration: underline;
 }

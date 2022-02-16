@@ -4,12 +4,12 @@
     <div class="row">
         <section class="gradient-custom">
             <div class="container-fluid py-md-5 h-100" style="padding-right:0; padding-left:0;">
-                <div class="col-12" style="margin-top: 15px;">
+                <div class="components__container col-12">
                     <div class="card bg-light text-black p-2 p-md-4 mb-4">
-                        <form class="mb-3" action="{% url 'search_results' %}" method="get">
-                            <h1 class="mb-4">Components</h1>
+                        <form class="mb-3" action="{% url 'components_search_results' %}" method="get">
+                            <h1 class="display-1 mb-4">Components</h1>
                             <p class="mb-4">Find components and add them to you personal inventory. </p>
-                            <label for="search-bom" class="form-label h4">Search:</label>
+                            <label for="search-bom" class="module-list__search-label form-label h4"">Keyword:</label>
                             <input id="search-bom" class="form-control" name="q" type="text" placeholder="Search...">
                         </form>
                     </div>
@@ -17,67 +17,65 @@
                         {% if components %}
                             {% regroup components by type as types_list %}
                             {% for type in types_list %}
-                                <div class="d-flex" style="border: 4px solid #ebeced; border-radius: 0.25rem; margin-bottom: 24px">
+                                <div class="d-flex h-100 w-100" style="border: 4px solid #ebeced; border-radius: 0.25rem; margin-bottom: 24px">
                                     <div style="background-color: #ebeced; width: 8vw;">
                                         <div class="h-100 w-100 d-flex flex-column justify-content-center">
                                             <div style="display: inline-block; writing-mode: vertical-rl;text-orientation: mixed; transform: rotate(180deg)">
-                                                <h2 style="display:inline-block; white-space: nowrap; text-align: center">{{type.grouper}}s</h2>
+                                                <h2 style="display:inline-block; white-space: nowrap; text-align: center; color: #7a7a7a">{{type.grouper}}s</h2>
                                             </div>
                                         </div>
                                     </div>
-                                    <div style="padding: 2vw;">
-                                        <div class="table-responsive">
-                                            <table class="table">
-                                                <thead>
+                                    <div class="w-100 table-responsive p-4">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Description</th>
+                                                    <th scope="col">Manufacturer</th>
+                                                    <th scope="col">Voltage Rating</th>
+                                                    <th scope="col">Tolerance</th>
+                                                    <th scope="col">Suppliers</th>
+                                                    <th scope="col">Suppliers' Item #</th>
+                                                    <th scope="col"># in Inventory</th>
+                                                    <th scope="col">Inventory Location</th>
+                                                    <th scope="col">Number</th>
+                                                    <th scope="col">Container</th>
+                                                    <th scope="col">Box</th>
+                                                    <th scope="col"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for item in type.list %}
                                                     <tr>
-                                                        <th scope="col">Description</th>
-                                                        <th scope="col">Manufacturer</th>
-                                                        <th scope="col">Voltage Rating</th>
-                                                        <th scope="col">Tolerance</th>
-                                                        <th scope="col">Suppliers</th>
-                                                        <th scope="col">Suppliers' Item Nos.</th>
-                                                        <th scope="col">Personal Inventory No.</th>
-                                                        <th scope="col">Personal Inventory Location</th>
-                                                        <th scope="col">No.</th>
-                                                        <th scope="col">Container</th>
-                                                        <th scope="col">Box</th>
-                                                        <th scope="col"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for item in type.list %}
-                                                        <tr>
-                                                            <th>{{ item.description }}</th>
-                                                            <th>{{ item.manufacturer.name }}</th>
-                                                            <th></th>
-                                                            <th></th>
-                                                            <th></th>
-                                                            <th></th>
-                                                            <th></th>
-                                                            <th></th>
-                                                            <th>
-                                                                <form>
-                                                                  <label class="sr-only" for="quantity">Quantity (between 1 and 5):</label>
-                                                                  <input type="number" id="quantity" name="quantity" min="1" max="5">
-                                                                </form>
+                                                        <th>{{ item.description }}</th>
+                                                        <th>{{ item.manufacturer.name }}</th>
+                                                        <th>{{ item.voltage_rating }}</th>
+                                                        <th>{{ item.tolerance }}</th>
+                                                        <th>{{ item.supplier.name }}</th>
+                                                        <th>{{ item.supplier_item_no }}</th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th>
+                                                            <form>
+                                                              <label class="sr-only" for="quantity">Quantity (between 1 and 5):</label>
+                                                              <input type="number" id="quantity" name="quantity" min="1" max="5">
+                                                            </form>
 
-                                                            </th>
-                                                            <th>
-                                                                <label class="sr-only" for="fname"></label>
-                                                                <input type="text" id="fname" name="fname" style="max-width: 50px;">
-                                                            </th>
-                                                            <th>
-                                                                <label class="sr-only" for="fname"></label>
-                                                                <input type="text" id="fname" name="fname" style="max-width: 50px;">
-                                                            </th>
-                                                            <th>
-                                                                <button type="submit" class="btn btn-success">Add</button>
-                                                            </th>
-                                                        </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                        </th>
+                                                        <th>
+                                                            <label class="sr-only" for="fname"></label>
+                                                            <input type="text" id="fname" name="fname" style="max-width: 50px;">
+                                                        </th>
+                                                        <th>
+                                                            <label class="sr-only" for="fname"></label>
+                                                            <input type="text" id="fname" name="fname" style="max-width: 50px;">
+                                                        </th>
+                                                        <th>
+                                                            <button type="submit" class="btn btn-success">Add</button>
+                                                        </th>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             {% endfor %}

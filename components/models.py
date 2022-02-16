@@ -54,7 +54,7 @@ class ComponentManufacturer(models.Model):
 class Component(models.Model):
     description = models.CharField(max_length=255)
     manufacturer = models.ForeignKey(ComponentManufacturer, blank=True, on_delete=models.PROTECT)
-    supplier = models.ManyToManyField(ComponentSupplier, blank=True)
+    supplier = models.ForeignKey(ComponentSupplier, blank=True, on_delete=models.PROTECT)
     supplier_item_no = models.CharField(max_length=100, blank=False, unique=True)
     type = models.ForeignKey(Types, blank=False, on_delete=models.PROTECT)
     ohms = models.DecimalField(blank=True, null=True, decimal_places=1, max_digits=6, help_text="If the component type involves resistance, this value MUST be set.")
@@ -63,8 +63,8 @@ class Component(models.Model):
     farads_unit = models.CharField(max_length=2, choices=FARAD_UNITS, blank=True, null=True, help_text="If the component type involves capacitance, this value MUST be set.")
     voltage_rating = models.CharField(max_length=3, blank=True)
     tolerance = models.CharField(max_length=3, blank=True)
-    price= MoneyField(max_digits=4, decimal_places=2, default_currency='USD', blank=True, null=True)
-    pcs = models.IntegerField(default=1)
+    price= MoneyField(max_digits=4, decimal_places=2, default_currency='USD', null=True, blank=True)
+    pcs = models.IntegerField(default=1, help_text="The number of component that are purchased per price (if they are sold in a set). Defaults to 1.")
     notes = models.TextField(blank=True)
     link = models.URLField(blank=False)
     date_updated = models.DateField(default=timezone.now, blank=False)
@@ -74,13 +74,13 @@ class Component(models.Model):
 
     def __str__(self):
         if self.type.name == "Potentiometers":
-            return f"{self.description} {self.type.name} ({self.supplier.all().first().name} {self.supplier_item_no})"
+            return f"{self.description} {self.type.name} ({self.supplier.name} {self.supplier_item_no})"
         elif self.ohms and self.ohms_unit:
-            return f"{self.ohms} {self.ohms_unit} {self.type} ({self.supplier.all().first().name} {self.supplier_item_no})"
+            return f"{self.ohms} {self.ohms_unit} {self.type} ({self.supplier.name} {self.supplier_item_no})"
         elif self.farads and self.farads_unit:
-            return f"{self.farads} {self.farads_unit} {self.type} ({self.supplier.all().first().name} {self.supplier_item_no})"
+            return f"{self.farads} {self.farads_unit} {self.type} ({self.supplier.name} {self.supplier_item_no})"
         else:
-            return f"{self.description} {self.type.name} ({self.supplier.all().first().name} {self.supplier_item_no})"
+            return f"{self.description} {self.type.name} ({self.supplier.name} {self.supplier_item_no})"
 
     def clean(self):
 

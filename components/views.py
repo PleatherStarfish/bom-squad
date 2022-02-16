@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from components.models import Component
+from django.db.models import Q
+from django.shortcuts import render, redirect
 
 
 # Create your views here.
@@ -12,9 +14,9 @@ def index(request):
 
 def search_results(request):
     query = request.GET.get("q")
-    # if query:
-    #     module_list = Module.objects.filter(Q(name__icontains=query) | Q(manufacturer__name__icontains=query))
-    #     context = {"module_list": module_list}
-    #     return render(request, 'home/home.html', context)
-    # else:
-        # return redirect(index)
+    if query:
+        components = Component.objects.filter(Q(description__icontains=query) | Q(manufacturer__name__icontains=query))
+        context = {"components": components}
+        return render(request, 'components/index.html', context)
+    else:
+        return redirect(index)

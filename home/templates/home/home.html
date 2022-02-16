@@ -19,7 +19,9 @@
                     {% endcomment %}
                     <div class="module-list__search-box card bg-light text-black p-2 p-md-4 mb-4">
                         <form class="mb-3" action="{% url 'search_results' %}" method="get">
-                            <label for="search-bom" class="module-list__search-label form-label h4">Search for a BOM:</label>
+                            <h1 class="display-1 mb-4">Modules</h1>
+                            <p class="mb-4">Find modules and add them to either your "Built" or "Want to Build" lists.</p>
+                            <label for="search-bom" class="module-list__search-label form-label h4">Keyword:</label>
                             <input id="search-bom" class="form-control" name="q" type="text" placeholder="Search...">
                         </form>
                     </div>

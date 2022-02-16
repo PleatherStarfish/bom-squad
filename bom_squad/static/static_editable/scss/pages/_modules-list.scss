@@ -1,17 +1,17 @@
 @include media-breakpoint-up(lg) {
-  .module__container {
+  .module__container, .components__container {
     margin-top: 20vh;
   }
 }
 
 @include media-breakpoint-only(md) {
-  .module__container {
+  .module__container, .components__container {
     margin-top: 5vh;
   }
 }
 
 @include media-breakpoint-down(md) {
-  .module__container {
+  .module__container, .components__container {
     margin-top: 45px;
   }
 }

@@ -16,7 +16,7 @@ const InnerTable = (props) => {
                 <Td>{props.compLookup[key][0].fields["tolerance"]}</Td>
                 <Td>{props.suppliersLookup[supplierKey].short_name}</Td>
                 <Td><a href={props.compLookup[key][0].fields["link"]}>{props.compLookup[key][0].fields["supplier_item_no"]}</a></Td>
-                <Td>{props.compLookup[key][0].fields["price"]}</Td>
+                <Td>{props.compLookup[key][0].fields["price"] ? "$" + props.compLookup[key][0].fields["price"] + " USD" : null}</Td>
                 { props.userInventory && <Td></Td> }
                 { props.userInventory && <Td></Td> }
             </Tr>

@@ -4,7 +4,7 @@ from components.models import Component
 
 # Create your views here.
 def index(request):
-    components = Component.objects.order_by('type__order')
+    components = Component.objects.order_by('type__name')
 
     context = {"components": components}
 

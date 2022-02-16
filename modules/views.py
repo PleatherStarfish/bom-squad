@@ -71,11 +71,17 @@ def data(request, slug):
     result["components_options_dict"] = components_options_dict
 
     # If a user is not logged in, there is no inventory data to display
-    result["inventory"] = None
+    result["user_inventory"] = None
+
     if request.user.is_authenticated:
         user = UserProfile.objects.get(user=request.user)
-        inventory = user.userprofilecomponentinventorydata_set.all()
-        result["inventory"] = json.loads(serializers.serialize('json', inventory))
+        inventory = user.userprofilecomponentinventorydata_set.all().values()
+        inventory_data = {}
+        for entry in inventory:
+            name = entry['component_id']  # remove and return the name field to use as a key
+            inventory_data[name] = entry
+
+        result["user_inventory"] = inventory_data
 
     return JsonResponse(result)
 

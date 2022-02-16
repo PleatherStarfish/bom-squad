@@ -42,7 +42,7 @@ const BOMListTable = (props) => {
 
     useEffect(() => {
         if (props.userInventory) {
-            setColumns((prev) => [...prev, {name: 'Sufficient # in Inventory', sortable: true}])
+            setColumns((prev) => [...prev, {name: 'Sufficient # in Inventory', selector: row => row.in_user_inventory, sortable: true}])
         }
     }, [props.userInventory]);
 

@@ -1,18 +1,8 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView, ListView
-from django.shortcuts import redirect
 from modules.models import Module
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib import messages
-from .forms import SignUpForm
 from user_profile.models import UserProfile
-import urllib
-import json
-from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.urls import resolve, Resolver404
@@ -54,63 +44,6 @@ def search_results(request):
         return render(request, 'home/home.html', context)
     else:
         return redirect(index)
-
-def login_user(request):
-    if request.method == 'GET':
-        request.session['login_from'] = request.META.get('HTTP_REFERER', '/')
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            messages.success(request, ('You have successfully logged in.'))
-            return redirect('home')
-        else:
-            messages.success(request, ('Login attempt unsuccessful.'))
-            return redirect('login')
-    else:
-        return render(request, 'home/login.html', {})
-
-def logout_user(request):
-    logout(request)
-    messages.success(request, ('You have been logged out.'))
-    return redirect('home')
-
-# Create new user
-def register_user(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-
-            ''' Begin reCAPTCHA validation '''
-            recaptcha_response = request.POST.get('g-recaptcha-response')
-            url = 'https://www.google.com/recaptcha/api/siteverify'
-            values = {
-                'secret': settings.RECAPTCHA_PRIVATE_KEY,
-                'response': recaptcha_response
-            }
-            data = urllib.parse.urlencode(values).encode()
-            req = urllib.request.Request(url, data=data)
-            response = urllib.request.urlopen(req)
-            result = json.loads(response.read().decode())
-            ''' End reCAPTCHA validation '''
-
-            form.save()
-
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            messages.success(request, ('You have registered...'))
-            user_extended = UserProfile(user=user)
-            user_extended.save()
-            return redirect('home')
-    else:
-        form = SignUpForm()
-
-    context = {'form': form}
-    return render(request, 'home/register.html', context)
 
 @login_required()
 def add_to_built(request, id):

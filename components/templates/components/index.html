@@ -14,60 +14,74 @@
                         </form>
                     </div>
                     <div>
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">Description</th>
-                                <th scope="col">Type</th>
-                                <th scope="col">Manufacturer</th>
-                                <th scope="col">Voltage Rating</th>
-                                <th scope="col">Tolerance</th>
-                                <th scope="col">Suppliers</th>
-                                <th scope="col">Suppliers' Item Nos.</th>
-                                <th scope="col">Personal Inventory No.</th>
-                                <th scope="col">Personal Inventory Location</th>
-                                <th scope="col">No.</th>
-                                <th scope="col">Container</th>
-                                <th scope="col">Box</th>
-                                <th scope="col"></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                {% if components %}
-                                    {% for component in components %}
-                                        <tr>
-                                            <th>{{ component.name }}</th>
-                                            <th>{{ component.type.name }}</th>
-                                            <th>{{ component.manufacturer.name }}</th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th>
-                                                <form>
-                                                  <label class="sr-only" for="quantity">Quantity (between 1 and 5):</label>
-                                                  <input type="number" id="quantity" name="quantity" min="1" max="5">
-                                                </form>
+                        {% if components %}
+                            {% regroup components by type as types_list %}
+                            {% for type in types_list %}
+                                <div class="d-flex" style="border: 4px solid #ebeced; border-radius: 0.25rem; margin-bottom: 24px">
+                                    <div style="background-color: #ebeced; width: 8vw;">
+                                        <div class="h-100 w-100 d-flex flex-column justify-content-center">
+                                            <div style="display: inline-block; writing-mode: vertical-rl;text-orientation: mixed; transform: rotate(180deg)">
+                                                <h2 style="display:inline-block; white-space: nowrap; text-align: center">{{type.grouper}}s</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="padding: 2vw;">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Description</th>
+                                                        <th scope="col">Manufacturer</th>
+                                                        <th scope="col">Voltage Rating</th>
+                                                        <th scope="col">Tolerance</th>
+                                                        <th scope="col">Suppliers</th>
+                                                        <th scope="col">Suppliers' Item Nos.</th>
+                                                        <th scope="col">Personal Inventory No.</th>
+                                                        <th scope="col">Personal Inventory Location</th>
+                                                        <th scope="col">No.</th>
+                                                        <th scope="col">Container</th>
+                                                        <th scope="col">Box</th>
+                                                        <th scope="col"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for item in type.list %}
+                                                        <tr>
+                                                            <th>{{ item.description }}</th>
+                                                            <th>{{ item.manufacturer.name }}</th>
+                                                            <th></th>
+                                                            <th></th>
+                                                            <th></th>
+                                                            <th></th>
+                                                            <th></th>
+                                                            <th></th>
+                                                            <th>
+                                                                <form>
+                                                                  <label class="sr-only" for="quantity">Quantity (between 1 and 5):</label>
+                                                                  <input type="number" id="quantity" name="quantity" min="1" max="5">
+                                                                </form>
 
-                                            </th>
-                                            <th>
-                                                <label class="sr-only" for="fname"></label>
-                                                <input type="text" id="fname" name="fname" style="max-width: 50px;">
-                                            </th>
-                                            <th>
-                                                <label class="sr-only" for="fname"></label>
-                                                <input type="text" id="fname" name="fname" style="max-width: 50px;">
-                                            </th>
-                                            <th>
-                                                <button type="submit" class="btn btn-success">Add</button>
-                                            </th>
-                                        </tr>
-                                    {% endfor %}
-                                {% endif %}
-                            </tbody>
-                        </table>
+                                                            </th>
+                                                            <th>
+                                                                <label class="sr-only" for="fname"></label>
+                                                                <input type="text" id="fname" name="fname" style="max-width: 50px;">
+                                                            </th>
+                                                            <th>
+                                                                <label class="sr-only" for="fname"></label>
+                                                                <input type="text" id="fname" name="fname" style="max-width: 50px;">
+                                                            </th>
+                                                            <th>
+                                                                <button type="submit" class="btn btn-success">Add</button>
+                                                            </th>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
             </div>

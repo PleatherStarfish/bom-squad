@@ -92,25 +92,25 @@ window.onload = function () {
 
     lax.addElements('.logo__main', {
         scrollY: {
-            scale: [[0, 'screenHeight/3'], [1, 0.6], {easing: 'easeInOutQuint', inertia: 10}]
+            scale: [[0, 'screenHeight/3'], {767:[], 768: [1, 0.6]}, {easing: 'easeInOutQuint', inertia: 10}]
         }
     });
 
     lax.addElements('.logo__secondary', {
         scrollY: {
-            scale: [[0, 'screenHeight/3'], [1, 0.6], {easing: 'easeInOutQuint', inertia: 10}]
+            scale: [[0, 'screenHeight/3'], {991:[], 992: [1, 0.6]}, {easing: 'easeInOutQuint', inertia: 10}]
         }
     });
 
     lax.addElements('.logo__secondary--main-hidden', {
         scrollY: {
-            scale: [[0, 'screenHeight/3'], [1, 0.7], {easing: 'easeInOutQuint', inertia: 10}]
+            scale: [[0, 'screenHeight/3'], {991:[], 992: [1, 0.7]}, {easing: 'easeInOutQuint', inertia: 10}]
         }
     });
 
     lax.addElements('#topnav__main', {
         scrollY: {
-            height: [[0, 'screenHeight/3'], [90, 70], {cssUnit: "px", easing: 'easeInOutQuint', inertia: 10}]
+            height: [[0, 'screenHeight/3'], {991:[], 992: [90, 70]}, {cssUnit: "px", easing: 'easeInOutQuint', inertia: 10}]
         }
     });
 

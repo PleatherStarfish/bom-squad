@@ -13,22 +13,34 @@
 
             <a href="{% url 'home' %}">
                 <img id="logo__secondary"
-                     style="z-index: 9999"
                      class="{% if not 'users' in request.path %}logo__secondary{% else %}logo__secondary--main-hidden{% endif %}"
                      src="{% static '/bom_squad/head_logo.png' %}"
                      alt="Bom Squad logo">
             </a>
-{#            <a href="{% url 'home' %}">#}
-{#                <img id="logo-text" src="{% static '/bom_squad/logo_text2.png' %}" alt="">#}
-{#            </a>#}
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            {% comment %}
+            <a href="{% url 'home' %}">
+                <img id="logo-text" src="{% static '/bom_squad/logo_text2.png' %}" alt="">
+            </a>
+            {% endcomment %}
+            <div class="d-flex align-items-center">
+                <span class="topnav__dropdown-arrow border-0">
+                    <button class="d-block d-lg-none btn btn-outline-secondary border-0" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#fullscreen-menu__container" aria-controls="fullscreen-menu__container">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-caret-down-fill"
+                             viewBox="0 0 16 16">
+                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                        </svg>
+                    </button>
+                </span>
+                <button class="navbar-toggler my-3" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="topnav__dropdown-arrow nav-item">
+                <ul class="mt-4 mt-lg-0 navbar-nav mr-auto">
+                    <li class="d-none d-lg-block topnav__dropdown-arrow nav-item">
                         <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas"
                                 data-bs-target="#fullscreen-menu__container" aria-controls="fullscreen-menu__container">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-caret-down-fill"
@@ -38,24 +50,24 @@
                         </button>
                     </li>
                     {% if user.is_authenticated %}
-                        <li class="nav-item">
+                        <li class="mb-2 mb-lg-0 nav-item">
                             <a href="{% url 'user_page' request.user.username %}">
                                 <button class="topnav__button btn btn-outline-secondary" type="button"><b>account</b></button>
                             </a>
                         </li>
-                        <li class="nav-item" style="margin-left: 10px">
+                        <li class="mb-2 mb-lg-0 nav-item">
                             <a href="{% url 'logout' %}">
                                 <button class="topnav__button btn btn-outline-secondary" type="button"><b>logout</b></button>
                             </a>
                         </li>
                     {% else %}
-                        <li class="nav-item">
+                        <li class="mb-2 mb-lg-0 nav-item">
                             <a href="{% url 'accounts-register' %}">
                                 <button class="topnav__button btn btn-outline-secondary" type="button"><b>register</b></button>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{% url 'login' %}" style="margin-left: 10px">
+                        <li class="mb-2 mb-lg-0 nav-item">
+                            <a href="{% url 'login' %}">
                                 <button class="topnav__button btn btn-outline-secondary" type="button"><b>login</b></button>
                             </a>
                         </li>

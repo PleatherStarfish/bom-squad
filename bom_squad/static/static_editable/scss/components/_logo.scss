@@ -14,6 +14,14 @@
     }
 }
 
+.logo__secondary--mobile {
+    left: 18px;
+    opacity: 1;
+    position: fixed;
+    top: 13px;
+    width: 100px;
+}
+
 @include media-breakpoint-up(lg) {
     .logo__secondary {
         z-index: 9999;
@@ -24,6 +32,11 @@
         opacity: 0;
         transform-origin: top left;
         transition: opacity 1.3s, width 1.3s, left 1.3s, top .3s;
+    }
+    .logo__secondary--visible {
+        opacity: 1 !important;;
+        width: 140px;
+        left: 15px;
     }
 }
 
@@ -38,13 +51,6 @@
         width: 100px;
     }
 }
-
-.logo__secondary--visible {
-    opacity: 1 !important;;
-    width: 140px;
-    left: 15px;
-}
-
 .logo__secondary--main-hidden {
     left: 18px;
     opacity: 1!important;

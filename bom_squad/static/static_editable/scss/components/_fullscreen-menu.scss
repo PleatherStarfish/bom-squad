@@ -44,10 +44,21 @@ $btn-close-color: red;
 .fullscreen-menu__item > a {
   font-family: 'Roboto', sans-serif;
   color: #64727e;
-  font-size: 12vh;
   letter-spacing: 5px;
   text-decoration: none;
   transition: color .5s, letter-spacing 0.5s;
+}
+
+@include media-breakpoint-down(md) {
+  .fullscreen-menu__item > a {
+    font-size: 12vw;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .fullscreen-menu__item > a {
+    font-size: 12vh;
+  }
 }
 
 .fullscreen-menu__item > a:hover {

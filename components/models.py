@@ -63,7 +63,7 @@ class Component(models.Model):
     farads_unit = models.CharField(max_length=2, choices=FARAD_UNITS, blank=True, null=True, help_text="If the component type involves capacitance, this value MUST be set.")
     voltage_rating = models.CharField(max_length=3, blank=True)
     tolerance = models.CharField(max_length=3, blank=True)
-    price= MoneyField(max_digits=4, decimal_places=2, default_currency='USD', null=True, blank=True)
+    price = MoneyField(max_digits=4, decimal_places=2, default_currency='USD', null=True, blank=True)
     pcs = models.IntegerField(default=1, help_text="The number of component that are purchased per price (if they are sold in a set). Defaults to 1.")
     notes = models.TextField(blank=True)
     link = models.URLField(blank=False)

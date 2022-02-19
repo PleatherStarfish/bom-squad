@@ -12,7 +12,6 @@ class UserProfile(models.Model):
                                                  through='UserProfileComponentInventoryData')
     shopping_list = models.ManyToManyField(Component, blank=True, related_name='user_shopping_list',
                                                  through='UserProfileShoppingListData')
-    inventory_structure = models.JSONField(default={"container_name": "default_container", "contents": {"container_name": "default_box", "contents": []}}, blank=True, null=True)
     slug = models.SlugField(blank=True)
 
     def save(self, *args, **kwargs):

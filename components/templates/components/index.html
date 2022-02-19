@@ -17,8 +17,8 @@
                         {% if components %}
                             {% regroup components by type as types_list %}
                             {% for type in types_list %}
-                                <div class="d-flex h-100 w-100" style="border: 4px solid #ebeced; border-radius: 0.25rem; margin-bottom: 24px">
-                                    <div style="background-color: #ebeced; width: 8vw;">
+                                <div class="d-flex flex-row h-100 w-100" style="border: 4px solid #ebeced; border-radius: 0.25rem; margin-bottom: 24px">
+                                    <div style="background-color: #ebeced; width: 100px;">
                                         <div class="h-100 w-100 d-flex flex-column justify-content-center">
                                             <div style="display: inline-block; writing-mode: vertical-rl;text-orientation: mixed; transform: rotate(180deg)">
                                                 <h2 style="display:inline-block; white-space: nowrap; text-align: center; color: #7a7a7a">{{type.grouper}}s</h2>
@@ -27,7 +27,7 @@
                                     </div>
                                     <div class="w-100 table-responsive p-4">
                                         <table class="table">
-                                            <thead>
+                                            <thead style="font-size: 11px">
                                                 <tr>
                                                     <th scope="col">Description</th>
                                                     <th scope="col">Manufacturer</th>
@@ -35,15 +35,13 @@
                                                     <th scope="col">Tolerance</th>
                                                     <th scope="col">Suppliers</th>
                                                     <th scope="col">Supplier Item #</th>
+                                                    <th scope="col">Price</th>
                                                     <th scope="col"># in Inventory</th>
                                                     <th scope="col">Inventory Location</th>
-                                                    <th scope="col">Number</th>
-                                                    <th scope="col">Container</th>
-                                                    <th scope="col">Box</th>
-                                                    <th scope="col"></th>
+                                                    <th scope="col">Add</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody style="font-size: 11px">
                                                 {% for item in type.list %}
                                                     <tr>
                                                         <th>{{ item.description }}</th>
@@ -51,26 +49,26 @@
                                                         <th>{{ item.voltage_rating }}</th>
                                                         <th>{{ item.tolerance }}</th>
                                                         <th>{{ item.supplier.name }}</th>
-                                                        <th>{{ item.supplier_item_no }}</th>
+                                                        <th><a href="{{ item.link }}">{{ item.supplier_item_no }}</a></th>
+                                                        <th>{% if item.price %}{{ item.price }}{% endif %}</th>
                                                         <th></th>
                                                         <th></th>
-                                                        <th>
+                                                        <th id="row_{{ item.id }}">
                                                             <form>
-                                                              <label class="sr-only" for="quantity">Quantity (between 1 and 5):</label>
-                                                              <input type="number" id="quantity" name="quantity" min="1" max="5">
-                                                            </form>
+                                                                <div class="d-flex">
+                                                                    <div>
+                                                                        <label for="quantity">Quantity:</label><br>
+                                                                        <input class="me-2" type="number" id="quantity" name="quantity" style="max-width: 50px;"><br>
+                                                                    </div>
 
-                                                        </th>
-                                                        <th>
-                                                            <label class="sr-only" for="fname"></label>
-                                                            <input type="text" id="fname" name="fname" style="max-width: 50px;">
-                                                        </th>
-                                                        <th>
-                                                            <label class="sr-only" for="fname"></label>
-                                                            <input type="text" id="fname" name="fname" style="max-width: 50px;">
-                                                        </th>
-                                                        <th>
-                                                            <button type="submit" class="btn btn-success">Add</button>
+                                                                    <div>
+                                                                        <label for="location">Location:</label><br>
+                                                                        <input class="me-2"  type="text" id="location" name="location">
+                                                                    </div>
+
+                                                                    <button type="submit" class="btn btn-success">Add</button>
+                                                                </div>
+                                                            </form>
                                                         </th>
                                                     </tr>
                                                 {% endfor %}

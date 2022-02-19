@@ -20,3 +20,5 @@ def search_results(request):
         return render(request, 'components/index.html', context)
     else:
         return redirect(index)
+
+# def data(request):

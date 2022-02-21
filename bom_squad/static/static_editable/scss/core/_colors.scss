@@ -30,7 +30,7 @@ $info:      $brown;
 $warning:   $yellow;
 $danger:    $pink;
 $light:     $gray-100;
-$dark:      $gray-900;
+$dark:      #212529;
 
 $theme-colors: (
   "primary":    $primary,
@@ -41,4 +41,15 @@ $theme-colors: (
   "danger":     $danger,
   "light":      $light,
   "dark":       $dark
+);
+
+$table-variants: (
+  "primary":    shift-color($primary, $table-bg-scale),
+  "secondary":  shift-color($secondary, $table-bg-scale),
+  "success":    shift-color($success, $table-bg-scale),
+  "info":       shift-color($info, $table-bg-scale),
+  "warning":    shift-color($warning, $table-bg-scale),
+  "danger":     shift-color($danger, $table-bg-scale),
+  "light":      $light,
+  "dark":       $dark,
 );

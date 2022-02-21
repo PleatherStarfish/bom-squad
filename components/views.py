@@ -2,13 +2,14 @@ from django.shortcuts import render
 from components.models import Component
 from django.db.models import Q
 from django.shortcuts import render, redirect
+from components.column_names import columns
 
 
 # Create your views here.
 def index(request):
     components = Component.objects.order_by('type__name')
 
-    context = {"components": components}
+    context = {"components": components, "columns": columns}
 
     return render(request, 'components/index.html', context)
 

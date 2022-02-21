@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load get_item %}
 
 {% block content %}
     <div class="row">
@@ -14,6 +15,9 @@
                         </form>
                     </div>
                     <div>
+                        {% if not user.is_authenticated %}
+                            <div class="alert alert-warning" role="alert"><a href={% url 'login' %}><b>Login</b></a> to add components to your personal user inventory or shopping list.</div>
+                        {% endif %}
                         {% if components %}
                             {% regroup components by type as types_list %}
                             {% for type in types_list %}
@@ -27,49 +31,62 @@
                                     </div>
                                     <div class="w-100 table-responsive p-4">
                                         <table class="table">
-                                            <thead style="font-size: 11px">
+                                            <thead class="table-dark" style="font-size: 11px">
                                                 <tr>
-                                                    <th scope="col">Description</th>
-                                                    <th scope="col">Manufacturer</th>
-                                                    <th scope="col">Voltage Rating</th>
-                                                    <th scope="col">Tolerance</th>
-                                                    <th scope="col">Suppliers</th>
-                                                    <th scope="col">Supplier Item #</th>
-                                                    <th scope="col">Price</th>
-                                                    <th scope="col"># in Inventory</th>
-                                                    <th scope="col">Inventory Location</th>
-                                                    <th scope="col">Add</th>
+                                                    {% if columns|get_item:type.grouper %}
+                                                        {% with heading_list=columns|get_item:type.grouper %}
+                                                            {% for heading in heading_list %}
+                                                                {% if heading == "Add" %}
+                                                                    {% if user.is_authenticated %}
+                                                                        <th scope="col"><span class="sr-only">{{ heading }}</span></th>
+                                                                    {% endif %}
+                                                                {% elif heading == "# in Inventory" or heading == "Inventory Location" %}
+                                                                    {% if user.is_authenticated %}
+                                                                        <th scope="col">{{ heading }}</th>
+                                                                    {% endif %}
+                                                                {% else %}
+                                                                    <th scope="col">{{ heading }}</th>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endwith %}
+                                                    {% endif %}
                                                 </tr>
                                             </thead>
                                             <tbody style="font-size: 11px">
                                                 {% for item in type.list %}
                                                     <tr>
-                                                        <th>{{ item.description }}</th>
-                                                        <th>{{ item.manufacturer.name }}</th>
-                                                        <th>{{ item.voltage_rating }}</th>
-                                                        <th>{{ item.tolerance }}</th>
-                                                        <th>{{ item.supplier.name }}</th>
-                                                        <th><a href="{{ item.link }}">{{ item.supplier_item_no }}</a></th>
-                                                        <th>{% if item.price %}{{ item.price }}{% endif %}</th>
-                                                        <th></th>
-                                                        <th></th>
-                                                        <th id="row_{{ item.id }}">
-                                                            <form>
-                                                                <div class="d-flex">
-                                                                    <div>
-                                                                        <label for="quantity">Quantity:</label><br>
-                                                                        <input class="me-2" type="number" id="quantity" name="quantity" style="max-width: 50px;"><br>
-                                                                    </div>
+                                                        {% with heading_list=columns|get_item:type.grouper %}
+                                                            <th>{{ item.description }}</th>
+                                                                {% if "Manufacturer" in heading_list %}<th>{{ item.manufacturer.name }}</th>{% endif %}
+                                                                {% if "Voltage Rating" in heading_list %}<th>{{ item.voltage_rating }}</th>{% endif %}
+                                                                {% if "Tolerance" in heading_list %}<th>{{ item.tolerance }}</th>{% endif %}
+                                                                {% if "Suppliers" in heading_list %}<th>{{ item.supplier.name }}</th>{% endif %}
+                                                                {% if "Supplier Item #" in heading_list %}<th><a href="{{ item.link }}">{{ item.supplier_item_no }}</a></th>{% endif %}
+                                                                <th>{% if item.price %}{{ item.price }}{% endif %}</th>
+                                                                {% if user.is_authenticated %}
+                                                                    <th></th>
+                                                                    <th></th>
+                                                                {% endif %}
+                                                        {% endwith %}
+                                                            {% if user.is_authenticated %}
+                                                                <th class="d-flex flex-row-reverse" id="row_{{ item.id }}">
+                                                                    <form>
+                                                                        <div class="d-flex">
+                                                                            <div>
+                                                                                <label for="quantity">Quantity:</label><br>
+                                                                                <input class="me-2" type="number" id="quantity" name="quantity" style="max-width: 50px;"><br>
+                                                                            </div>
 
-                                                                    <div>
-                                                                        <label for="location">Location:</label><br>
-                                                                        <input class="me-2"  type="text" id="location" name="location">
-                                                                    </div>
+                                                                            <div>
+                                                                                <label for="location">Location:</label><br>
+                                                                                <input class="me-2"  type="text" id="location" name="location">
+                                                                            </div>
 
-                                                                    <button type="submit" class="btn btn-success">Add</button>
-                                                                </div>
-                                                            </form>
-                                                        </th>
+                                                                            <button type="submit" class="btn btn-success">Add</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </th>
+                                                            {% endif %}
                                                     </tr>
                                                 {% endfor %}
                                             </tbody>

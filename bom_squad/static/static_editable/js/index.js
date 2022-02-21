@@ -2,6 +2,8 @@ import "../scss/index.scss";
 import '../scss/node_modules/bootstrap';
 import '../scss/node_modules/animate.css';
 
+import './components/tooltip'
+
 window.onload = function () {
 
     // Thanks to StackOverflow user Phil Ricketts
@@ -39,6 +41,7 @@ window.onload = function () {
     const mainLogoImg = document.getElementById('logo__main');
     const secondaryLogo = document.getElementById('logo__secondary');
 
+    // Bootstrap 5 event listeners for the fullswcreen menu "hide" event
     fullscreenMenu.addEventListener('hide.bs.offcanvas', function () {
         secondaryLogo.classList.remove("logo__secondary--off-canvas");
         mainLogoImg.classList.remove("logo__main--off-canvas");
@@ -52,11 +55,13 @@ window.onload = function () {
         }
     });
 
+    // Bootstrap 5 event listeners for the fullswcreen menu "show" event
     fullscreenMenu.addEventListener('show.bs.offcanvas', function () {
         secondaryLogo.classList.add("logo__secondary--off-canvas");
         mainLogoImg.classList.add("logo__main--off-canvas");
     });
 
+    // Bootstrap 5 event listeners for the fullswcreen menu "shown" event
     fullscreenMenu.addEventListener('shown.bs.offcanvas', function () {
 
         setTimeout(function() {
@@ -73,6 +78,7 @@ window.onload = function () {
 
     });
 
+    // On scroll, we get the scroll percentage and do stuff with it
     window.addEventListener("scroll", function (e) {
         if (getScrollPercent() > 70) {
             secondaryLogo.classList.add("logo__secondary--visible");
@@ -118,11 +124,5 @@ window.onload = function () {
         scrollY: {
             opacity: [[0, 'screenHeight/6'], [1.0, 0.0], {inertia: 10}]
         }
-    });
-
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-
-    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
     });
 };

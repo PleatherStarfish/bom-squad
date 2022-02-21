@@ -50,7 +50,7 @@
         </div>
         <h2 class="mb-4">Components</h2>
         {% if not user.is_authenticated %}
-        <p><a href={% url 'login' %}><b>Login</b></a> to to compare the bill of materials (BOM) against your personal user inventory.</p>
+            <div class="alert alert-warning" role="alert"><a href={% url 'login' %}><b>Login</b></a> to compare the bill of materials (BOM) against your personal user inventory.</div>
         {% endif %}
         <div id="_react"></div>
 

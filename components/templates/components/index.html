@@ -136,7 +136,7 @@
             aria-controls="offcanvasBottom">
         Components [<span id="components-number">0</span>], Shopping [<span id="shopping-number">0</span>]
         <span style="margin-left: 10px">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+            <svg id="components__offcanvas-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill components__offcanvas-arrow" viewBox="0 0 16 16">
                 <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
             </svg>
         </span>
@@ -144,7 +144,7 @@
 
     <div class="offcanvas offcanvas-bottom components__offcanvas-container" tabindex="-1" id="components__offcanvas-container" aria-labelledby="offcanvasBottomLabel">
         <div class="offcanvas-body small">
-            ...
+
         </div>
     </div>
 
@@ -153,19 +153,26 @@
 
 {% block scripts %}
     <script>
-        var quantity_state = {};
-        var location_state = {};
-
         function setQuantity(e) {
+            if (localStorage.getItem('quantity_state') === null) {
+                localStorage.setItem('quantity_state', JSON.stringify({}));
+            }
             var compIdQuant = e.target.id.split('_')[1];
-            quantity_state[compIdQuant] = parseInt(document.getElementById(e.target.id).value);
-            console.log(quantity_state)
+            var localQuantityStorageState = JSON.parse(localStorage.getItem('quantity_state'));
+            localQuantityStorageState[compIdQuant] = parseInt(document.getElementById(e.target.id).value);
+            localStorage.setItem('quantity_state', JSON.stringify(localQuantityStorageState));
+            console.log(localStorage.getItem('quantity_state'))
         }
 
         function setLocation(e) {
+            if (localStorage.getItem('location_state') === null) {
+                localStorage.setItem('location_state', JSON.stringify({}));
+            }
             var compIdLoc = e.target.id.split('_')[1];
-            location_state[compIdLoc] = document.getElementById(e.target.id).value;
-            console.log(location_state)
+            var localLocationStorageState = JSON.parse(localStorage.getItem('location_state'));
+            localLocationStorageState[compIdLoc] = document.getElementById(e.target.id).value;
+            localStorage.setItem('location_state', JSON.stringify(localLocationStorageState));
+            console.log(localStorage.getItem('location_state'));
         }
 
         function addToInv(e) {
@@ -176,9 +183,11 @@
             var csrftoken = '{{ csrf_token }}';
             var data_to_backend = new FormData();
 
+            var quantity_state = JSON.parse(localStorage.getItem('quantity_state'));
+            var location_state = JSON.parse(localStorage.getItem('location_state'));
+
             console.log(id_str);
-            if ((id_str in quantity_state) && (id_str in location_state)) {
-                console.log("YES");
+            if ((`${id_str}` in quantity_state) && (`${id_str}` in location_state)) {
                 data_to_backend.append('quantity', quantity_state[`${id_str}`]);
                 data_to_backend.append('location', location_state[`${id_str}`]);
             }
@@ -205,15 +214,18 @@
 
         var offcanvasContainer = document.getElementById('components__offcanvas-container');
         var offcanvasButton = document.getElementById('components__offcanvas-button');
+        var offcanvasArrow = document.getElementById('components__offcanvas-arrow');
 
         offcanvasContainer.addEventListener('show.bs.offcanvas', function () {
             offcanvasButton.classList.add("components__offcanvas-button--lifted");
             offcanvasContainer.classList.add("components__offcanvas-container--lifted");
+            offcanvasArrow.classList.add("components__offcanvas-arrow--flipped");
         });
 
         offcanvasContainer.addEventListener('hide.bs.offcanvas', function () {
             offcanvasButton.classList.remove("components__offcanvas-button--lifted");
             offcanvasContainer.classList.remove("components__offcanvas-container--lifted");
+            offcanvasArrow.classList.remove("components__offcanvas-arrow--flipped")
         });
 
     </script>

@@ -27,3 +27,11 @@
   background-color: #f8f9fa;
 
 }
+
+#bootstrap-overrides .components__offcanvas-arrow {
+  transition: all .35s ease;
+}
+
+#bootstrap-overrides .components__offcanvas-arrow--flipped {
+  transform: rotate(-180deg) !important;
+}

@@ -5,7 +5,7 @@ $pink:    #FF00C0;
 //$red:     #dc3545;
 //$orange:  #fd7e14;
 $yellow:  #fada02;
-$green:   #548b6a;
+$green:   #538b69;
 //$teal:    #20c997;
 //$cyan:    #0dcaf0;
 $brown:   #c2b59b;
@@ -53,3 +53,15 @@ $table-variants: (
   "light":      $light,
   "dark":       $dark,
 );
+
+@each $color, $value in $theme-colors {
+  .btn-#{$color} {
+    @include button-variant($value, $value);
+  }
+}
+
+@each $color, $value in $theme-colors {
+  .btn-outline-#{$color} {
+    @include button-outline-variant($value);
+  }
+}

@@ -25,8 +25,8 @@ const InnerTable = (props) => {
 
     return (
         <div style={{padding: "0 0 0 48px"}}>
-            <Table className={"table"} style={{paddingLeft: "48px", backgroundColor: "#f8f9fa", border: "2px solid black"}}>
-                <Thead style={{backgroundColor: "#dbddde"}}>
+            <Table className={"table"} style={{paddingLeft: "48px"}}>
+                <Thead style={{backgroundColor: "#538b69", color: "white"}}>
                     <Tr>
                         <Th>Description</Th>
                         <Th>Voltage Rating</Th>
@@ -38,7 +38,7 @@ const InnerTable = (props) => {
                         { props.userInventory && <Th><span className={"sr-only"}>Add</span></Th> }
                     </Tr>
                 </Thead>
-                <Tbody>
+                <Tbody style={{backgroundColor: "#f0f0f0", borderTop: 0}}>
                     { rows }
                 </Tbody>
             </Table>

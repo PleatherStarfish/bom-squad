@@ -2,7 +2,8 @@ import "../scss/index.scss";
 import '../scss/node_modules/bootstrap';
 import '../scss/node_modules/animate.css';
 
-import './components/tooltip'
+import './components/tooltip.js'
+// import './components/fullscreen_menu.js'
 
 window.onload = function () {
 
@@ -40,13 +41,15 @@ window.onload = function () {
     const fullscreenMenuItems = document.getElementsByClassName("fullscreen-menu__item");
     const mainLogoImg = document.getElementById('logo__main');
     const secondaryLogo = document.getElementById('logo__secondary');
+    const componentsOffcanvasBtn = document.getElementById('components__offcanvas-button');
+    const componentsOffcanvasContainer = document.getElementById('components__offcanvas-container');
 
-    // Bootstrap 5 event listeners for the fullswcreen menu "hide" event
+    // Bootstrap 5 event listeners for the full screen menu "hide" event
     fullscreenMenu.addEventListener('hide.bs.offcanvas', function () {
         secondaryLogo.classList.remove("logo__secondary--off-canvas");
         mainLogoImg.classList.remove("logo__main--off-canvas");
         const closeBtn = document.getElementById('fullscreen-menu__close-btn');
-        closeBtn.style.visibility = 'hidden'
+        closeBtn.style.visibility = 'hidden';
 
         const itemsLength = fullscreenMenuItems !== null ? fullscreenMenuItems.length : 0;
         for(let i = 0; i < itemsLength; i++) {
@@ -55,10 +58,18 @@ window.onload = function () {
         }
     });
 
+    // Bootstrap 5 event listeners for the full screen menu "hidden" event
+    fullscreenMenu.addEventListener('hidden.bs.offcanvas', function () {
+        componentsOffcanvasBtn.style.visibility = "visible";
+        componentsOffcanvasContainer.style.visibility = "visible";
+    });
+
     // Bootstrap 5 event listeners for the fullswcreen menu "show" event
     fullscreenMenu.addEventListener('show.bs.offcanvas', function () {
         secondaryLogo.classList.add("logo__secondary--off-canvas");
         mainLogoImg.classList.add("logo__main--off-canvas");
+        componentsOffcanvasBtn.style.visibility = "hidden";
+        componentsOffcanvasContainer.style.visibility = "hidden";
     });
 
     // Bootstrap 5 event listeners for the fullswcreen menu "shown" event

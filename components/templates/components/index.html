@@ -25,22 +25,22 @@
                                     <div style="background-color: #ebeced; width: 100px;">
                                         <div class="h-100 w-100 d-flex flex-column justify-content-center">
                                             <div style="display: inline-block; writing-mode: vertical-rl;text-orientation: mixed; transform: rotate(180deg)">
-                                                <h2 style="display:inline-block; white-space: nowrap; text-align: center; color: #7a7a7a">{{type.grouper}}s</h2>
+                                                <h2 class="py-3" style="display:inline-block; white-space: nowrap; text-align: center; color: #7a7a7a">{{type.grouper}}s</h2>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="w-100 table-responsive p-4">
                                         <table class="table">
-                                            <thead class="table-dark" style="font-size: 11px">
+                                            <thead style="font-weight: bold; font-size: 14px; background-color: white; color: #538b69; white-space: nowrap;">
                                                 <tr>
                                                     {% if columns|get_item:type.grouper %}
                                                         {% with heading_list=columns|get_item:type.grouper %}
                                                             {% for heading in heading_list %}
                                                                 {% if heading == "Add" %}
                                                                     {% if user.is_authenticated %}
-                                                                        <th scope="col"><span class="sr-only">{{ heading }}</span></th>
+                                                                        <th scope="col">{{ heading }}</th>
                                                                     {% endif %}
-                                                                {% elif heading == "# in Inventory" or heading == "Inventory Location" %}
+                                                                {% elif heading == "# in Inv." or heading == "Inv. Location" %}
                                                                     {% if user.is_authenticated %}
                                                                         <th scope="col">{{ heading }}</th>
                                                                     {% endif %}
@@ -52,39 +52,65 @@
                                                     {% endif %}
                                                 </tr>
                                             </thead>
-                                            <tbody style="font-size: 11px">
+                                            <tbody class="border-0" style="font-size: 11px">
                                                 {% for item in type.list %}
-                                                    <tr>
+                                                    <tr id="component_row_{{ item.id }}">
                                                         {% with heading_list=columns|get_item:type.grouper %}
-                                                            <th>{{ item.description }}</th>
-                                                                {% if "Manufacturer" in heading_list %}<th>{{ item.manufacturer.name }}</th>{% endif %}
-                                                                {% if "Voltage Rating" in heading_list %}<th>{{ item.voltage_rating }}</th>{% endif %}
-                                                                {% if "Tolerance" in heading_list %}<th>{{ item.tolerance }}</th>{% endif %}
-                                                                {% if "Suppliers" in heading_list %}<th>{{ item.supplier.name }}</th>{% endif %}
-                                                                {% if "Supplier Item #" in heading_list %}<th><a href="{{ item.link }}">{{ item.supplier_item_no }}</a></th>{% endif %}
-                                                                <th>{% if item.price %}{{ item.price }}{% endif %}</th>
-                                                                {% if user.is_authenticated %}
-                                                                    <th></th>
-                                                                    <th></th>
-                                                                {% endif %}
+                                                            <th class="component_cell_description">{% if item.description %}{{ item.description }}{% endif %}</th>
+                                                            {% if "Manufacturer" in heading_list %}<th class="component_cell_manufacturer">{{ item.manufacturer.name }}</th>{% endif %}
+                                                            {% if "Voltage Rating" in heading_list %}<th class="component_cell_voltage_rating">{{ item.voltage_rating }}</th>{% endif %}
+                                                            {% if "Tolerance" in heading_list %}<th class="component_cell_tolerance">{{ item.tolerance }}</th>{% endif %}
+                                                            {% if "Suppliers" in heading_list %}<th class="component_cell_supplier">{{ item.supplier.name }}</th>{% endif %}
+                                                            {% if "Supplier Item #" in heading_list %}<th class="component_cell_supplier_item_no"><a href="{{ item.link }}">{{ item.supplier_item_no }}</a></th>{% endif %}
+                                                            <th class="component_cell_price">{% if item.price %}{{ item.price }}{% endif %}</th>
+                                                            {% if user.is_authenticated %}
+                                                                <th></th>
+                                                                <th></th>
+                                                            {% endif %}
                                                         {% endwith %}
                                                             {% if user.is_authenticated %}
-                                                                <th class="d-flex flex-row-reverse" id="row_{{ item.id }}">
-                                                                    <form>
+                                                                <th id="row_{{ item.id }}">
+
+                                                                    <div class="d-flex flex-row-reverse h-100">
+
+                                                                        {% comment %}
+                                                                        <div class="d-flex">
+                                                                            <div class="d-flex flex-column justify-content-center mx-1">
+                                                                                <div class="btn btn-outline-success p-2" style="font-size: 11px" id="addToInv_{{ item.id }}" onclick="addToInv(event)">
+                                                                                    <svg id="addToInvSVG_{{ item.id }}" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-seam" viewBox="0 0 16 16">
+                                                                                      <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2l-2.218-.887zm3.564 1.426L5.596 5 8 5.961 14.154 3.5l-2.404-.961zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z"/>
+                                                                                    </svg>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="d-flex flex-column justify-content-center mx-1">
+                                                                                <div class="btn btn-outline-success p-2" style="font-size: 11px">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bag-plus" viewBox="0 0 16 16">
+                                                                                      <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5z"/>
+                                                                                      <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
+                                                                                    </svg>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        {% endcomment %}
+
                                                                         <div class="d-flex">
                                                                             <div>
-                                                                                <label for="quantity">Quantity:</label><br>
-                                                                                <input class="me-2" type="number" id="quantity" name="quantity" style="max-width: 50px;"><br>
+                                                                                <label for="quantity_{{ item.id }}">Quantity:</label><br>
+                                                                                <input id="quantity_{{ item.id }}" class="me-2" type="number" name="quantity" min="0" style="max-width: 50px;" oninput="setQuantity(event)"><br>
                                                                             </div>
 
                                                                             <div>
-                                                                                <label for="location">Location:</label><br>
-                                                                                <input class="me-2"  type="text" id="location" name="location">
+                                                                                <label for="location_{{ item.id }}">Location:</label><br>
+                                                                                <input id="location_{{ item.id }}" class="me-2"  type="text" name="location" oninput="setLocation(event)">
                                                                             </div>
 
-                                                                            <button type="submit" class="btn btn-success">Add</button>
+                                                                            <div class="d-none">
+                                                                                <span>Total cost:</span>
+                                                                                <span id="total-cost"></span>
+                                                                            </div>
                                                                         </div>
-                                                                    </form>
+                                                                    </div>
                                                                 </th>
                                                             {% endif %}
                                                     </tr>
@@ -100,4 +126,96 @@
             </div>
         </section>
     </div>
+
+    <button id="components__offcanvas-button"
+            class="btn btn-success px-3 components__offcanvas-button"
+            type="button"
+            style="z-index: 9999"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#components__offcanvas-container"
+            aria-controls="offcanvasBottom">
+        Components [<span id="components-number">0</span>], Shopping [<span id="shopping-number">0</span>]
+        <span style="margin-left: 10px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+            </svg>
+        </span>
+    </button>
+
+    <div class="offcanvas offcanvas-bottom components__offcanvas-container" tabindex="-1" id="components__offcanvas-container" aria-labelledby="offcanvasBottomLabel">
+        <div class="offcanvas-body small">
+            ...
+        </div>
+    </div>
+
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        var quantity_state = {};
+        var location_state = {};
+
+        function setQuantity(e) {
+            var compIdQuant = e.target.id.split('_')[1];
+            quantity_state[compIdQuant] = parseInt(document.getElementById(e.target.id).value);
+            console.log(quantity_state)
+        }
+
+        function setLocation(e) {
+            var compIdLoc = e.target.id.split('_')[1];
+            location_state[compIdLoc] = document.getElementById(e.target.id).value;
+            console.log(location_state)
+        }
+
+        function addToInv(e) {
+            e.preventDefault();
+
+            var id_str = e.target.id.split('_')[1];
+
+            var csrftoken = '{{ csrf_token }}';
+            var data_to_backend = new FormData();
+
+            console.log(id_str);
+            if ((id_str in quantity_state) && (id_str in location_state)) {
+                console.log("YES");
+                data_to_backend.append('quantity', quantity_state[`${id_str}`]);
+                data_to_backend.append('location', location_state[`${id_str}`]);
+            }
+
+            var request = new Request("/components/add_to_components_list/", {
+                method: 'POST',
+                headers: {'X-CSRFToken': csrftoken},
+                body: data_to_backend
+            });
+            fetch(request, {
+                method: 'POST',
+                mode: 'same-origin'
+                }).then(
+                    function(response) {
+                        if (response.status === 200) {
+                            console.log(response)
+                        } else {
+                            console.log("Error");
+                            console.log(response)
+                        }
+                    }
+                );
+        }
+
+        var offcanvasContainer = document.getElementById('components__offcanvas-container');
+        var offcanvasButton = document.getElementById('components__offcanvas-button');
+
+        offcanvasContainer.addEventListener('show.bs.offcanvas', function () {
+            offcanvasButton.classList.add("components__offcanvas-button--lifted");
+            offcanvasContainer.classList.add("components__offcanvas-container--lifted");
+        });
+
+        offcanvasContainer.addEventListener('hide.bs.offcanvas', function () {
+            offcanvasButton.classList.remove("components__offcanvas-button--lifted");
+            offcanvasContainer.classList.remove("components__offcanvas-container--lifted");
+        });
+
+    </script>
+
 {% endblock %}

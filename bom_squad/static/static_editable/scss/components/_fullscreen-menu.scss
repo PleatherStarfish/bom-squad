@@ -1,28 +1,32 @@
-$offcanvas-vertical-height: 100vh;
-$offcanvas-transition-duration: .5s;
-$offcanvas-bg-color: #212529;
-
-$btn-close-width:  12vw;
-$btn-close-height: $btn-close-width;
-$btn-close-color: red;
-
 .fullscreen-menu__body-inner-flex {
   width: 100%;
   margin-top: 3vh;
 }
 
-.fullscreen-menu__container {
-  z-index: -9999;
+#bootstrap-overrides .fullscreen-menu__container {
+  height: 100vh;
+  transition-duration: .5s;
+  background-color: #212529;
 }
 
-.fullscreen-menu__close-btn {
+#bootstrap-overrides .fullscreen-menu__close-btn {
+  @extend .btn-close, .btn-close-white;
   position: absolute;
+  background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='#{$btn-close-color}'><path d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/></svg>");
+  background-size: 12vw 12vw !important;
   top: 2vw;
   left: 2vw;
+  width: 12vw !important;
+  height: 12vw !important;
   visibility: hidden;
 }
 
-.fullscreen-menu__close-btn:hover {
+#bootstrap-overrides .fullscreen-menu__close-btn > * {
+  width: 12vw !important;
+  height: 12vw !important;
+}
+
+#bootstrap-overrides .fullscreen-menu__close-btn:hover {
   fill:red;
 }
 

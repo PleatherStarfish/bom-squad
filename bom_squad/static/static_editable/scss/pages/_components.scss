@@ -5,33 +5,52 @@
   bottom: 0;
   right: 2vw;
   height: 50px;
-  border: 0;
-  border-radius: 20px 20px 0 0;
+  border: 0 !important;
+  border-radius: 10px 10px 0 0;
   transition: all .35s ease;
+  box-shadow: none;
 }
 
 #bootstrap-overrides .components__offcanvas-button--lifted {
   bottom: 25vh !important;
   background-color: #f8f9fa;
   color: #505050;
+  border: 0;
+  box-shadow: none;
 }
 
 #bootstrap-overrides .components__offcanvas-container {
   background-color: #528c69;
   height: 25vh;
   box-sizing: content-box;
-  transition: all .35s ease;
+  transition: all .35s;
+  border: 0;
+  box-shadow: none;
 }
 
 #bootstrap-overrides .components__offcanvas-container--lifted {
   background-color: #f8f9fa;
-
+  border: 0;
 }
 
 #bootstrap-overrides .components__offcanvas-arrow {
   transition: all .35s ease;
+  box-shadow: none;
 }
 
 #bootstrap-overrides .components__offcanvas-arrow--flipped {
   transform: rotate(-180deg) !important;
+}
+
+.components__offcanvas-svg {
+  margin-left: 10px;
+}
+
+.components__offcanvas-table {
+    overflow: scroll;
+}
+
+#bootstrap-overrides .components__offcanvas-remove-btn {
+  background-color: #FF00C0;
+  padding: 0.1rem 0.5rem;
 }

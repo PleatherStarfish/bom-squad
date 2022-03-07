@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load get_item %}
+{% load static get_item %}
 
 {% block content %}
     <div class="row">
@@ -56,13 +56,13 @@
                                                 {% for item in type.list %}
                                                     <tr id="component_row_{{ item.id }}">
                                                         {% with heading_list=columns|get_item:type.grouper %}
-                                                            <th class="component_cell_description">{% if item.description %}{{ item.description }}{% endif %}</th>
+                                                            <th id="description_{{ item.id }}" class="component_cell_description">{% if item.description %}{{ item.description }}{% endif %}</th>
                                                             {% if "Manufacturer" in heading_list %}<th class="component_cell_manufacturer">{{ item.manufacturer.name }}</th>{% endif %}
                                                             {% if "Voltage Rating" in heading_list %}<th class="component_cell_voltage_rating">{{ item.voltage_rating }}</th>{% endif %}
                                                             {% if "Tolerance" in heading_list %}<th class="component_cell_tolerance">{{ item.tolerance }}</th>{% endif %}
                                                             {% if "Suppliers" in heading_list %}<th class="component_cell_supplier">{{ item.supplier.name }}</th>{% endif %}
-                                                            {% if "Supplier Item #" in heading_list %}<th class="component_cell_supplier_item_no"><a href="{{ item.link }}">{{ item.supplier_item_no }}</a></th>{% endif %}
-                                                            <th class="component_cell_price">{% if item.price %}{{ item.price }}{% endif %}</th>
+                                                            {% if "Supplier Item #" in heading_list %}<th id="item_no_{{ item.id }}" class="component_cell_supplier_item_no"><a href="{{ item.link }}">{{ item.supplier_item_no }}</a></th>{% endif %}
+                                                            <th id="price_{{ item.id }}" class="component_cell_price">{% if item.price %}{{ item.price }}{% endif %}</th>
                                                             {% if user.is_authenticated %}
                                                                 <th></th>
                                                                 <th></th>
@@ -127,15 +127,18 @@
         </section>
     </div>
 
+    <div id="_react"></div>
+
+    {% comment %}
     <button id="components__offcanvas-button"
             class="btn btn-success px-3 components__offcanvas-button"
             type="button"
-            style="z-index: 9999"
+            style="z-index: 9999;"
             data-bs-toggle="offcanvas"
             data-bs-target="#components__offcanvas-container"
             aria-controls="offcanvasBottom">
         Components [<span id="components-number">0</span>], Shopping [<span id="shopping-number">0</span>]
-        <span style="margin-left: 10px">
+        <span class="components__offcanvas-svg">
             <svg id="components__offcanvas-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill components__offcanvas-arrow" viewBox="0 0 16 16">
                 <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
             </svg>
@@ -144,35 +147,93 @@
 
     <div class="offcanvas offcanvas-bottom components__offcanvas-container" tabindex="-1" id="components__offcanvas-container" aria-labelledby="offcanvasBottomLabel">
         <div class="offcanvas-body small">
-
+            <table id="components__offcanvas-table" class="table table-sm components__offcanvas-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Description</th>
+                        <th scope="col">Supplier Item #</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Quantity to Add</th>
+                        <th scope="col">Location</th>
+                        <th scope="col"><span class="sr-only">Remove</span></th>
+                    </tr>
+                </thead>
+                <tbody id="components__offcanvas-tbody">
+                </tbody>
+            </table>
         </div>
     </div>
+    {% endcomment %}
 
-    </div>
 {% endblock %}
 
 {% block scripts %}
     <script>
+        function setCompData(id) {
+            if (localStorage.getItem('components_data_state') === null) {
+                localStorage.setItem('components_data_state', JSON.stringify({}));
+            }
+            var localDataState = JSON.parse(localStorage.getItem('components_data_state'));
+            var addObj = {};
+            addObj['description'] = document.getElementById(`description_${id}`).textContent;
+            addObj['price'] = document.getElementById(`price_${id}`).textContent;
+            addObj['item_no'] = document.getElementById(`item_no_${id}`).textContent;
+            localDataState[id] = addObj;
+            localStorage.setItem('components_data_state', JSON.stringify(localDataState));
+        }
+
         function setQuantity(e) {
             if (localStorage.getItem('quantity_state') === null) {
                 localStorage.setItem('quantity_state', JSON.stringify({}));
             }
-            var compIdQuant = e.target.id.split('_')[1];
+
+            var compId = e.target.id.split('_')[1];
+            setCompData(compId);
+
             var localQuantityStorageState = JSON.parse(localStorage.getItem('quantity_state'));
-            localQuantityStorageState[compIdQuant] = parseInt(document.getElementById(e.target.id).value);
+            localQuantityStorageState[compId] = parseInt(document.getElementById(e.target.id).value);
             localStorage.setItem('quantity_state', JSON.stringify(localQuantityStorageState));
-            console.log(localStorage.getItem('quantity_state'))
+        }
+
+        function setOffcanvasTableDisplay() {
+            var table = document.getElementById('components__offcanvas-tbody');
+            var rowCount = table.rows.length;
+            for (var i = rowCount - 1 ; i >= 0; i--) {
+                table.deleteRow(i);
+            }
+            for (var [key, value] of Object.entries(JSON.parse(localStorage.getItem('quantity_state')))) {
+                var row = table.insertRow(0);
+
+                var cell0 = row.insertCell(0);
+                var cell1 = row.insertCell(1);
+                var cell2 = row.insertCell(2);
+                var cell3 = row.insertCell(3);
+                var cell4 = row.insertCell(4);
+                var cell5 = row.insertCell(5);
+
+                var cellData = JSON.parse(localStorage.getItem('components_data_state'))[key];
+                cell0.innerHTML = cellData['description'];
+                cell1.innerHTML = cellData['item_no'];
+                cell2.innerHTML = cellData['price'];
+                cell3.innerHTML = "NEW CELL2";
+                cell4.innerHTML = "NEW CELL2";
+
+                let btn = document.createElement("button");
+                cell5.innerHTML += "<button class='btn btn-small btn-danger components__offcanvas-remove-btn' type='button'>Remove</button>";
+            }
         }
 
         function setLocation(e) {
             if (localStorage.getItem('location_state') === null) {
                 localStorage.setItem('location_state', JSON.stringify({}));
             }
-            var compIdLoc = e.target.id.split('_')[1];
+
+            var compId = e.target.id.split('_')[1];
+            setCompData(compId);
+
             var localLocationStorageState = JSON.parse(localStorage.getItem('location_state'));
-            localLocationStorageState[compIdLoc] = document.getElementById(e.target.id).value;
+            localLocationStorageState[compId] = document.getElementById(e.target.id).value;
             localStorage.setItem('location_state', JSON.stringify(localLocationStorageState));
-            console.log(localStorage.getItem('location_state'));
         }
 
         function addToInv(e) {
@@ -186,7 +247,6 @@
             var quantity_state = JSON.parse(localStorage.getItem('quantity_state'));
             var location_state = JSON.parse(localStorage.getItem('location_state'));
 
-            console.log(id_str);
             if ((`${id_str}` in quantity_state) && (`${id_str}` in location_state)) {
                 data_to_backend.append('quantity', quantity_state[`${id_str}`]);
                 data_to_backend.append('location', location_state[`${id_str}`]);
@@ -217,6 +277,7 @@
         var offcanvasArrow = document.getElementById('components__offcanvas-arrow');
 
         offcanvasContainer.addEventListener('show.bs.offcanvas', function () {
+            setOffcanvasTableDisplay();
             offcanvasButton.classList.add("components__offcanvas-button--lifted");
             offcanvasContainer.classList.add("components__offcanvas-container--lifted");
             offcanvasArrow.classList.add("components__offcanvas-arrow--flipped");
@@ -229,5 +290,7 @@
         });
 
     </script>
+
+    <script type="text/javascript" src="{% static "bundles/components_bundle.js" %}"></script>
 
 {% endblock %}

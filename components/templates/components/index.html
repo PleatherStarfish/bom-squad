@@ -195,34 +195,6 @@
             localStorage.setItem('quantity_state', JSON.stringify(localQuantityStorageState));
         }
 
-        function setOffcanvasTableDisplay() {
-            var table = document.getElementById('components__offcanvas-tbody');
-            var rowCount = table.rows.length;
-            for (var i = rowCount - 1 ; i >= 0; i--) {
-                table.deleteRow(i);
-            }
-            for (var [key, value] of Object.entries(JSON.parse(localStorage.getItem('quantity_state')))) {
-                var row = table.insertRow(0);
-
-                var cell0 = row.insertCell(0);
-                var cell1 = row.insertCell(1);
-                var cell2 = row.insertCell(2);
-                var cell3 = row.insertCell(3);
-                var cell4 = row.insertCell(4);
-                var cell5 = row.insertCell(5);
-
-                var cellData = JSON.parse(localStorage.getItem('components_data_state'))[key];
-                cell0.innerHTML = cellData['description'];
-                cell1.innerHTML = cellData['item_no'];
-                cell2.innerHTML = cellData['price'];
-                cell3.innerHTML = "NEW CELL2";
-                cell4.innerHTML = "NEW CELL2";
-
-                let btn = document.createElement("button");
-                cell5.innerHTML += "<button class='btn btn-small btn-danger components__offcanvas-remove-btn' type='button'>Remove</button>";
-            }
-        }
-
         function setLocation(e) {
             if (localStorage.getItem('location_state') === null) {
                 localStorage.setItem('location_state', JSON.stringify({}));
@@ -277,7 +249,6 @@
         var offcanvasArrow = document.getElementById('components__offcanvas-arrow');
 
         offcanvasContainer.addEventListener('show.bs.offcanvas', function () {
-            setOffcanvasTableDisplay();
             offcanvasButton.classList.add("components__offcanvas-button--lifted");
             offcanvasContainer.classList.add("components__offcanvas-container--lifted");
             offcanvasArrow.classList.add("components__offcanvas-arrow--flipped");

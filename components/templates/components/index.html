@@ -60,7 +60,7 @@
                                                             {% if "Manufacturer" in heading_list %}<th class="component_cell_manufacturer">{{ item.manufacturer.name }}</th>{% endif %}
                                                             {% if "Voltage Rating" in heading_list %}<th class="component_cell_voltage_rating">{{ item.voltage_rating }}</th>{% endif %}
                                                             {% if "Tolerance" in heading_list %}<th class="component_cell_tolerance">{{ item.tolerance }}</th>{% endif %}
-                                                            {% if "Suppliers" in heading_list %}<th class="component_cell_supplier">{{ item.supplier.name }}</th>{% endif %}
+                                                            {% if "Suppliers" in heading_list %}<th id="supplier_{{ item.id }}" class="component_cell_supplier" data-supplier-short-name="{{ item.supplier.short_name }}">{{ item.supplier.name }}</th>{% endif %}
                                                             {% if "Supplier Item #" in heading_list %}<th id="item_no_{{ item.id }}" class="component_cell_supplier_item_no"><a href="{{ item.link }}">{{ item.supplier_item_no }}</a></th>{% endif %}
                                                             <th id="price_{{ item.id }}" class="component_cell_price">{% if item.price %}{{ item.price }}{% endif %}</th>
                                                             {% if user.is_authenticated %}
@@ -169,6 +169,13 @@
 
 {% block scripts %}
     <script>
+        function updateNumberInTab() {
+            var tabNumber = document.getElementById('components-quantity-tab-number');
+            var quantityStateObj = JSON.parse(localStorage.getItem('quantity_state'));
+            console.log("updateNumberInTab", quantityStateObj);
+            tabNumber.innerText = Object.values(quantityStateObj).reduce((partialSum, a) => partialSum + a, 0);
+        }
+
         function setCompData(id) {
             if (localStorage.getItem('components_data_state') === null) {
                 localStorage.setItem('components_data_state', JSON.stringify({}));
@@ -177,6 +184,7 @@
             var addObj = {};
             addObj['description'] = document.getElementById(`description_${id}`).textContent;
             addObj['price'] = document.getElementById(`price_${id}`).textContent;
+            addObj['supplier_short_name'] = document.getElementById(`supplier_${id}`).getAttribute('data-supplier-short-name');
             addObj['item_no'] = document.getElementById(`item_no_${id}`).textContent;
             localDataState[id] = addObj;
             localStorage.setItem('components_data_state', JSON.stringify(localDataState));
@@ -191,14 +199,24 @@
             setCompData(compId);
 
             var localQuantityStorageState = JSON.parse(localStorage.getItem('quantity_state'));
-            localQuantityStorageState[compId] = parseInt(document.getElementById(e.target.id).value);
-            localStorage.setItem('quantity_state', JSON.stringify(localQuantityStorageState));
+
+            if (parseInt(document.getElementById(e.target.id).value) !== 0) {
+                localQuantityStorageState[compId] = parseInt(document.getElementById(e.target.id).value);
+                console.log("parseInt(document.getElementById(e.target.id).value)", parseInt(document.getElementById(e.target.id).value));
+                localStorage.setItem('quantity_state', JSON.stringify(localQuantityStorageState));
+                updateNumberInTab();
+            } else {
+                delete localQuantityStorageState[compId];
+                localStorage.setItem('quantity_state', JSON.stringify(localQuantityStorageState));
+                updateNumberInTab();
+            }
         }
 
         function setLocation(e) {
             if (localStorage.getItem('location_state') === null) {
                 localStorage.setItem('location_state', JSON.stringify({}));
             }
+            updateNumberInTab();
 
             var compId = e.target.id.split('_')[1];
             setCompData(compId);

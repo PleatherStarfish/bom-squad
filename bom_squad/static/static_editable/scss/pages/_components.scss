@@ -1,7 +1,6 @@
 #bootstrap-overrides .components__offcanvas-button {
   background-color: #528c69;
   position: fixed;
-  font-weight: bold;
   bottom: 0;
   right: 2vw;
   height: 50px;
@@ -50,11 +49,16 @@
     overflow: scroll;
 }
 
-#bootstrap-overrides .components__offcanvas-remove-btn {
-  background-color: #FF00C0;
-  padding: 0.1rem 0.5rem;
-}
-
 .components__offcanvas-thead > tr > th {
   color: #505050;
+}
+
+#bootstrap-overrides .components__offcanvas-remove-btn {
+  border-color: #FF00C0;
+  color: #FF00C0;
+}
+
+#bootstrap-overrides .components__offcanvas-remove-btn:hover {
+  background-color: #FF00C0;
+  color: #f8f9fa;
 }

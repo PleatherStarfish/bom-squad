@@ -23,9 +23,9 @@ $gray-800: #343a40;
 $gray-900: #212529;
 $black:    #000;
 
-$primary:   $blue;
+$primary:   $green;
 $secondary: $gray-600;
-$success:   $green;
+$success:   $blue;
 $info:      $brown;
 $warning:   $yellow;
 $danger:    $pink;
@@ -42,6 +42,21 @@ $theme-colors: (
   "light":      $light,
   "dark":       $dark
 );
+
+//$form-check-input-checked-bg-color: #528c69;
+//$form-check-input-checked-border-color: #528c69;
+//$component-active-color: #528c69;
+//$form-check-input-checked-color: #528c69;
+//
+//$form-check-input-indeterminate-color: #528c69;
+//$form-check-input-indeterminate-bg-color: #528c69;
+//$form-check-input-indeterminate-border-color: #528c69;
+//
+//$form-check-input-focus-border: #528c69;
+//$form-check-input-focus-box-shadow: #528c69;
+//
+//$input-focus-border-color: #528c69;
+//$input-btn-focus-box-shadow: #528c69;
 
 $table-variants: (
   "primary":    shift-color($primary, $table-bg-scale),

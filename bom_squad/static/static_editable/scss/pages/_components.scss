@@ -1,5 +1,6 @@
 #bootstrap-overrides .components__offcanvas-button {
   background-color: #528c69;
+  color: #f8f9fa;
   position: fixed;
   bottom: 0;
   right: 2vw;
@@ -61,4 +62,10 @@
 #bootstrap-overrides .components__offcanvas-remove-btn:hover {
   background-color: #FF00C0;
   color: #f8f9fa;
+}
+
+#bootstrap-overrides .form-check-input:focus {
+  border-color: #528c69;
+  color: #528c69;
+  box-shadow: rgba(82, 140, 105, .7);
 }

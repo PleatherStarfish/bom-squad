@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Offcanvas } from 'react-bootstrap'
+import React, { useEffect, useState, useRef } from 'react';
+import { Button, Offcanvas, Form } from 'react-bootstrap'
 // import BOMListTable from "./components/Table";
 
-function getTotalPrice(number, price, currencyOrPrice) {
+function getTotalPrice(number, price) {
     const quant = parseInt(number);
     const currency = price.charAt(0);
     const stringWithoutCurrency = price.substring(1);
     const floatPrice = parseFloat(stringWithoutCurrency);
-    if (currencyOrPrice === "currency") {
-        return currency
-    } else if (currencyOrPrice === "price") {
-        return (floatPrice * quant).toFixed(2)
-    }
+    return `${currency}${(floatPrice * quant).toFixed(2)}`
 }
 
 function App() {
@@ -25,12 +21,45 @@ function App() {
 
     const [tableRows, setTableRows] = useState(null);
 
+    const [componentsChecked, setComponentsChecked] = useState([]);
+    const [shoppingChecked, setShoppingChecked] = useState([]);
+
+    const [allContentListSwitchesOn, setAllContentListSwitchesOn] = useState(false);
+    const [allShoppingListSwitchesOn, setAllShoppingListSwitchesOn] = useState(false);
+
     const handleClick = () => setShow(!show);
+
     const handleClose = () => {
         setShow(false)
     };
     const handleShow = () => {
         setShow(true)
+    };
+
+    const handleContentListSwitches = () => {
+        setAllContentListSwitchesOn(!allContentListSwitchesOn)
+    };
+
+    const handleShoppingListSwitches = () => {
+        setAllShoppingListSwitchesOn(!allShoppingListSwitchesOn)
+    };
+
+    const handleContentSwitchesChange = (e) => {
+        const switchID = e.target.id;
+        if (switchID in componentsChecked) {
+            setComponentsChecked(componentsChecked.filter(item => item !== switchID))
+        } else {
+            setComponentsChecked((oldArray) => [switchID, ...oldArray])
+        }
+    };
+
+    const handleShoppingSwitchesChange = (e) => {
+        const switchID = e.target.id;
+        if (!(switchID in shoppingChecked)) {
+            setShoppingChecked(shoppingChecked.filter(item => item !== switchID))
+        } else {
+            setShoppingChecked((oldArray) => [switchID, ...oldArray])
+        }
     };
 
     useEffect(() => {
@@ -56,9 +85,27 @@ function App() {
                         <td>{componentsData[value].description}</td>
                         <td>{componentsData[value].supplier_short_name}</td>
                         <td>{componentsData[value].item_no}</td>
-                        <td>{quantityState ? `${getTotalPrice(quantityState[value], componentsData[value].price, "currency")}${getTotalPrice(quantityState[value], componentsData[value].price, "price")}` : ""}</td>
+                        <td>{quantityState ? getTotalPrice(quantityState[value], componentsData[value].price) : ""}</td>
                         <td>{quantityState ? quantityState[value] : ""}</td>
                         <td>{locationState ? locationState[value] : ""}</td>
+                        <td style={{fontSize: "16px"}}>
+                            <Form>
+                                <Form.Check
+                                    type="switch"
+                                    id={`contentSwitch_${value}`}
+                                    onChange={(e) => handleContentSwitchesChange(e)}
+                                />
+                            </Form>
+                        </td>
+                        <td style={{fontSize: "16px"}}>
+                            <Form>
+                                <Form.Check
+                                    type="switch"
+                                    id={`shoppingSwitch_${value}`}
+                                    onChange={(e) => handleShoppingSwitchesChange(e)}
+                                />
+                            </Form>
+                        </td>
                         <td><Button className="components__offcanvas-remove-btn" variant="outline-danger" size="sm">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      className="bi bi-trash3" viewBox="0 0 16 16">
@@ -79,7 +126,7 @@ function App() {
             <Button id="components__offcanvas-button"
                     className={!show ? "btn btn-success px-3 components__offcanvas-button" : "btn btn-success px-3 components__offcanvas-button components__offcanvas-button--lifted"}
                     type="button"
-                    style={{ zIndex: 9999 }}
+                    style={{ zIndex: 9999}}
                     onClick={handleClick}>
                 Components to Add [<span id="components-quantity-tab-number">{ totalQuantityToAdd || 0 }</span>]
                 <span className="components__offcanvas-svg">
@@ -98,7 +145,7 @@ function App() {
                        placement={"bottom"}>
                 <Offcanvas.Body>
                     <table id="components__offcanvas-table" className="table table-sm components__offcanvas-table">
-                        <thead className={"components__offcanvas-thead"}>
+                        <thead className={"components__offcanvas-thead"} style={{fontSize: "13px"}}>
                             <tr>
                                 <th scope="col">Description</th>
                                 <th scope="col">Supplier</th>
@@ -106,10 +153,28 @@ function App() {
                                 <th scope="col">Total</th>
                                 <th scope="col">Quantity to Add</th>
                                 <th scope="col">Location</th>
+                                <th scope="col">Add to Components
+                                    <Form style={{fontSize: "16px"}}>
+                                        <Form.Check
+                                            type="switch"
+                                            id="custom-switch"
+                                            onChange={handleContentListSwitches}
+                                        />
+                                    </Form>
+                                </th>
+                                <th scope="col">Add to Shopping
+                                    <Form style={{fontSize: "16px"}}>
+                                        <Form.Check
+                                            type="switch"
+                                            id="custom-switch"
+                                            onChange={handleShoppingListSwitches}
+                                        />
+                                    </Form>
+                                </th>
                                 <th scope="col"><span className="sr-only">Remove</span></th>
                             </tr>
                         </thead>
-                        <tbody id="components__offcanvas-tbody">
+                        <tbody id="components__offcanvas-tbody" style={{fontSize: "13px"}}>
                             { tableRows }
                         </tbody>
                     </table>

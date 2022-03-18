@@ -57,26 +57,48 @@ function App() {
         setShow(true)
     };
 
+    // Update local storage with the state of a single row switch
+    const setLocalStorageSwitch = (compID, list_type, username) => {
+        const localStorageState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
+
+        if (localStorageState[`${compID}`][`add_to_${list_type}_list`] === "true") {
+            localStorageState[`${compID}`][`add_to_${list_type}_list`] = "false";
+        } else {
+            localStorageState[`${compID}`][`add_to_${list_type}_list`] = "true";
+        }
+        localStorage.setItem(`${username}_comp_data`, JSON.stringify(localStorageState));
+    };
+
+    // Enforce an "all-on" or "all-off" switch state in local storage
+    const setLocalStorageSwitchOnOff = (compID, list_type, username, on) => {
+        const localStorageState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
+
+        if (on) {
+            localStorageState[`${compID}`][`add_to_${list_type}_list`] = "true"
+        } else {
+            localStorageState[`${compID}`][`add_to_${list_type}_list`] = "false"
+        }
+        localStorage.setItem(`${username}_comp_data`, JSON.stringify(localStorageState));
+    };
+
+    // Update hook with the state of a single row switch
+    const setStateFromSwitch = (compID, list_type) => {
+        if (list_type === 'components') {
+            switchHandler(componentsChecked, compID, setComponentsChecked)
+        }
+        if (list_type === 'shopping') {
+            switchHandler(shoppingChecked, compID, setShoppingChecked)
+        }
+    };
+
     // Handle a click on any of the switches for the data rows
     const handleSwitchesChange = (e, type) => {
         const switchID = e.target.id.split('_')[1];
         const username = window.username;
-        const compState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
+        const localStorageState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
 
-        if (compState[`${switchID}`][`add_to_${type}_list`] === "true") {
-            compState[`${switchID}`][`add_to_${type}_list`] = "false";
-        } else {
-            compState[`${switchID}`][`add_to_${type}_list`] = "true";
-        }
-
-        localStorage.setItem(`${username}_comp_data`, JSON.stringify(compState));
-
-        if (type === 'components') {
-            switchHandler(componentsChecked, switchID, setComponentsChecked)
-        }
-        if (type === 'shopping') {
-            switchHandler(shoppingChecked, switchID, setShoppingChecked)
-        }
+        setLocalStorageSwitch(switchID, type, username);
+        setStateFromSwitch(switchID, type)
     };
 
     // Handle any click on the "meta" switches at the top of the switch columns
@@ -91,9 +113,17 @@ function App() {
     // If the "allCSwitchesOn" state is true, switch all switches to the "on" state, else "off"
     useEffect(() => {
         if (componentsData) {
+            const username = window.username;
+
             if (allCSwitchesOn) {
+                Object.keys(componentsData).forEach((value, index) => {
+                    setLocalStorageSwitchOnOff(value, 'components', username, true);
+                });
                 setComponentsChecked(new Set([...Object.keys(componentsData)]))
             } else {
+                Object.keys(componentsData).forEach((value, index) => {
+                    setLocalStorageSwitchOnOff(value, 'components', username, false);
+                });
                 setComponentsChecked(new Set([]))
             }
         }
@@ -102,9 +132,17 @@ function App() {
     // If the "allSSwitchesOn" state is true, switch all switches to the "on" state, else "off"
     useEffect(() => {
         if (componentsData) {
+            const username = window.username;
+
             if (allSSwitchesOn) {
+                Object.keys(componentsData).forEach((value, index) => {
+                    setLocalStorageSwitchOnOff(value, 'shopping', username, true)
+                });
                 setShoppingChecked(new Set([...Object.keys(componentsData)]))
             } else {
+                Object.keys(componentsData).forEach((value, index) => {
+                    setLocalStorageSwitchOnOff(value, 'shopping', username, false);
+                });
                 setShoppingChecked(new Set([]))
             }
         }

@@ -19,6 +19,8 @@ const switchHandler = (array, value, setter) => {
     }
 };
 
+const getID = (e) => e.target.id.split('_')[1];
+
 function App() {
 
     // Show hide state of tab
@@ -33,9 +35,11 @@ function App() {
     // LSX for table rows
     const [tableRows, setTableRows] = useState(null);
 
+    // An array of IDs representing the on/off state of the switches (if it's in the array it's "on")
     const [componentsChecked, setComponentsChecked] = useState(new Set([]));
     const [shoppingChecked, setShoppingChecked] = useState(new Set([]));
 
+     // A boolean representing the state of the two "meta" switches at the top of the columns
     const [allCSwitchesOn, setAllCSwitchesOn] = useState(false);
     const [allSSwitchesOn, setAllSSwitchesOn] = useState(false);
 
@@ -93,11 +97,9 @@ function App() {
 
     // Handle a click on any of the switches for the data rows
     const handleSwitchesChange = (e, type) => {
-        const switchID = e.target.id.split('_')[1];
-        const username = window.username;
-        const localStorageState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
+        const switchID = getID(e);
 
-        setLocalStorageSwitch(switchID, type, username);
+        setLocalStorageSwitch(switchID, type, window.username);
         setStateFromSwitch(switchID, type)
     };
 
@@ -110,19 +112,31 @@ function App() {
         }
     };
 
+    const handleDeleteRow = (e) => {
+        const id = parseInt(e);
+        const {[id]: _removedComponent, ...newComponentsData} = componentsData;
+
+        setComponentsData(newComponentsData);
+        setComponentsChecked(prev => new Set([...prev].filter(x => x !== `${id}`)));
+        setShoppingChecked(prev => new Set([...prev].filter(x => x !== `${id}`)));
+
+        const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
+        const {[id]: _removedLocalStateComponent, ...newLocalStorageState} = localStorageState;
+        localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(newLocalStorageState));
+    };
+
     // If the "allCSwitchesOn" state is true, switch all switches to the "on" state, else "off"
     useEffect(() => {
         if (componentsData) {
-            const username = window.username;
 
             if (allCSwitchesOn) {
                 Object.keys(componentsData).forEach((value, index) => {
-                    setLocalStorageSwitchOnOff(value, 'components', username, true);
+                    setLocalStorageSwitchOnOff(value, 'components', window.username, true);
                 });
                 setComponentsChecked(new Set([...Object.keys(componentsData)]))
             } else {
                 Object.keys(componentsData).forEach((value, index) => {
-                    setLocalStorageSwitchOnOff(value, 'components', username, false);
+                    setLocalStorageSwitchOnOff(value, 'components', window.username, false);
                 });
                 setComponentsChecked(new Set([]))
             }
@@ -132,16 +146,15 @@ function App() {
     // If the "allSSwitchesOn" state is true, switch all switches to the "on" state, else "off"
     useEffect(() => {
         if (componentsData) {
-            const username = window.username;
 
             if (allSSwitchesOn) {
                 Object.keys(componentsData).forEach((value, index) => {
-                    setLocalStorageSwitchOnOff(value, 'shopping', username, true)
+                    setLocalStorageSwitchOnOff(value, 'shopping', window.username, true)
                 });
                 setShoppingChecked(new Set([...Object.keys(componentsData)]))
             } else {
                 Object.keys(componentsData).forEach((value, index) => {
-                    setLocalStorageSwitchOnOff(value, 'shopping', username, false);
+                    setLocalStorageSwitchOnOff(value, 'shopping', window.username, false);
                 });
                 setShoppingChecked(new Set([]))
             }
@@ -150,10 +163,16 @@ function App() {
 
     useEffect(() => {
         let rows = null;
+
         if (componentsData) {
             rows = Object.keys(componentsData).map((value, index) => {
                 return (
-                    <Row componentsData={componentsData} valueString={value} componentsChecked={componentsChecked} shoppingChecked={shoppingChecked} handleSwitchesChange={handleSwitchesChange} />
+                    <Row componentsData={componentsData}
+                         valueString={value}
+                         componentsChecked={componentsChecked}
+                         shoppingChecked={shoppingChecked}
+                         handleSwitchesChange={handleSwitchesChange}
+                         handleDeleteRow={handleDeleteRow} />
                 )
             });
             setTableRows(rows)

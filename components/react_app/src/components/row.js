@@ -36,7 +36,11 @@ const Row = (props) => {
                     />
                 </Form>
             </td>
-            <td><Button className="components__offcanvas-remove-btn" variant="outline-danger" size="sm">
+            <td><Button className="components__offcanvas-remove-btn"
+                        variant="outline-danger"
+                        size="sm"
+                        id={`rowDelete_${value}`}
+                        onClick={() => props.handleDeleteRow(value)}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                      className="bi bi-trash3" viewBox="0 0 16 16">
                     <path

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Button, Offcanvas, Form } from 'react-bootstrap'
-// import BOMListTable from "./components/Table";
+import { Button, Offcanvas, Form } from 'react-bootstrap';
+
 
 function getTotalPrice(number, price) {
     const quant = parseInt(number);
@@ -10,90 +10,115 @@ function getTotalPrice(number, price) {
     return `${currency}${(floatPrice * quant).toFixed(2)}`
 }
 
+const switchHandler = (array, value, setter) => {
+    if (array.has(value)) {
+        setter(prev => new Set([...prev].filter(x => x !== value)))
+    } else {
+        setter((prev) => new Set([...prev, value]))
+    }
+};
+
 function App() {
+
+    // Show hide state of tab
     const [show, setShow] = useState(false);
 
-    const [quantityState, setQuantityState] = useState(null);
-    const [locationState, setLocationState] = useState(null);
+    // Main data from browser state
     const [componentsData, setComponentsData] = useState(null);
 
+    // Number displayed in tab
     const [totalQuantityToAdd, setTotalQuantityToAdd] = useState(0);
 
+    // LSX for table rows
     const [tableRows, setTableRows] = useState(null);
 
-    const [componentsChecked, setComponentsChecked] = useState([]);
-    const [shoppingChecked, setShoppingChecked] = useState([]);
+    const [componentsChecked, setComponentsChecked] = useState(new Set([]));
+    const [shoppingChecked, setShoppingChecked] = useState(new Set([]));
 
-    const [allContentListSwitchesOn, setAllContentListSwitchesOn] = useState(false);
-    const [allShoppingListSwitchesOn, setAllShoppingListSwitchesOn] = useState(false);
+    const [allCSwitchesOn, setAllCSwitchesOn] = useState(false);
+    const [allSSwitchesOn, setAllSSwitchesOn] = useState(false);
 
-    const handleClick = () => setShow(!show);
+    useEffect(() => console.log(componentsChecked), [componentsChecked]);
 
+    //
+    const handleOffcanvasButtonClick = () => {
+        const username = window.username;
+        setComponentsData(JSON.parse(localStorage.getItem(`${username}_comp_data`)));
+        setShow(!show)
+    };
+
+    // Handler called when offcanvas closes
     const handleClose = () => {
         setShow(false)
     };
+
+    // Handler called when offcanvas opens
     const handleShow = () => {
         setShow(true)
     };
 
-    const handleContentListSwitches = () => {
-        setAllContentListSwitchesOn(!allContentListSwitchesOn)
-    };
+    const handleSwitchesChange = (e, type) => {
+        const switchID = e.target.id.split('_')[1];
+        const username = window.username;
+        const compState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
 
-    const handleShoppingListSwitches = () => {
-        setAllShoppingListSwitchesOn(!allShoppingListSwitchesOn)
-    };
-
-    const handleContentSwitchesChange = (e) => {
-        const switchID = e.target.id;
-        if (switchID in componentsChecked) {
-            setComponentsChecked(componentsChecked.filter(item => item !== switchID))
+        if (compState[`${switchID}`][`add_to_${type}_list`] === "true") {
+            compState[`${switchID}`][`add_to_${type}_list`] = "false";
         } else {
-            setComponentsChecked((oldArray) => [switchID, ...oldArray])
+            compState[`${switchID}`][`add_to_${type}_list`] = "true";
+        }
+
+        localStorage.setItem(`${username}_comp_data`, JSON.stringify(compState));
+
+        if (type === 'components') {
+            switchHandler(componentsChecked, switchID, setComponentsChecked)
+        } else {
+            switchHandler(shoppingChecked, switchID, setShoppingChecked)
         }
     };
 
-    const handleShoppingSwitchesChange = (e) => {
-        const switchID = e.target.id;
-        if (!(switchID in shoppingChecked)) {
-            setShoppingChecked(shoppingChecked.filter(item => item !== switchID))
+    const handleMetaSwitchChange = (e, type) => {
+        if (type === 'components') {
+            setAllCSwitchesOn(!allCSwitchesOn)
         } else {
-            setShoppingChecked((oldArray) => [switchID, ...oldArray])
+            setAllSSwitchesOn(!allSSwitchesOn)
         }
     };
 
     useEffect(() => {
-        setQuantityState(JSON.parse(localStorage.getItem('quantity_state')));
-        setLocationState(JSON.parse(localStorage.getItem('location_state')));
-        setComponentsData(JSON.parse(localStorage.getItem('components_data_state')));
-    }, [show]);
+        if (componentsData) {
+            if (allCSwitchesOn) {
+                setComponentsChecked(new Set([...Object.keys(componentsData)]))
+            } else {
+                setComponentsChecked(new Set([]))
+            }
 
-    useEffect(() => {
-        if (quantityState) {
-            const compListQuant = Object.values(quantityState).reduce((partialSum, a) => partialSum + a, 0);
-            setTotalQuantityToAdd(compListQuant)
+            if (allSSwitchesOn) {
+                setShoppingChecked(new Set([...Object.keys(componentsData)]))
+            } else {
+                setShoppingChecked(new Set([]))
+            }
         }
-
-    }, [quantityState]);
+    }, [allCSwitchesOn, allSSwitchesOn]);
 
     useEffect(() => {
         let rows = null;
-        if (quantityState && componentsData && quantityState) {
-            rows = Object.keys(quantityState).map((value, index) => {
+        if (componentsData) {
+            rows = Object.keys(componentsData).map((value, index) => {
                 return (
                     <tr>
                         <td>{componentsData[value].description}</td>
                         <td>{componentsData[value].supplier_short_name}</td>
                         <td>{componentsData[value].item_no}</td>
-                        <td>{quantityState ? getTotalPrice(quantityState[value], componentsData[value].price) : ""}</td>
-                        <td>{quantityState ? quantityState[value] : ""}</td>
-                        <td>{locationState ? locationState[value] : ""}</td>
+                        <td>{componentsData[value].quantity}</td>
+                        <td style={{visibility: "hidden"}}></td>
                         <td style={{fontSize: "16px"}}>
                             <Form>
                                 <Form.Check
                                     type="switch"
                                     id={`contentSwitch_${value}`}
-                                    onChange={(e) => handleContentSwitchesChange(e)}
+                                    checked={componentsChecked.has(value)}
+                                    onChange={(e) => handleSwitchesChange(e, 'components')}
                                 />
                             </Form>
                         </td>
@@ -102,7 +127,8 @@ function App() {
                                 <Form.Check
                                     type="switch"
                                     id={`shoppingSwitch_${value}`}
-                                    onChange={(e) => handleShoppingSwitchesChange(e)}
+                                    checked={shoppingChecked.has(value)}
+                                    onChange={(e) => handleSwitchesChange(e, 'shopping')}
                                 />
                             </Form>
                         </td>
@@ -119,7 +145,7 @@ function App() {
             });
             setTableRows(rows)
         }
-    }, [quantityState, locationState, componentsData]);
+    }, [componentsData, componentsChecked, shoppingChecked]);
 
     return (
         <>
@@ -127,7 +153,7 @@ function App() {
                     className={!show ? "btn btn-success px-3 components__offcanvas-button" : "btn btn-success px-3 components__offcanvas-button components__offcanvas-button--lifted"}
                     type="button"
                     style={{ zIndex: 9999}}
-                    onClick={handleClick}>
+                    onClick={handleOffcanvasButtonClick}>
                 Components to Add [<span id="components-quantity-tab-number">{ totalQuantityToAdd || 0 }</span>]
                 <span className="components__offcanvas-svg">
                     <svg id="components__offcanvas-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -150,24 +176,27 @@ function App() {
                                 <th scope="col">Description</th>
                                 <th scope="col">Supplier</th>
                                 <th scope="col">Supplier Item #</th>
-                                <th scope="col">Total</th>
                                 <th scope="col">Quantity to Add</th>
-                                <th scope="col">Location</th>
-                                <th scope="col">Add to Components
+                                <th scope="col" style={{visibility: "hidden"}}>Location</th>
+                                <th scope="col">
+                                    Add to Components
                                     <Form style={{fontSize: "16px"}}>
                                         <Form.Check
                                             type="switch"
                                             id="custom-switch"
-                                            onChange={handleContentListSwitches}
+                                            checked={allCSwitchesOn}
+                                            onChange={(e) => handleMetaSwitchChange(e, 'components')}
                                         />
                                     </Form>
                                 </th>
-                                <th scope="col">Add to Shopping
+                                <th scope="col">
+                                    Add to Shopping
                                     <Form style={{fontSize: "16px"}}>
                                         <Form.Check
                                             type="switch"
                                             id="custom-switch"
-                                            onChange={handleShoppingListSwitches}
+                                            checked={allSSwitchesOn}
+                                            onChange={(e) => handleMetaSwitchChange(e, 'shopping')}
                                         />
                                     </Form>
                                 </th>

@@ -151,6 +151,24 @@
             updateNumberInTab();
         }
 
+        {# Set form values from localStorage #}
+        window.onload = function () {
+            window.username = "{{ request.user.username }}";
+            var compData = null;
+
+            if (localStorage.getItem('{{ user.get_username }}_comp_data') !== null) {
+                compData = JSON.parse(localStorage.getItem('{{ user.get_username }}_comp_data'));
+            }
+
+            if (compData) {
+                for (key of Object.keys(compData)) {
+                    var formField = document.getElementById(`quantity_${key}`);
+                    formField.value = compData[key].quantity
+                }
+            }
+            updateNumberInTab();
+        };
+
         {% comment %}
         function addToInv(e) {
             e.preventDefault();

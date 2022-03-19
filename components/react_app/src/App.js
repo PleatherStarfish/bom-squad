@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Button, Offcanvas, Form } from 'react-bootstrap';
+import { Button, Offcanvas, Form, Modal } from 'react-bootstrap';
 import Row from 'components/row'
 
 
@@ -43,6 +43,16 @@ function App() {
     const [allCSwitchesOn, setAllCSwitchesOn] = useState(false);
     const [allSSwitchesOn, setAllSSwitchesOn] = useState(false);
 
+    const [confirmDeleteShow, setConfirmDeleteShow] = useState(false);
+    const [deleteID, setDeleteID] = useState(null);
+
+    const handleConfirmDeleteModelClose = () => setConfirmDeleteShow(false);
+
+    // Open popup to confirm delete
+    const handleConfirmDeleteModelShow = (e) => {
+        setConfirmDeleteShow(true);
+        setDeleteID(e);
+    };
 
     // Handle a click on the main button that expands the offcanvas div
     const handleOffcanvasButtonClick = () => {
@@ -125,6 +135,16 @@ function App() {
         localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(newLocalStorageState));
     };
 
+    const handleQuantityChange = (e) => {
+        const id = getID(e);
+        const value = e.target.value;
+
+        const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
+        localStorageState[id]["quantity"] = parseInt(value);
+        localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
+        setComponentsData(JSON.parse(localStorage.getItem(`${window.username}_comp_data`)));
+    };
+
     // If the "allCSwitchesOn" state is true, switch all switches to the "on" state, else "off"
     useEffect(() => {
         if (componentsData) {
@@ -172,7 +192,9 @@ function App() {
                          componentsChecked={componentsChecked}
                          shoppingChecked={shoppingChecked}
                          handleSwitchesChange={handleSwitchesChange}
-                         handleDeleteRow={handleDeleteRow} />
+                         handleDeleteRow={handleConfirmDeleteModelShow}
+                         handleQuantityChange={handleQuantityChange}
+                    />
                 )
             });
             setTableRows(rows)
@@ -184,7 +206,7 @@ function App() {
             <Button id="components__offcanvas-button"
                     className={!show ? "btn btn-success px-3 components__offcanvas-button" : "btn btn-success px-3 components__offcanvas-button components__offcanvas-button--lifted"}
                     type="button"
-                    style={{ zIndex: 9999}}
+                    style={{ zIndex: 1045}}
                     onClick={handleOffcanvasButtonClick}>
                 Components to Add [<span id="components-quantity-tab-number">{ totalQuantityToAdd || 0 }</span>]
                 <span className="components__offcanvas-svg">
@@ -194,6 +216,26 @@ function App() {
                     </svg>
                 </span>
             </Button>
+
+            {componentsData && deleteID &&
+                <Modal show={confirmDeleteShow} onHide={handleConfirmDeleteModelClose} animation={true}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Are you sure?</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Do you really want to delete {componentsData[deleteID].supplier_short_name} {componentsData[deleteID].item_no}?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleConfirmDeleteModelClose}>
+                            Close
+                        </Button>
+                        <Button variant="primary" onClick={() => {
+                            handleConfirmDeleteModelClose();
+                            handleDeleteRow(deleteID);
+                        }} style={{color: "white"}}>
+                            Delete
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            }
 
             <Offcanvas id="components__offcanvas-container"
                        className={!show ? "offcanvas offcanvas-bottom components__offcanvas-container" : "offcanvas offcanvas-bottom components__offcanvas-container components__offcanvas-container--lifted"}
@@ -209,7 +251,7 @@ function App() {
                                 <th scope="col">Supplier</th>
                                 <th scope="col">Supplier Item #</th>
                                 <th scope="col">Quantity to Add</th>
-                                <th scope="col" style={{visibility: "hidden"}}>Location</th>
+                                <th scope="col" style={componentsChecked.size ? {width: "12%"} : {display: "none"}}>Location</th>
                                 <th scope="col">
                                     Add to Components
                                     <Form style={{fontSize: "16px"}}>

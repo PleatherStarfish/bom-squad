@@ -8,15 +8,25 @@ const Row = (props) => {
     const componentsChecked = props.componentsChecked;
     const shoppingChecked = props.shoppingChecked;
     const handleSwitchesChange = props.handleSwitchesChange;
+    const handleQuantityChange = props.handleQuantityChange;
 
     return (
         <tr>
             <td>{componentsData[value].description}</td>
             <td>{componentsData[value].supplier_short_name}</td>
             <td>{componentsData[value].item_no}</td>
-            <td>{componentsData[value].quantity}</td>
-            <td style={{visibility: "hidden"}}></td>
-            <td style={{fontSize: "16px"}}>
+            <td className={"h-100"} style={{verticalAlign: "middle"}}>
+                <label className={"sr-only"} htmlFor={`offcanvasQuantity_${value}`}>Quantity:</label>
+                <input id={`offcanvasQuantity_${value}`}
+                       type="number"
+                       name="quantity"
+                       min="1"
+                       style={{maxWidth: "50px"}}
+                       value={componentsData[value].quantity}
+                       onChange={(e) => handleQuantityChange(e)} />
+            </td>
+            <td style={componentsChecked.size ? (componentsChecked.has(value) ? {verticalAlign: "middle", fontSize: "16px"} : {visibility: "hidden"}) : {display: "none"}}>x</td>
+            <td className={"h-100"} style={{verticalAlign: "middle", fontSize: "16px"}}>
                 <Form>
                     <Form.Check
                         type="switch"
@@ -26,7 +36,7 @@ const Row = (props) => {
                     />
                 </Form>
             </td>
-            <td style={{fontSize: "16px"}}>
+            <td className={"h-100"} style={{verticalAlign: "middle", fontSize: "16px"}}>
                 <Form>
                     <Form.Check
                         type="switch"

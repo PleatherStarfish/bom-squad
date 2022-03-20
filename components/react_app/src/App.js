@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Button, Offcanvas, Form, Modal } from 'react-bootstrap';
-import Row from 'components/row'
+import Row from './components/Row'
+import OnDeleteConfirmation from './components/OnDeleteConfirmation';
 
 
 function getTotalPrice(number, price) {
@@ -45,6 +46,9 @@ function App() {
 
     const [confirmDeleteShow, setConfirmDeleteShow] = useState(false);
     const [deleteID, setDeleteID] = useState(null);
+
+    // {"location": [], "remainder": ""}
+    const [location, setLocation ] = useState({});
 
     const handleConfirmDeleteModelClose = () => setConfirmDeleteShow(false);
 
@@ -123,6 +127,7 @@ function App() {
     };
 
     const handleDeleteRow = (e) => {
+        console.log(e)
         const id = parseInt(e);
         const {[id]: _removedComponent, ...newComponentsData} = componentsData;
 
@@ -143,6 +148,40 @@ function App() {
         localStorageState[id]["quantity"] = parseInt(value);
         localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
         setComponentsData(JSON.parse(localStorage.getItem(`${window.username}_comp_data`)));
+    };
+
+    const handleLocationChange = (e) => {
+        const id = getID(e);
+        const value = e.target.value;
+
+        if (value.includes(",")) {
+
+            // If last charecter in string is comma...
+            if (value.slice(-1) === ",") {
+                const newLocations = value.split(",");
+                newLocations.pop();
+                const newLocationArray = [...location[id]["location"],...newLocations];
+                setLocation((prev) => {
+                    return {...prev, [id]: {"location": newLocationArray, "remainder": ""}
+                }});
+            } else {
+                const newLocations = value.split(",");
+                const newRemainder = newLocations.pop();
+                const newLocationArray = [...location[id]["location"],...newLocations];
+                setLocation((prev) => {
+                    return {...prev, [id]: {"location": newLocations, "remainder": newRemainder}
+                }});
+            }
+        } else {
+            setLocation((prev) => {
+                return {...prev, [id]: {"location": prev[id] ? prev[id]["location"] : [], "remainder": value}}
+            })
+        }
+
+        // const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
+        // localStorageState[id]["location"] = value;
+        // localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
+        // setComponentsData(JSON.parse(localStorage.getItem(`${window.username}_comp_data`)));
     };
 
     // If the "allCSwitchesOn" state is true, switch all switches to the "on" state, else "off"
@@ -181,25 +220,28 @@ function App() {
         }
     }, [allSSwitchesOn]);
 
-    useEffect(() => {
+    useMemo(() => {
         let rows = null;
 
         if (componentsData) {
             rows = Object.keys(componentsData).map((value, index) => {
                 return (
-                    <Row componentsData={componentsData}
+                    <Row key={index}
+                         componentsData={componentsData}
                          valueString={value}
                          componentsChecked={componentsChecked}
                          shoppingChecked={shoppingChecked}
                          handleSwitchesChange={handleSwitchesChange}
                          handleDeleteRow={handleConfirmDeleteModelShow}
                          handleQuantityChange={handleQuantityChange}
+                         location={location}
+                         handleLocationChange={handleLocationChange}
                     />
                 )
             });
             setTableRows(rows)
         }
-    }, [componentsData, componentsChecked, shoppingChecked]);
+    }, [componentsData, componentsChecked, shoppingChecked, location]);
 
     return (
         <>
@@ -217,25 +259,7 @@ function App() {
                 </span>
             </Button>
 
-            {componentsData && deleteID &&
-                <Modal show={confirmDeleteShow} onHide={handleConfirmDeleteModelClose} animation={true}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Are you sure?</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>Do you really want to delete {componentsData[deleteID].supplier_short_name} {componentsData[deleteID].item_no}?</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleConfirmDeleteModelClose}>
-                            Close
-                        </Button>
-                        <Button variant="primary" onClick={() => {
-                            handleConfirmDeleteModelClose();
-                            handleDeleteRow(deleteID);
-                        }} style={{color: "white"}}>
-                            Delete
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-            }
+            {componentsData && deleteID && componentsData[deleteID] && <OnDeleteConfirmation componentsData={componentsData} deleteID={deleteID} confirmDeleteShow={confirmDeleteShow} handleDeleteRow={handleDeleteRow} handleConfirmDeleteModelClose={handleConfirmDeleteModelClose} />}
 
             <Offcanvas id="components__offcanvas-container"
                        className={!show ? "offcanvas offcanvas-bottom components__offcanvas-container" : "offcanvas offcanvas-bottom components__offcanvas-container components__offcanvas-container--lifted"}

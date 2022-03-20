@@ -9,6 +9,14 @@ const Row = (props) => {
     const shoppingChecked = props.shoppingChecked;
     const handleSwitchesChange = props.handleSwitchesChange;
     const handleQuantityChange = props.handleQuantityChange;
+    const location = props.location;
+    const handleLocationChange = props.handleLocationChange;
+
+    try {
+        console.log(location[value]["remainder"])
+    } catch {
+        console.log("no data")
+    }
 
     return (
         <tr>
@@ -25,7 +33,15 @@ const Row = (props) => {
                        value={componentsData[value].quantity}
                        onChange={(e) => handleQuantityChange(e)} />
             </td>
-            <td style={componentsChecked.size ? (componentsChecked.has(value) ? {verticalAlign: "middle", fontSize: "16px"} : {visibility: "hidden"}) : {display: "none"}}>x</td>
+            <td style={componentsChecked.size ? (componentsChecked.has(value) ? {verticalAlign: "middle", fontSize: "16px"} : {visibility: "hidden"}) : {display: "none"}}>
+                <label className={"sr-only"} htmlFor={`offcanvasLocation_${value}`}>Location:</label>
+                <input id={`offcanvasLocation_${value}`}
+                       type="text"
+                       name="location"
+                       style={{maxWidth: "150px"}}
+                       value={value && location[value] && location[value]["remainder"] && location[value]["remainder"]}
+                       onChange={(e) => handleLocationChange(e)} />
+            </td>
             <td className={"h-100"} style={{verticalAlign: "middle", fontSize: "16px"}}>
                 <Form>
                     <Form.Check

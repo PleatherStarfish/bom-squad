@@ -154,6 +154,10 @@ function App() {
         const id = getID(e);
         const value = e.target.value;
 
+        if (value === ",") {
+            return;
+        }
+
         if (value.includes(",")) {
 
             // If last charecter in string is comma...

@@ -1,6 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import { Button, Offcanvas, Form } from 'react-bootstrap';
-
+import { Button, CloseButton, Form } from 'react-bootstrap';
 
 const Row = (props) => {
     const componentsData = props.componentsData;
@@ -12,11 +11,31 @@ const Row = (props) => {
     const location = props.location;
     const handleLocationChange = props.handleLocationChange;
 
-    try {
-        console.log(location[value]["remainder"])
-    } catch {
-        console.log("no data")
-    }
+    const [locationList, setLocationList] = useState(null);
+
+    useEffect(() => {
+        if (value && location[value] && location[value]["location"]) {
+            const arrayLength = location[value]["location"].length;
+
+            const placeList = location[value]["location"].map((value, index) => {
+
+                let close = null;
+                if (index !== arrayLength-1) {
+                    close = <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/> </svg>
+                }
+
+                return (
+                    <>
+                        <div style={{fontSize: "10px", display: "inline-block", padding: "3px 6px", border: "1px solid black", borderRadius: ".8em", margin: "3px 0 0 0"}}>
+                            <b>{ value }</b><CloseButton style={{fontSize: "0.8em", marginLeft: "3px"}} />
+                        </div>
+                        { close }
+                    </>
+                )
+            });
+            setLocationList(placeList)
+        }
+    }, [location]);
 
     return (
         <tr>
@@ -39,8 +58,9 @@ const Row = (props) => {
                        type="text"
                        name="location"
                        style={{maxWidth: "150px"}}
-                       value={value && location[value] && location[value]["remainder"] && location[value]["remainder"]}
-                       onChange={(e) => handleLocationChange(e)} />
+                       value={(value && location[value] && location[value]["remainder"]) ? location[value]["remainder"] : ""}
+                       onChange={(e) => handleLocationChange(e)} /><br/>
+                { locationList }
             </td>
             <td className={"h-100"} style={{verticalAlign: "middle", fontSize: "16px"}}>
                 <Form>
@@ -77,6 +97,6 @@ const Row = (props) => {
         </tr>
     )
 
-}
+};
 
 export default Row;

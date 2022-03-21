@@ -59,7 +59,8 @@ const Row = (props) => {
                        name="location"
                        style={{maxWidth: "150px"}}
                        value={(value && location[value] && location[value]["remainder"]) ? location[value]["remainder"] : ""}
-                       onChange={(e) => handleLocationChange(e)} /><br/>
+                       onChange={(e) => handleLocationChange(e)}
+                       onPaste={(e) => handleLocationChange(e)} /><br/>
                 { locationList }
             </td>
             <td className={"h-100"} style={{verticalAlign: "middle", fontSize: "16px"}}>

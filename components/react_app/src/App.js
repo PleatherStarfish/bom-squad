@@ -157,12 +157,10 @@ function App() {
         if (value === ",") {
             return;
         }
-        console.log("one", value);
 
         if (value.includes(",")) {
-            console.log("two", value);
 
-            // If last charecter in string is comma...
+            // If last charecter in string is a comma...
             if (value.slice(-1) === ",") {
                 const newLocations = value.split(",");
                 newLocations.pop();

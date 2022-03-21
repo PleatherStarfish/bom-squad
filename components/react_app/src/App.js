@@ -180,12 +180,18 @@ function App() {
                 return {...prev, [id]: {"location": prev[id] ? prev[id]["location"] : [], "remainder": value}}
             })
         }
-
-        // const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
-        // localStorageState[id]["location"] = value;
-        // localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
-        // setComponentsData(JSON.parse(localStorage.getItem(`${window.username}_comp_data`)));
     };
+
+    useEffect(() => {
+        if (Object.keys(location).length > 0) {
+            for (let id of Object.keys(location)) {
+                const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
+                localStorageState[id]["location"] = location[id];
+                localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
+                setComponentsData(JSON.parse(localStorage.getItem(`${window.username}_comp_data`)));
+            }
+        }
+    }, [location]);
 
     // If the "allCSwitchesOn" state is true, switch all switches to the "on" state, else "off"
     useEffect(() => {

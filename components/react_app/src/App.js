@@ -157,8 +157,10 @@ function App() {
         if (value === ",") {
             return;
         }
+        console.log("one", value);
 
         if (value.includes(",")) {
+            console.log("two", value);
 
             // If last charecter in string is comma...
             if (value.slice(-1) === ",") {
@@ -170,10 +172,9 @@ function App() {
                 }});
             } else {
                 const newLocations = value.split(",");
-                const newRemainder = newLocations.pop();
                 const newLocationArray = [...location[id]["location"],...newLocations];
                 setLocation((prev) => {
-                    return {...prev, [id]: {"location": newLocations, "remainder": newRemainder}
+                    return {...prev, [id]: {"location": newLocationArray, "remainder": ""}
                 }});
             }
         } else {
@@ -230,7 +231,7 @@ function App() {
         if (componentsData) {
             rows = Object.keys(componentsData).map((value, index) => {
                 return (
-                    <Row key={index}
+                    <Row key={`${value}_${index}`}
                          componentsData={componentsData}
                          valueString={value}
                          componentsChecked={componentsChecked}

@@ -10,6 +10,7 @@ const Row = (props) => {
     const handleQuantityChange = props.handleQuantityChange;
     const location = props.location;
     const handleLocationChange = props.handleLocationChange;
+    const handleLocationBubbleDelete = props.handleLocationBubbleDelete;
 
     const [locationList, setLocationList] = useState(null);
 
@@ -17,7 +18,7 @@ const Row = (props) => {
         if (value && location[value] && location[value]["location"]) {
             const arrayLength = location[value]["location"].length;
 
-            const placeList = location[value]["location"].map((value, index) => {
+            const placeList = location[value]["location"].map((name, index) => {
 
                 let close = null;
                 if (index !== arrayLength-1) {
@@ -27,7 +28,7 @@ const Row = (props) => {
                 return (
                     <div key={index} style={{display: "inline-block", whiteSpace: "nowrap"}}>
                         <div style={{fontSize: "10px", display: "inline-block", padding: "3px 6px", border: "1px solid black", borderRadius: ".8em", margin: "3px 0 0 0"}}>
-                            <b>{ value }</b><CloseButton style={{fontSize: "0.8em", marginLeft: "3px"}} />
+                            <b>{ name }</b><CloseButton id={`deleteLocationButton_${value}_${index}`} style={{fontSize: "0.8em", marginLeft: "3px"}} onClick={(e) => handleLocationBubbleDelete(e)} />
                         </div>
                         { close }
                     </div>

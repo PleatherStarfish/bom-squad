@@ -163,16 +163,17 @@ function App() {
             // If last charecter in string is a comma...
             if (value.slice(-1) === ",") {
                 const newLocations = value.split(",");
-                newLocations.pop();
-                const newLocationArray = [...location[id]["location"],...newLocations];
+                const newLocationsFiltered = newLocations.filter(function (el) { return el !== ""; });
+                const newLocationArray = [...location[id]["location"],...newLocationsFiltered];
                 setLocation((prev) => {
                     return {...prev, [id]: {"location": newLocationArray, "remainder": ""}
                 }});
             } else {
                 const newLocations = value.split(",");
                 const newLocationArray = [...location[id]["location"],...newLocations];
+                const newLocationArrayFiltered = newLocationArray.filter(function (el) { return el !== ""; });
                 setLocation((prev) => {
-                    return {...prev, [id]: {"location": newLocationArray, "remainder": ""}
+                    return {...prev, [id]: {"location": newLocationArrayFiltered, "remainder": ""}
                 }});
             }
         } else {
@@ -180,6 +181,15 @@ function App() {
                 return {...prev, [id]: {"location": prev[id] ? prev[id]["location"] : [], "remainder": value}}
             })
         }
+    };
+
+    const handleLocationBubbleDelete = (e) => {
+        const row_id = e.target.id.split('_')[1];
+        const bubble_id = e.target.id.split('_')[2];
+
+        console.log(row_id);
+        console.log(bubble_id);
+
     };
 
     useEffect(() => {
@@ -245,6 +255,7 @@ function App() {
                          handleQuantityChange={handleQuantityChange}
                          location={location}
                          handleLocationChange={handleLocationChange}
+                         handleLocationBubbleDelete={handleLocationBubbleDelete}
                     />
                 )
             });

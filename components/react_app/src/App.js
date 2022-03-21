@@ -187,9 +187,11 @@ function App() {
         const row_id = e.target.id.split('_')[1];
         const bubble_id = e.target.id.split('_')[2];
 
-        console.log(row_id);
-        console.log(bubble_id);
-
+        let newLocationArray = location[row_id]["location"];
+        newLocationArray.splice(bubble_id, 1);
+        setLocation((prev) => {
+            return {...prev, [row_id]: {"location": newLocationArray, "remainder": ""}}
+        });
     };
 
     useEffect(() => {

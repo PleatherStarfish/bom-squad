@@ -27,8 +27,10 @@ function App() {
     // Show hide state of tab
     const [show, setShow] = useState(false);
 
+    const [extended, setExtended] = useState(false);
+
     // Main data from browser state
-    const [componentsData, setComponentsData] = useState(null);
+    const [componentsData, setComponentsData] = useState(false);
 
     // Number displayed in tab
     const [totalQuantityToAdd, setTotalQuantityToAdd] = useState(0);
@@ -52,6 +54,8 @@ function App() {
 
     const handleConfirmDeleteModelClose = () => setConfirmDeleteShow(false);
 
+    const handleExtended = () => setExtended(!extended);
+
     // Open popup to confirm delete
     const handleConfirmDeleteModelShow = (e) => {
         setConfirmDeleteShow(true);
@@ -63,6 +67,11 @@ function App() {
         const username = window.username;
         setComponentsData(JSON.parse(localStorage.getItem(`${username}_comp_data`)));
         setShow(!show)
+    };
+
+    const update = () => {
+        const username = window.username;
+        setComponentsData(JSON.parse(localStorage.getItem(`${username}_comp_data`)));
     };
 
     // Handler called when offcanvas closes
@@ -127,7 +136,6 @@ function App() {
     };
 
     const handleDeleteRow = (e) => {
-        console.log(e)
         const id = parseInt(e);
         const {[id]: _removedComponent, ...newComponentsData} = componentsData;
 
@@ -268,7 +276,7 @@ function App() {
     return (
         <>
             <Button id="components__offcanvas-button"
-                    className={!show ? "btn btn-success px-3 components__offcanvas-button" : "btn btn-success px-3 components__offcanvas-button components__offcanvas-button--lifted"}
+                    className={!show ? "btn btn-success px-3 components__offcanvas-button" : ((extended) ? "btn btn-success px-3 components__offcanvas-button components__offcanvas-button--full" : "btn btn-success px-3 components__offcanvas-button components__offcanvas-button--lifted")}
                     type="button"
                     style={{ zIndex: 1045}}
                     onClick={handleOffcanvasButtonClick}>
@@ -284,12 +292,28 @@ function App() {
             {componentsData && deleteID && componentsData[deleteID] && <OnDeleteConfirmation componentsData={componentsData} deleteID={deleteID} confirmDeleteShow={confirmDeleteShow} handleDeleteRow={handleDeleteRow} handleConfirmDeleteModelClose={handleConfirmDeleteModelClose} />}
 
             <Offcanvas id="components__offcanvas-container"
-                       className={!show ? "offcanvas offcanvas-bottom components__offcanvas-container" : "offcanvas offcanvas-bottom components__offcanvas-container components__offcanvas-container--lifted"}
+                       className={!show ? "offcanvas offcanvas-bottom components__offcanvas-container" : ((extended) ? "offcanvas offcanvas-bottom components__offcanvas-container components__offcanvas-container--full" : "offcanvas offcanvas-bottom components__offcanvas-container components__offcanvas-container--lifted")}
                        aria-labelledby="offcanvasBottomLabel"
                        show={show}
                        onHide={handleClose}
                        placement={"bottom"}>
                 <Offcanvas.Body>
+                    <Button variant="outline-primary" onClick={handleExtended} style={{padding: ".375rem .575rem", marginRight: "1%"}}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                             className="bi bi-arrow-bar-up" viewBox="0 0 15 15" style={(extended) ? {transform: "scale(-1, -1)"} : {transform: "scale(-1, 1)"}}>
+                            <path fillRule="evenodd"
+                                  d="M8 10a.5.5 0 0 0 .5-.5V3.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 3.707V9.5a.5.5 0 0 0 .5.5zm-7 2.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5z"/>
+                        </svg>
+                    </Button>
+                    <Button variant="outline-primary" onClick={update} style={{padding: ".375rem .575rem"}}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                             className="bi bi-arrow-clockwise" viewBox="0 0 15 15" style={{transform: "scale(-1, -1)"}}>
+                            <path fillRule="evenodd"
+                                  d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                            <path
+                                d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                        </svg>
+                    </Button>
                     <table id="components__offcanvas-table" className="table table-sm components__offcanvas-table">
                         <thead className={"components__offcanvas-thead"} style={{fontSize: "13px"}}>
                             <tr>

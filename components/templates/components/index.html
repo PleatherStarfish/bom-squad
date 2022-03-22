@@ -61,7 +61,7 @@
                                                             {% if "Voltage Rating" in heading_list %}<th class="component_cell_voltage_rating">{{ item.voltage_rating }}</th>{% endif %}
                                                             {% if "Tolerance" in heading_list %}<th class="component_cell_tolerance">{{ item.tolerance }}</th>{% endif %}
                                                             {% if "Suppliers" in heading_list %}<th id="supplier_{{ item.id }}" class="component_cell_supplier" data-supplier-short-name="{{ item.supplier.short_name }}">{{ item.supplier.name }}</th>{% endif %}
-                                                            {% if "Supplier Item #" in heading_list %}<th id="item_no_{{ item.id }}" class="component_cell_supplier_item_no"><a href="{{ item.link }}">{{ item.supplier_item_no }}</a></th>{% endif %}
+                                                            {% if "Supplier Item #" in heading_list %}<th id="item_no_{{ item.id }}" class="component_cell_supplier_item_no"><a id="item_url_{{ item.id }}" href="{{ item.link }}">{{ item.supplier_item_no }}</a></th>{% endif %}
                                                             <th id="price_{{ item.id }}" class="component_cell_price">{% if item.price %}{{ item.price }}{% endif %}</th>
                                                             {% if user.is_authenticated %}
                                                                 <th></th>
@@ -112,6 +112,7 @@
             comp['price'] = document.getElementById(`price_${id}`).textContent;
             comp['supplier_short_name'] = document.getElementById(`supplier_${id}`).getAttribute('data-supplier-short-name');
             comp['item_no'] = document.getElementById(`item_no_${id}`).textContent;
+            comp['item_url'] = document.getElementById(`item_url_${id}`).href;
             return comp;
         }
 

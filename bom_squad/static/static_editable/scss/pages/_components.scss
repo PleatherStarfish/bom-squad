@@ -11,6 +11,14 @@
   box-shadow: none;
 }
 
+#bootstrap-overrides .components__offcanvas-button--full {
+  bottom: 85vh !important;
+  background-color: #f8f9fa;
+  color: #505050;
+  border: 0;
+  box-shadow: none;
+}
+
 #bootstrap-overrides .components__offcanvas-button--lifted {
   bottom: 25vh !important;
   background-color: #f8f9fa;
@@ -22,6 +30,15 @@
 #bootstrap-overrides .components__offcanvas-container {
   background-color: #528c69;
   height: 25vh;
+  box-sizing: content-box;
+  transition: all .35s;
+  border: 0;
+  box-shadow: none;
+}
+
+#bootstrap-overrides .components__offcanvas-container--full {
+  background-color: #f8f9fa;
+  height: 85vh;
   box-sizing: content-box;
   transition: all .35s;
   border: 0;

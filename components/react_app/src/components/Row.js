@@ -42,7 +42,7 @@ const Row = (props) => {
         <tr>
             <td>{componentsData[value].description}</td>
             <td>{componentsData[value].supplier_short_name}</td>
-            <td>{componentsData[value].item_no}</td>
+            <td><b><a href={componentsData[value].item_url}>{componentsData[value].item_no}</a></b></td>
             <td className={"h-100"} style={{verticalAlign: "middle"}}>
                 <label className={"sr-only"} htmlFor={`offcanvasQuantity_${value}`}>Quantity:</label>
                 <input id={`offcanvasQuantity_${value}`}

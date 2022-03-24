@@ -5,6 +5,14 @@ import '../scss/node_modules/animate.css';
 import './components/tooltip.js'
 // import './components/fullscreen_menu.js'
 
+Function.prototype.extend_function_definition = function(fn) {
+  var self = this;
+  return function() {
+    self.apply(this, arguments);
+    fn.apply(this, arguments);
+  };
+};
+
 window.onload = function () {
 
     // Thanks to StackOverflow user Phil Ricketts
@@ -75,17 +83,19 @@ window.onload = function () {
     // Bootstrap 5 event listeners for the fullswcreen menu "shown" event
     fullscreenMenu.addEventListener('shown.bs.offcanvas', function () {
 
+        // Set delay (800ms) before close button in fullscreen menu bounces in
         setTimeout(function() {
             animateCSS('fullscreen-menu__close-btn', "bounceIn");
-        }, 1000);
+        }, 800);
 
+        // Set delay (400ms) before text in fullscreen menu rotates in
         setTimeout(function() {
             const itemsLength = fullscreenMenuItems !== null ? fullscreenMenuItems.length : 0;
             // fullscreenMenuItems[i].style.transition = "all .2s cubic-bezier(0.55, 0, 1, 0.45)";
             for(let i = 0; i < itemsLength; i++) {
                 fullscreenMenuItems[i].classList.add("fullscreen-menu__item--rotate-in");
             }
-         }, 600);
+         }, 400);
 
     });
 

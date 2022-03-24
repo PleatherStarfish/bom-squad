@@ -26,7 +26,7 @@ const InnerTable = (props) => {
     return (
         <div style={{padding: "0 0 0 48px"}}>
             <Table className={"table"} style={{paddingLeft: "48px"}}>
-                <Thead style={{backgroundColor: "#538b69", color: "white"}}>
+                <Thead style={{backgroundColor: "#505050", color: "white"}}>
                     <Tr>
                         <Th>Description</Th>
                         <Th>Voltage Rating</Th>

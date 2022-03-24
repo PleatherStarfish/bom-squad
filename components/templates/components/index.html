@@ -155,7 +155,7 @@
         }
 
         {# Set form values from localStorage #}
-        window.onload = function () {
+        window.onload = window.onload.extend_function_definition(function () {
             window.username = "{{ request.user.username }}";
             var compData = null;
 
@@ -170,7 +170,7 @@
                 }
             }
             updateNumberInTab();
-        };
+        });
 
     </script>
 

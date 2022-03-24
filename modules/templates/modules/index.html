@@ -246,9 +246,9 @@
 
 {% block scripts %}
     <script type="text/javascript">
-    window.onload = function () {
-        window.username = "{{ request.user.username }}";
-    };
+        window.onload = window.onload.extend_function_definition(function () {
+            window.username = "{{ request.user.username }}";
+        });
     </script>
     <script type="text/javascript" src="{% static "bundles/module_detail_bundle.js" %}"></script>
     <script type="text/javascript" src="{% static "bundles/components_bundle.js" %}"></script>

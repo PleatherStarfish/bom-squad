@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react';
-import { Button, Offcanvas, Form, Modal } from 'react-bootstrap';
+import React, { useEffect, useState, useMemo } from 'react';
+import { Button, Offcanvas, Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Row from './components/Row'
 import OnDeleteConfirmation from './components/OnDeleteConfirmation';
 
@@ -64,6 +64,10 @@ function App() {
 
     // Handle a click on the main button that expands the offcanvas div
     const handleOffcanvasButtonClick = () => {
+        console.log("components", window.username);
+        console.log("components", JSON.parse(localStorage.getItem(`${username}_comp_data`)));
+
+
         const username = window.username;
         setComponentsData(JSON.parse(localStorage.getItem(`${username}_comp_data`)));
         setShow(!show)
@@ -298,22 +302,36 @@ function App() {
                        onHide={handleClose}
                        placement={"bottom"}>
                 <Offcanvas.Body>
-                    <Button variant="outline-primary" onClick={handleExtended} style={{padding: ".375rem .575rem", marginRight: "1%"}}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-                             className="bi bi-arrow-bar-up" viewBox="0 0 15 15" style={(extended) ? {transform: "scale(-1, -1)"} : {transform: "scale(-1, 1)"}}>
-                            <path fillRule="evenodd"
-                                  d="M8 10a.5.5 0 0 0 .5-.5V3.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 3.707V9.5a.5.5 0 0 0 .5.5zm-7 2.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5z"/>
-                        </svg>
-                    </Button>
-                    <Button variant="outline-primary" onClick={update} style={{padding: ".375rem .575rem"}}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-                             className="bi bi-arrow-clockwise" viewBox="0 0 15 15" style={{transform: "scale(-1, -1)"}}>
-                            <path fillRule="evenodd"
-                                  d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
-                            <path
-                                d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
-                        </svg>
-                    </Button>
+                    <OverlayTrigger
+                        placement={'top'}
+                        overlay={
+                            <Tooltip>Expand</Tooltip>
+                        }
+                    >
+                        <Button variant="outline-primary" onClick={handleExtended} style={{padding: ".375rem .575rem", marginRight: "1%"}}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                 className="bi bi-arrow-bar-up" viewBox="0 0 15 15" style={(extended) ? {transform: "scale(-1, -1)"} : {transform: "scale(-1, 1)"}}>
+                                <path fillRule="evenodd"
+                                      d="M8 10a.5.5 0 0 0 .5-.5V3.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 3.707V9.5a.5.5 0 0 0 .5.5zm-7 2.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5z"/>
+                            </svg>
+                        </Button>
+                    </OverlayTrigger>
+                    <OverlayTrigger
+                        placement={'top'}
+                        overlay={
+                            <Tooltip>Update</Tooltip>
+                        }
+                    >
+                        <Button variant="outline-primary" onClick={update} style={{padding: ".375rem .575rem"}}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                 className="bi bi-arrow-clockwise" viewBox="0 0 15 15" style={{transform: "scale(-1, -1)"}}>
+                                <path fillRule="evenodd"
+                                      d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                                <path
+                                    d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                            </svg>
+                        </Button>
+                    </OverlayTrigger>
                     <table id="components__offcanvas-table" className="table table-sm components__offcanvas-table">
                         <thead className={"components__offcanvas-thead"} style={{fontSize: "13px"}}>
                             <tr>

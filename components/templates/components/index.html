@@ -88,7 +88,9 @@
         </section>
     </div>
 
-    <div id="_react"></div>
+    {% if user.is_authenticated %}
+        <div id="_react_components"></div>
+    {% endif %}
 
 {% endblock %}
 
@@ -169,60 +171,6 @@
             }
             updateNumberInTab();
         };
-
-        {% comment %}
-        function addToInv(e) {
-            e.preventDefault();
-
-            var id_str = e.target.id.split('_')[1];
-
-            var csrftoken = '{{ csrf_token }}';
-            var data_to_backend = new FormData();
-
-            var quantity_state = JSON.parse(localStorage.getItem('quantity_state'));
-            var location_state = JSON.parse(localStorage.getItem('location_state'));
-
-            if ((`${id_str}` in quantity_state) && (`${id_str}` in location_state)) {
-                data_to_backend.append('quantity', quantity_state[`${id_str}`]);
-                data_to_backend.append('location', location_state[`${id_str}`]);
-            }
-
-            var request = new Request("/components/add_to_components_list/", {
-                method: 'POST',
-                headers: {'X-CSRFToken': csrftoken},
-                body: data_to_backend
-            });
-            fetch(request, {
-                method: 'POST',
-                mode: 'same-origin'
-                }).then(
-                    function(response) {
-                        if (response.status === 200) {
-                            console.log(response)
-                        } else {
-                            console.log("Error");
-                            console.log(response)
-                        }
-                    }
-                );
-        }
-
-        var offcanvasContainer = document.getElementById('components__offcanvas-container');
-        var offcanvasButton = document.getElementById('components__offcanvas-button');
-        var offcanvasArrow = document.getElementById('components__offcanvas-arrow');
-
-        offcanvasContainer.addEventListener('show.bs.offcanvas', function () {
-            offcanvasButton.classList.add("components__offcanvas-button--lifted");
-            offcanvasContainer.classList.add("components__offcanvas-container--lifted");
-            offcanvasArrow.classList.add("components__offcanvas-arrow--flipped");
-        });
-
-        offcanvasContainer.addEventListener('hide.bs.offcanvas', function () {
-            offcanvasButton.classList.remove("components__offcanvas-button--lifted");
-            offcanvasContainer.classList.remove("components__offcanvas-container--lifted");
-            offcanvasArrow.classList.remove("components__offcanvas-arrow--flipped")
-        });
-        {% endcomment %}
 
     </script>
 

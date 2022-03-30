@@ -1,12 +1,8 @@
-from django.contrib.auth.models import User
+from django.urls import resolve
 from django.test import TestCase
-from django.contrib.auth import get_user_model
+from .views import index #
 
-class LogInTest(TestCase):
-    def setUp(self):
-        user = User.objects.create_user('temporary', 'temporary@gmail.com', 'temporary')
-    def test_login(self):
-        self.client.login(username='temporary', password='temporary')
-        response = self.client.get('/manufacturers/', follow=True)
-        user = User.objects.get(username='temporary')
-        self.assertEqual(response.context['email'], 'temporary@gmail.com')
+class HomePageTest(TestCase):
+    def test_root_url_resolves_to_home_page_view(self):
+        found = resolve('/')
+        self.assertEqual(found.func, index)

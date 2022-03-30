@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Button, Offcanvas, Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Row from './components/Row'
 import OnDeleteConfirmation from './components/OnDeleteConfirmation';
@@ -52,6 +52,8 @@ function App() {
     // {"location": [], "remainder": ""}
     const [location, setLocation ] = useState({});
 
+    let addToUserListsEnabled = useRef(false);
+
     const handleConfirmDeleteModelClose = () => setConfirmDeleteShow(false);
 
     const handleExtended = () => setExtended(!extended);
@@ -64,10 +66,6 @@ function App() {
 
     // Handle a click on the main button that expands the offcanvas div
     const handleOffcanvasButtonClick = () => {
-        console.log("components", window.username);
-        console.log("components", JSON.parse(localStorage.getItem(`${username}_comp_data`)));
-
-
         const username = window.username;
         setComponentsData(JSON.parse(localStorage.getItem(`${username}_comp_data`)));
         setShow(!show)
@@ -253,6 +251,11 @@ function App() {
         }
     }, [allSSwitchesOn]);
 
+    useEffect(() => {
+        const bothLists = [...componentsChecked, ...shoppingChecked];
+        addToUserListsEnabled = bothLists.length > 0;
+    }, [componentsChecked, shoppingChecked]);
+
     useMemo(() => {
         let rows = null;
 
@@ -308,7 +311,7 @@ function App() {
                             <Tooltip>Expand</Tooltip>
                         }
                     >
-                        <Button variant="outline-primary" onClick={handleExtended} style={{padding: ".375rem .575rem", marginRight: "1%"}}>
+                        <Button variant="outline-primary" className={"offcanvas__buttons"} onClick={handleExtended} style={{padding: ".375rem .575rem", marginRight: "1%"}}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                  className="bi bi-arrow-bar-up" viewBox="0 0 15 15" style={(extended) ? {transform: "scale(-1, -1)"} : {transform: "scale(-1, 1)"}}>
                                 <path fillRule="evenodd"
@@ -322,7 +325,7 @@ function App() {
                             <Tooltip>Update</Tooltip>
                         }
                     >
-                        <Button variant="outline-primary" onClick={update} style={{padding: ".375rem .575rem"}}>
+                        <Button variant="outline-primary" className={"offcanvas__buttons"} onClick={update} style={{padding: ".375rem .575rem", marginRight: "1%"}}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                  className="bi bi-arrow-clockwise" viewBox="0 0 15 15" style={{transform: "scale(-1, -1)"}}>
                                 <path fillRule="evenodd"
@@ -332,6 +335,7 @@ function App() {
                             </svg>
                         </Button>
                     </OverlayTrigger>
+                    <Button variant="outline-primary" className={"offcanvas__buttons"} onClick={update} style={addToUserListsEnabled ? {padding: ".375rem .575rem"} : {padding: ".375rem .575rem", borderColor: "#bfbfbf", color: "#bfbfbf"}}>Add Selection to List</Button>
                     <table id="components__offcanvas-table" className="table table-sm components__offcanvas-table">
                         <thead className={"components__offcanvas-thead"} style={{fontSize: "13px"}}>
                             <tr>

@@ -55,7 +55,7 @@ class UserProfileShoppingListData(models.Model):
     component = models.ForeignKey(Component, on_delete=models.CASCADE)
     profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     number = models.PositiveIntegerField(default=0, blank=False)
-    shopping_list = models.ForeignKey(UserShoppingLists, null=True, on_delete=models.CASCADE)
+    tags = models.JSONField(blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "User Shopping List"

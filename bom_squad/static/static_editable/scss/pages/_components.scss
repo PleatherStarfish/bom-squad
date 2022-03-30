@@ -86,3 +86,10 @@
   color: #528c69;
   box-shadow: rgba(82, 140, 105, .7);
 }
+
+#bootstrap-overrides .offcanvas__buttons:hover {
+  color: white;
+  * {
+    color: white;
+  }
+}

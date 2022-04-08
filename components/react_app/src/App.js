@@ -68,7 +68,7 @@ function App() {
     const handleOffcanvasButtonClick = () => {
         const username = window.username;
         setComponentsData(JSON.parse(localStorage.getItem(`${username}_comp_data`)));
-        setShow(!show)
+        setShow(!show);
     };
 
     const update = () => {
@@ -204,6 +204,32 @@ function App() {
         });
     };
 
+    // When "show" changes, get the switch state from LocalState
+    useEffect(() => {
+        const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
+        console.log(localStorageState);
+
+        // If local storage is loaded...
+        if (localStorageState) {
+
+            // Get switch state from local storage
+            const newComponentsSwitchState = [];
+            const newShoppingSwitchState = [];
+            Object.keys(localStorageState).forEach((item) => {
+                console.log(item);
+                if ('add_to_components_list' in localStorageState[item] && localStorageState[item]['add_to_components_list'] === "true") {
+                    newComponentsSwitchState.push(item)
+                }
+                if ('add_to_shopping_list' in localStorageState[item] && localStorageState[item]['add_to_shopping_list'] === "true") {
+                    newShoppingSwitchState.push(item)
+                }
+            });
+            setComponentsChecked((prev) => new Set([...prev, ...newComponentsSwitchState]));
+            setShoppingChecked((prev) => new Set([...prev, ...newShoppingSwitchState]));
+        }
+
+    }, [show]);
+
     useEffect(() => {
         if (Object.keys(location).length > 0) {
             for (let id of Object.keys(location)) {
@@ -335,7 +361,11 @@ function App() {
                             </svg>
                         </Button>
                     </OverlayTrigger>
-                    <Button variant="outline-primary" className={"offcanvas__buttons"} onClick={update} style={addToUserListsEnabled ? {padding: ".375rem .575rem"} : {padding: ".375rem .575rem", borderColor: "#bfbfbf", color: "#bfbfbf"}}>Add Selection to List</Button>
+                    {(componentsChecked.size || shoppingChecked.size) ?
+                    <Button variant="outline-primary" className={"offcanvas__buttons"} onClick={update} style={{padding: ".375rem .575rem", border: "1px #528c69 solid", color: "white"}} active>Add Selection to List</Button>
+                        :
+                    <Button variant="outline-primary" className={"offcanvas__buttons"} onClick={update} style={{padding: ".375rem .575rem"}} disabled>Add Selection to List</Button>
+                    }
                     <table id="components__offcanvas-table" className="table table-sm components__offcanvas-table">
                         <thead className={"components__offcanvas-thead"} style={{fontSize: "13px"}}>
                             <tr>

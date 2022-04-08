@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Button, CloseButton, Form } from 'react-bootstrap';
 
 const Row = (props) => {
@@ -84,7 +84,8 @@ const Row = (props) => {
                     />
                 </Form>
             </td>
-            <td><Button className="components__offcanvas-remove-btn"
+            <td className={"h-100"} style={{verticalAlign: "middle"}}>
+                <Button className="components__offcanvas-remove-btn"
                         variant="outline-danger"
                         size="sm"
                         id={`rowDelete_${value}`}

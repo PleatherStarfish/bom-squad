@@ -58,22 +58,29 @@ function App() {
 
     const handleExtended = () => setExtended(!extended);
 
+    // Handle a click on the main button that expands the offcanvas div
+    const handleOffcanvasButtonClick = () => {
+        const username = window.username;
+        const compState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
+        setComponentsData(compState["components"]);
+
+        setAllCSwitchesOn(compState["metadata"]["allCSwitchesOn"]);
+        setAllSSwitchesOn(compState["metadata"]["allSSwitchesOn"]);
+
+        setShow(!show);
+    };
+
     // Open popup to confirm delete
     const handleConfirmDeleteModelShow = (e) => {
         setConfirmDeleteShow(true);
         setDeleteID(e);
     };
 
-    // Handle a click on the main button that expands the offcanvas div
-    const handleOffcanvasButtonClick = () => {
-        const username = window.username;
-        setComponentsData(JSON.parse(localStorage.getItem(`${username}_comp_data`)));
-        setShow(!show);
-    };
-
+    // Handle click on update button
     const update = () => {
         const username = window.username;
-        setComponentsData(JSON.parse(localStorage.getItem(`${username}_comp_data`)));
+        const compState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
+        setComponentsData(compState["components"]);
     };
 
     // Handler called when offcanvas closes
@@ -90,10 +97,10 @@ function App() {
     const setLocalStorageSwitch = (compID, list_type, username) => {
         const localStorageState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
 
-        if (localStorageState[`${compID}`][`add_to_${list_type}_list`] === "true") {
-            localStorageState[`${compID}`][`add_to_${list_type}_list`] = "false";
+        if (localStorageState["components"][`${compID}`][`add_to_${list_type}_list`] === "true") {
+            localStorageState["components"][`${compID}`][`add_to_${list_type}_list`] = "false";
         } else {
-            localStorageState[`${compID}`][`add_to_${list_type}_list`] = "true";
+            localStorageState["components"][`${compID}`][`add_to_${list_type}_list`] = "true";
         }
         localStorage.setItem(`${username}_comp_data`, JSON.stringify(localStorageState));
     };
@@ -103,9 +110,9 @@ function App() {
         const localStorageState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
 
         if (on) {
-            localStorageState[`${compID}`][`add_to_${list_type}_list`] = "true"
+            localStorageState["components"][`${compID}`][`add_to_${list_type}_list`] = "true"
         } else {
-            localStorageState[`${compID}`][`add_to_${list_type}_list`] = "false"
+            localStorageState["components"][`${compID}`][`add_to_${list_type}_list`] = "false"
         }
         localStorage.setItem(`${username}_comp_data`, JSON.stringify(localStorageState));
     };
@@ -131,7 +138,7 @@ function App() {
     // Handle any click on the "meta" switches at the top of the switch columns
     const handleMetaSwitchChange = (e, type) => {
         if (type === 'components') {
-            setAllCSwitchesOn(!allCSwitchesOn)
+            setAllCSwitchesOn(!allCSwitchesOn);
         } else {
             setAllSSwitchesOn(!allSSwitchesOn)
         }
@@ -145,9 +152,20 @@ function App() {
         setComponentsChecked(prev => new Set([...prev].filter(x => x !== `${id}`)));
         setShoppingChecked(prev => new Set([...prev].filter(x => x !== `${id}`)));
 
+        // Get local storage
         const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
-        const {[id]: _removedLocalStateComponent, ...newLocalStorageState} = localStorageState;
-        localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(newLocalStorageState));
+
+        const localStorageStateComponent = localStorageState["components"];
+        const localStorageStateMetadata = localStorageState["metadata"];
+
+        // Remove ID item from "components" object
+        const {[id]: _removedLocalStateComponent, ...newLocalStorageState} = localStorageStateComponent;
+
+        // Spread both the "components" object and the "metadata" object into new localStorage
+        localStorage.setItem(`${window.username}_comp_data`, JSON.stringify({
+                ...{["components"]: newLocalStorageState}, ...{["metadata"]: localStorageStateMetadata}
+            })
+        );
     };
 
     const handleQuantityChange = (e) => {
@@ -155,9 +173,11 @@ function App() {
         const value = e.target.value;
 
         const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
-        localStorageState[id]["quantity"] = parseInt(value);
+        localStorageState["components"][id]["quantity"] = parseInt(value);
         localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
-        setComponentsData(JSON.parse(localStorage.getItem(`${window.username}_comp_data`)));
+
+        const updatedLocalStorageState = localStorage.getItem(`${window.username}_comp_data`);
+        setComponentsData(JSON.parse(updatedLocalStorageState)["components"]);
     };
 
     const handleLocationChange = (e) => {
@@ -207,7 +227,6 @@ function App() {
     // When "show" changes, get the switch state from LocalState
     useEffect(() => {
         const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
-        console.log(localStorageState);
 
         // If local storage is loaded...
         if (localStorageState) {
@@ -215,12 +234,11 @@ function App() {
             // Get switch state from local storage
             const newComponentsSwitchState = [];
             const newShoppingSwitchState = [];
-            Object.keys(localStorageState).forEach((item) => {
-                console.log(item);
-                if ('add_to_components_list' in localStorageState[item] && localStorageState[item]['add_to_components_list'] === "true") {
+            Object.keys(localStorageState["components"]).forEach((item) => {
+                if ('add_to_components_list' in localStorageState["components"][item] && localStorageState["components"][item]['add_to_components_list'] === "true") {
                     newComponentsSwitchState.push(item)
                 }
-                if ('add_to_shopping_list' in localStorageState[item] && localStorageState[item]['add_to_shopping_list'] === "true") {
+                if ('add_to_shopping_list' in localStorageState["components"][item] && localStorageState["components"][item]['add_to_shopping_list'] === "true") {
                     newShoppingSwitchState.push(item)
                 }
             });
@@ -231,12 +249,32 @@ function App() {
     }, [show]);
 
     useEffect(() => {
+        if (componentsData) {
+            const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
+            localStorageState["metadata"]["allCSwitchesOn"] = allCSwitchesOn;
+            localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
+        }
+    }, [allCSwitchesOn]);
+
+    useEffect(() => {
+        if (componentsData) {
+            const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
+            localStorageState["metadata"]["allSSwitchesOn"] = allSSwitchesOn;
+            localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
+        }
+    }, [allSSwitchesOn]);
+
+    useEffect(() => {
         if (Object.keys(location).length > 0) {
             for (let id of Object.keys(location)) {
                 const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
-                localStorageState[id]["location"] = location[id];
+                localStorageState["components"][id]["location"] = location[id];
+
+                const localStorageStateComponent = localStorageState["components"];
+                const localStorageStateMetadata = localStorageState["metadata"];
+
                 localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
-                setComponentsData(JSON.parse(localStorage.getItem(`${window.username}_comp_data`)));
+                setComponentsData(JSON.parse(localStorage.getItem(`${window.username}_comp_data`))["components"]);
             }
         }
     }, [location]);
@@ -284,7 +322,6 @@ function App() {
 
     useMemo(() => {
         let rows = null;
-
         if (componentsData) {
             rows = Object.keys(componentsData).map((value, index) => {
                 return (

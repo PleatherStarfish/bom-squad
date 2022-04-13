@@ -4,6 +4,7 @@ import { Button, CloseButton, Form } from 'react-bootstrap';
 const Row = (props) => {
     const componentsData = props.componentsData;
     const value = props.valueString;
+    console.log(componentsData[value].description)
     const componentsChecked = props.componentsChecked;
     const shoppingChecked = props.shoppingChecked;
     const handleSwitchesChange = props.handleSwitchesChange;

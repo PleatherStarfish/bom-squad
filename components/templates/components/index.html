@@ -102,8 +102,8 @@
             var tabNumber = document.getElementById('components-quantity-tab-number');
             var compData = JSON.parse(localStorage.getItem('{{ user.get_username }}_comp_data'));
             var sum = 0;
-            for (key of Object.keys(compData)) {
-                sum += compData[key].quantity
+            for (key of Object.keys(compData["components"])) {
+                sum += compData["components"][key].quantity
             }
             tabNumber.innerText = sum;
         }
@@ -122,7 +122,7 @@
 
             {# If no local storage at all, create empty object #}
             if (localStorage.getItem('{{ user.get_username }}_comp_data') === null) {
-                localStorage.setItem('{{ user.get_username }}_comp_data', JSON.stringify({}));
+                localStorage.setItem('{{ user.get_username }}_comp_data', JSON.stringify({components: {}, metadata: {}}));
             }
 
             {# Get the component data from local storage (even if empty, having been just set above)  #}
@@ -131,23 +131,20 @@
             {# The ID (pk) number of component as a string #}
             var componentIDNumber = e.target.id.split('_')[1];
 
-            {# Create an object to hold the new data #}
-            var dataToAdd = {};
-
             {# Get quantity from form #}
             var userEnteredQuantity = parseInt(document.getElementById(e.target.id).value);
 
             {# Does component ID is already in local storage? #}
-            if (componentIDNumber in compData) {
-                compData[componentIDNumber]["quantity"] = userEnteredQuantity
-                if (compData[componentIDNumber]["quantity"] === 0) {
-                    delete compData[componentIDNumber];
+            if (componentIDNumber in compData["components"]) {
+                compData["components"][componentIDNumber]["quantity"] = userEnteredQuantity;
+                if (compData["components"][componentIDNumber]["quantity"] === 0) {
+                    delete compData["components"][componentIDNumber];
                 }
             } else {
-                compData[componentIDNumber] = getMiscCompData(componentIDNumber);
-                compData[componentIDNumber]["quantity"] = userEnteredQuantity;
-                if (compData[componentIDNumber]["quantity"] === 0) {
-                    delete compData[componentIDNumber];
+                compData["components"][componentIDNumber] = getMiscCompData(componentIDNumber);
+                compData["components"][componentIDNumber]["quantity"] = userEnteredQuantity;
+                if (compData["components"][componentIDNumber]["quantity"] === 0) {
+                    delete compData["components"][componentIDNumber];
                 }
             }
             localStorage.setItem('{{ user }}_comp_data', JSON.stringify(compData));
@@ -159,14 +156,15 @@
             window.username = "{{ request.user.username }}";
             var compData = null;
 
+            // If local storage for this user is already set, then assign to compData
             if (localStorage.getItem('{{ user.get_username }}_comp_data') !== null) {
                 compData = JSON.parse(localStorage.getItem('{{ user.get_username }}_comp_data'));
             }
 
             if (compData) {
-                for (key of Object.keys(compData)) {
+                for (key of Object.keys(compData["components"])) {
                     var formField = document.getElementById(`quantity_${key}`);
-                    formField.value = compData[key].quantity
+                    formField.value = compData["components"][key].quantity
                 }
             }
             updateNumberInTab();

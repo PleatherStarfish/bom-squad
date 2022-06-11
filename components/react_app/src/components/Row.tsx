@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
+// @ts-ignore
 import { Button, CloseButton, Form } from 'react-bootstrap';
 
-const Row = (props) => {
+const Row = (props: { componentsData: any; valueString: any; componentsChecked: any; shoppingChecked: any; handleSwitchesChange: any; handleQuantityChange: any; location: any; handleLocationChange: any; handleLocationBubbleDelete: any; handleDeleteRow: (arg0: any) => any; }) => {
     const componentsData = props.componentsData;
     const value = props.valueString;
-    console.log(componentsData[value].description)
+    console.log(componentsData[value].description);
     const componentsChecked = props.componentsChecked;
     const shoppingChecked = props.shoppingChecked;
     const handleSwitchesChange = props.handleSwitchesChange;
@@ -19,7 +20,7 @@ const Row = (props) => {
         if (value && location[value] && location[value]["location"]) {
             const arrayLength = location[value]["location"].length;
 
-            const placeList = location[value]["location"].map((name, index) => {
+            const placeList = location[value]["location"].map((name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal, index: React.Key) => {
 
                 let close = null;
                 if (index !== arrayLength-1) {

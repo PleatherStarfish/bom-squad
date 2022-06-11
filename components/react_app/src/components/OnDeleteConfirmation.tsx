@@ -1,7 +1,8 @@
 import React from 'react';
+// @ts-ignore
 import { Button, Modal } from 'react-bootstrap';
 
-const OnDeleteConfirmation = (props) => {
+const OnDeleteConfirmation = (props: { confirmDeleteShow: any; handleConfirmDeleteModelClose: () => void; componentsData: boolean | { [x: string]: { [x: string]: any; }; }; deleteID: string | number; handleDeleteRow: (arg0: any) => void; }) => {
 
     return (
         <Modal show={props.confirmDeleteShow} onHide={props.handleConfirmDeleteModelClose} animation={true}>

@@ -1,10 +1,15 @@
+// @ts-ignore
 import React, { useEffect, useState, useMemo, useRef } from 'react';
+// @ts-ignore
 import { Button, Offcanvas, Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Row from './components/Row'
 import OnDeleteConfirmation from './components/OnDeleteConfirmation';
 
+declare global {
+    interface Window { username: string; }
+}
 
-function getTotalPrice(number, price) {
+function getTotalPrice(number: string, price: string) {
     const quant = parseInt(number);
     const currency = price.charAt(0);
     const stringWithoutCurrency = price.substring(1);
@@ -12,7 +17,7 @@ function getTotalPrice(number, price) {
     return `${currency}${(floatPrice * quant).toFixed(2)}`
 }
 
-const switchHandler = (array, value, setter) => {
+const switchHandler = (array: Set<any>, value: any, setter: { (value: React.SetStateAction<Set<any>>): void; (value: React.SetStateAction<Set<any>>): void; (arg0: { (prev: any): Set<any>; (prev: any): Set<any>; }): void; }) => {
     if (array.has(value)) {
         setter(prev => new Set([...prev].filter(x => x !== value)))
     } else {
@@ -20,7 +25,7 @@ const switchHandler = (array, value, setter) => {
     }
 };
 
-const getID = (e) => e.target.id.split('_')[1];
+const getID = (e: { target: { id: string; }; }) => e.target.id.split('_')[1];
 
 function App() {
 
@@ -52,7 +57,7 @@ function App() {
     // {"location": [], "remainder": ""}
     const [location, setLocation ] = useState({});
 
-    let addToUserListsEnabled = useRef(false);
+    let addToUserListsEnabled: React.MutableRefObject<boolean> = useRef(false);
 
     const handleConfirmDeleteModelClose = () => setConfirmDeleteShow(false);
 
@@ -94,7 +99,7 @@ function App() {
     };
 
     // Update local storage with the state of a single row switch
-    const setLocalStorageSwitch = (compID, list_type, username) => {
+    const setLocalStorageSwitch = (compID: string, list_type: any, username: string) => {
         const localStorageState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
 
         if (localStorageState["components"][`${compID}`][`add_to_${list_type}_list`] === "true") {
@@ -106,7 +111,7 @@ function App() {
     };
 
     // Enforce an "all-on" or "all-off" switch state in local storage
-    const setLocalStorageSwitchOnOff = (compID, list_type, username, on) => {
+    const setLocalStorageSwitchOnOff = (compID: string, list_type: string, username: string, on: boolean) => {
         const localStorageState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
 
         if (on) {
@@ -118,7 +123,7 @@ function App() {
     };
 
     // Update hook with the state of a single row switch
-    const setStateFromSwitch = (compID, list_type) => {
+    const setStateFromSwitch = (compID: string, list_type: string) => {
         if (list_type === 'components') {
             switchHandler(componentsChecked, compID, setComponentsChecked)
         }
@@ -128,7 +133,7 @@ function App() {
     };
 
     // Handle a click on any of the switches for the data rows
-    const handleSwitchesChange = (e, type) => {
+    const handleSwitchesChange = (e: { target: { id: string; }; }, type: string) => {
         const switchID = getID(e);
 
         setLocalStorageSwitch(switchID, type, window.username);
@@ -136,7 +141,7 @@ function App() {
     };
 
     // Handle any click on the "meta" switches at the top of the switch columns
-    const handleMetaSwitchChange = (e, type) => {
+    const handleMetaSwitchChange = (e: any, type: string) => {
         if (type === 'components') {
             setAllCSwitchesOn(!allCSwitchesOn);
         } else {
@@ -144,12 +149,15 @@ function App() {
         }
     };
 
-    const handleDeleteRow = (e) => {
-        const id = parseInt(e);
+    const handleDeleteRow = (e: string) => {
+        const id: number = parseInt(e);
+        // @ts-ignore
         const {[id]: _removedComponent, ...newComponentsData} = componentsData;
 
         setComponentsData(newComponentsData);
+        // @ts-ignore
         setComponentsChecked(prev => new Set([...prev].filter(x => x !== `${id}`)));
+        // @ts-ignore
         setShoppingChecked(prev => new Set([...prev].filter(x => x !== `${id}`)));
 
         // Get local storage
@@ -168,7 +176,7 @@ function App() {
         );
     };
 
-    const handleQuantityChange = (e) => {
+    const handleQuantityChange = (e: { target: any; }) => {
         const id = getID(e);
         const value = e.target.value;
 
@@ -180,7 +188,7 @@ function App() {
         setComponentsData(JSON.parse(updatedLocalStorageState)["components"]);
     };
 
-    const handleLocationChange = (e) => {
+    const handleLocationChange = (e: { target: any; }) => {
         const id = getID(e);
         const value = e.target.value;
 
@@ -194,12 +202,14 @@ function App() {
             if (value.slice(-1) === ",") {
                 const newLocations = value.split(",");
                 const newLocationsFiltered = newLocations.filter(function (el) { return el !== ""; });
+                // @ts-ignore
                 const newLocationArray = [...location[id]["location"],...newLocationsFiltered];
                 setLocation((prev) => {
                     return {...prev, [id]: {"location": newLocationArray, "remainder": ""}
                 }});
             } else {
                 const newLocations = value.split(",");
+                // @ts-ignore
                 const newLocationArray = [...location[id]["location"],...newLocations];
                 const newLocationArrayFiltered = newLocationArray.filter(function (el) { return el !== ""; });
                 setLocation((prev) => {
@@ -208,15 +218,17 @@ function App() {
             }
         } else {
             setLocation((prev) => {
+                // @ts-ignore
                 return {...prev, [id]: {"location": prev[id] ? prev[id]["location"] : [], "remainder": value}}
             })
         }
     };
 
-    const handleLocationBubbleDelete = (e) => {
+    const handleLocationBubbleDelete = (e: { target: { id: string; }; }) => {
         const row_id = e.target.id.split('_')[1];
         const bubble_id = e.target.id.split('_')[2];
 
+        // @ts-ignore
         let newLocationArray = location[row_id]["location"];
         newLocationArray.splice(bubble_id, 1);
         setLocation((prev) => {
@@ -232,8 +244,8 @@ function App() {
         if (localStorageState) {
 
             // Get switch state from local storage
-            const newComponentsSwitchState = [];
-            const newShoppingSwitchState = [];
+            const newComponentsSwitchState: string[] = [];
+            const newShoppingSwitchState: string[] = [];
             Object.keys(localStorageState["components"]).forEach((item) => {
                 if ('add_to_components_list' in localStorageState["components"][item] && localStorageState["components"][item]['add_to_components_list'] === "true") {
                     newComponentsSwitchState.push(item)
@@ -242,7 +254,9 @@ function App() {
                     newShoppingSwitchState.push(item)
                 }
             });
+            // @ts-ignore
             setComponentsChecked((prev) => new Set([...prev, ...newComponentsSwitchState]));
+            // @ts-ignore
             setShoppingChecked((prev) => new Set([...prev, ...newShoppingSwitchState]));
         }
 
@@ -268,6 +282,7 @@ function App() {
         if (Object.keys(location).length > 0) {
             for (let id of Object.keys(location)) {
                 const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
+                // @ts-ignore
                 localStorageState["components"][id]["location"] = location[id];
 
                 const localStorageStateComponent = localStorageState["components"];
@@ -316,8 +331,11 @@ function App() {
     }, [allSSwitchesOn]);
 
     useEffect(() => {
+        // @ts-ignore
         const bothLists = [...componentsChecked, ...shoppingChecked];
-        addToUserListsEnabled = bothLists.length > 0;
+        if (bothLists.length > 0) {
+            addToUserListsEnabled.current = true
+        }
     }, [componentsChecked, shoppingChecked]);
 
     useMemo(() => {

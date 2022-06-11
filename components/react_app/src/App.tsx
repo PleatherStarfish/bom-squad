@@ -102,10 +102,10 @@ function App() {
     const setLocalStorageSwitch = (compID: string, list_type: any, username: string) => {
         const localStorageState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
 
-        if (localStorageState["components"][`${compID}`][`add_to_${list_type}_list`] === "true") {
-            localStorageState["components"][`${compID}`][`add_to_${list_type}_list`] = "false";
+        if (localStorageState["components"][compID][`add_to_${list_type}_list`] === "true") {
+            localStorageState["components"][compID][`add_to_${list_type}_list`] = "false";
         } else {
-            localStorageState["components"][`${compID}`][`add_to_${list_type}_list`] = "true";
+            localStorageState["components"][compID][`add_to_${list_type}_list`] = "true";
         }
         localStorage.setItem(`${username}_comp_data`, JSON.stringify(localStorageState));
     };
@@ -115,9 +115,9 @@ function App() {
         const localStorageState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
 
         if (on) {
-            localStorageState["components"][`${compID}`][`add_to_${list_type}_list`] = "true"
+            localStorageState["components"][compID][`add_to_${list_type}_list`] = "true"
         } else {
-            localStorageState["components"][`${compID}`][`add_to_${list_type}_list`] = "false"
+            localStorageState["components"][compID][`add_to_${list_type}_list`] = "false"
         }
         localStorage.setItem(`${username}_comp_data`, JSON.stringify(localStorageState));
     };
@@ -141,7 +141,7 @@ function App() {
     };
 
     // Handle any click on the "meta" switches at the top of the switch columns
-    const handleMetaSwitchChange = (e: any, type: string) => {
+    const handleMetaSwitchChange = (e: object, type: string) => {
         if (type === 'components') {
             setAllCSwitchesOn(!allCSwitchesOn);
         } else {
@@ -176,7 +176,7 @@ function App() {
         );
     };
 
-    const handleQuantityChange = (e: { target: any; }) => {
+    const handleQuantityChange = (e: { target: {id: string, value: string}; }) => {
         const id = getID(e);
         const value = e.target.value;
 

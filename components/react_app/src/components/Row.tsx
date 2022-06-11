@@ -2,10 +2,9 @@ import React, {useEffect, useState} from 'react';
 // @ts-ignore
 import { Button, CloseButton, Form } from 'react-bootstrap';
 
-const Row = (props: { componentsData: any; valueString: any; componentsChecked: any; shoppingChecked: any; handleSwitchesChange: any; handleQuantityChange: any; location: any; handleLocationChange: any; handleLocationBubbleDelete: any; handleDeleteRow: (arg0: any) => any; }) => {
+const Row = (props: { componentsData: boolean | object; valueString: string; componentsChecked: Set<string>; shoppingChecked: Set<string>; handleSwitchesChange: any; handleQuantityChange: any; location: any; handleLocationChange: any; handleLocationBubbleDelete: any; handleDeleteRow: (arg0: any) => any; }) => {
     const componentsData = props.componentsData;
     const value = props.valueString;
-    console.log(componentsData[value].description);
     const componentsChecked = props.componentsChecked;
     const shoppingChecked = props.shoppingChecked;
     const handleSwitchesChange = props.handleSwitchesChange;

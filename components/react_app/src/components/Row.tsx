@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 // @ts-ignore
 import { Button, CloseButton, Form } from 'react-bootstrap';
 
-const Row = (props: { componentsData: boolean | object; valueString: string; componentsChecked: Set<string>; shoppingChecked: Set<string>; handleSwitchesChange: any; handleQuantityChange: any; location: any; handleLocationChange: any; handleLocationBubbleDelete: any; handleDeleteRow: (arg0: any) => any; }) => {
+const Row = (props: { componentsData: any; valueString: string; componentsChecked: Set<string>; shoppingChecked: Set<string>; handleSwitchesChange: any; handleQuantityChange: any; location: any; handleLocationChange: any; handleLocationBubbleDelete: any; handleDeleteRow: (arg0: any) => any; }) => {
     const componentsData = props.componentsData;
     const value = props.valueString;
     const componentsChecked = props.componentsChecked;
@@ -19,7 +19,7 @@ const Row = (props: { componentsData: boolean | object; valueString: string; com
         if (value && location[value] && location[value]["location"]) {
             const arrayLength = location[value]["location"].length;
 
-            const placeList = location[value]["location"].map((name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal, index: React.Key) => {
+            const placeList = location[value]["location"].map((name: string, index: React.Key) => {
 
                 let close = null;
                 if (index !== arrayLength-1) {
@@ -29,7 +29,7 @@ const Row = (props: { componentsData: boolean | object; valueString: string; com
                 return (
                     <div key={index} style={{display: "inline-block", whiteSpace: "nowrap"}}>
                         <div style={{fontSize: "10px", display: "inline-block", padding: "3px 6px", border: "1px solid black", borderRadius: ".8em", margin: "3px 0 0 0"}}>
-                            <b>{ name }</b><CloseButton id={`deleteLocationButton_${value}_${index}`} style={{fontSize: "0.8em", marginLeft: "3px"}} onClick={(e) => handleLocationBubbleDelete(e)} />
+                            <b>{ name }</b><CloseButton id={`deleteLocationButton_${value}_${index}`} style={{fontSize: "0.8em", marginLeft: "3px"}} onClick={(e: object) => handleLocationBubbleDelete(e)} />
                         </div>
                         { close }
                     </div>
@@ -71,7 +71,7 @@ const Row = (props: { componentsData: boolean | object; valueString: string; com
                         type="switch"
                         id={`contentSwitch_${value}`}
                         checked={componentsChecked.has(value)}
-                        onChange={(e) => handleSwitchesChange(e, 'components')}
+                        onChange={(e: object) => handleSwitchesChange(e, 'components')}
                     />
                 </Form>
             </td>
@@ -81,7 +81,7 @@ const Row = (props: { componentsData: boolean | object; valueString: string; com
                         type="switch"
                         id={`shoppingSwitch_${value}`}
                         checked={shoppingChecked.has(value)}
-                        onChange={(e) => handleSwitchesChange(e, 'shopping')}
+                        onChange={(e: object) => handleSwitchesChange(e, 'shopping')}
                     />
                 </Form>
             </td>

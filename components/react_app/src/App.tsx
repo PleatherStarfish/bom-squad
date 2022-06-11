@@ -9,6 +9,19 @@ declare global {
     interface Window { username: string; }
 }
 
+interface CData {
+  [value: number]: {
+      prince: string,
+      item_url: string,
+      description: string,
+      item_no: string,
+      quantity: number,
+      supplier_short_name: string,
+      add_to_components_list: string,
+      add_to_shopping_list: string,
+      location: string}
+}
+
 function getTotalPrice(number: string, price: string) {
     const quant = parseInt(number);
     const currency = price.charAt(0);
@@ -35,7 +48,7 @@ function App() {
     const [extended, setExtended] = useState(false);
 
     // Main data from browser state
-    const [componentsData, setComponentsData] = useState(false);
+    const [componentsData, setComponentsData] = useState<CData | boolean>(false);
 
     // Number displayed in tab
     const [totalQuantityToAdd, setTotalQuantityToAdd] = useState(0);
@@ -201,7 +214,7 @@ function App() {
             // If last charecter in string is a comma...
             if (value.slice(-1) === ",") {
                 const newLocations = value.split(",");
-                const newLocationsFiltered = newLocations.filter(function (el) { return el !== ""; });
+                const newLocationsFiltered = newLocations.filter(function (el: string) { return el !== ""; });
                 // @ts-ignore
                 const newLocationArray = [...location[id]["location"],...newLocationsFiltered];
                 setLocation((prev) => {
@@ -377,7 +390,10 @@ function App() {
                 </span>
             </Button>
 
-            {componentsData && deleteID && componentsData[deleteID] && <OnDeleteConfirmation componentsData={componentsData} deleteID={deleteID} confirmDeleteShow={confirmDeleteShow} handleDeleteRow={handleDeleteRow} handleConfirmDeleteModelClose={handleConfirmDeleteModelClose} />}
+            {
+                componentsData &&
+                deleteID &&
+                <OnDeleteConfirmation componentsData={componentsData} deleteID={deleteID} confirmDeleteShow={confirmDeleteShow} handleDeleteRow={handleDeleteRow} handleConfirmDeleteModelClose={handleConfirmDeleteModelClose} />}
 
             <Offcanvas id="components__offcanvas-container"
                        className={!show ? "offcanvas offcanvas-bottom components__offcanvas-container" : ((extended) ? "offcanvas offcanvas-bottom components__offcanvas-container components__offcanvas-container--full" : "offcanvas offcanvas-bottom components__offcanvas-container components__offcanvas-container--lifted")}
@@ -436,7 +452,7 @@ function App() {
                                             type="switch"
                                             id="custom-switch"
                                             checked={allCSwitchesOn}
-                                            onChange={(e) => handleMetaSwitchChange(e, 'components')}
+                                            onChange={(e: object) => handleMetaSwitchChange(e, 'components')}
                                         />
                                     </Form>
                                 </th>
@@ -447,7 +463,7 @@ function App() {
                                             type="switch"
                                             id="custom-switch"
                                             checked={allSSwitchesOn}
-                                            onChange={(e) => handleMetaSwitchChange(e, 'shopping')}
+                                            onChange={(e: object) => handleMetaSwitchChange(e, 'shopping')}
                                         />
                                     </Form>
                                 </th>

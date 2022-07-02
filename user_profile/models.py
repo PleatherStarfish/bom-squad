@@ -3,6 +3,13 @@ from django.utils import timezone
 from django.template.defaultfilters import slugify
 from modules.models import Module, Component, ModuleBomListItem
 from django.contrib.auth.models import User
+import ast
+
+def StringToJSON(input_to_test):
+    try:
+        return ast.literal_eval(input_to_test)
+    except:
+        return ast.literal_eval("{}")
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, unique=True, on_delete=models.CASCADE)
@@ -12,11 +19,19 @@ class UserProfile(models.Model):
                                                  through='UserProfileComponentInventoryData')
     shopping_list = models.ManyToManyField(Component, blank=True, related_name='user_shopping_list',
                                                  through='UserProfileShoppingListData')
+    component_inventory_json = models.JSONField(null=True, blank=True)
+    shopping_list_json = models.JSONField(null=True, blank=True)
     slug = models.SlugField(blank=True)
 
     def save(self, *args, **kwargs):
+        if type(self.component_inventory_json) is str:
+            self.component_inventory_json = StringToJSON(self.component_inventory_json)
+        if type(self.shopping_list_json) is str:
+            self.shopping_list_json = StringToJSON(self.shopping_list_json)
         if not self.slug:
             self.slug = slugify(f"{self.user}")
+            super(UserProfile, self).save(*args, **kwargs)
+        else:
             super(UserProfile, self).save(*args, **kwargs)
 
     def __str__(self):

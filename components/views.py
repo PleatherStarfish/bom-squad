@@ -23,15 +23,3 @@ def search_results(request):
         return render(request, 'components/index.html', context)
     else:
         return redirect(index)
-
-@login_required()
-def add_to_components_list(request):
-    if request.method == 'POST':
-        quantity = request.POST['quantity']
-        location = request.POST['location']
-        user = request.user
-        print(user)
-    return redirect(index)
-
-def add_to_shopping_list(request):
-    pass

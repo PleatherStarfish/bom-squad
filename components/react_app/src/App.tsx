@@ -4,6 +4,8 @@ import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Button, Offcanvas, Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Row from './components/Row'
 import OnDeleteConfirmation from './components/OnDeleteConfirmation';
+// @ts-ignore
+import Cookies from 'js-cookie'
 
 declare global {
     interface Window { username: string; }
@@ -99,6 +101,25 @@ function App() {
         const username = window.username;
         const compState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
         setComponentsData(compState["components"]);
+    };
+
+    // Handle click on Add Selection to List button
+    const addSelectionToList = () => {
+        const csrftoken = Cookies.get("csrftoken");
+
+        if (typeof componentsData === 'object') {
+            const requestOptions = {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrftoken},
+                body: JSON.stringify({...componentsData})
+            };
+            console.log(requestOptions);
+            fetch('/users/add_components/', requestOptions)
+                .then(response => response.json())
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
     };
 
     // Handler called when offcanvas closes
@@ -433,9 +454,9 @@ function App() {
                         </Button>
                     </OverlayTrigger>
                     {(componentsChecked.size || shoppingChecked.size) ?
-                    <Button variant="outline-primary" className={"offcanvas__buttons"} onClick={update} style={{padding: ".375rem .575rem", border: "1px #528c69 solid", color: "white"}} active>Add Selection to List</Button>
+                    <Button variant="outline-primary" className={"offcanvas__buttons"} onClick={addSelectionToList} style={{padding: ".375rem .575rem", border: "1px #528c69 solid", color: "white"}} active>Add Selection to List</Button>
                         :
-                    <Button variant="outline-primary" className={"offcanvas__buttons"} onClick={update} style={{padding: ".375rem .575rem"}} disabled>Add Selection to List</Button>
+                    <Button variant="outline-primary" className={"offcanvas__buttons"} style={{padding: ".375rem .575rem"}} disabled>Add Selection to List</Button>
                     }
                     <table id="components__offcanvas-table" className="table table-sm components__offcanvas-table">
                         <thead className={"components__offcanvas-thead"} style={{fontSize: "13px"}}>

@@ -19,8 +19,8 @@ interface CData {
       item_no: string,
       quantity: number,
       supplier_short_name: string,
-      add_to_components_list: string,
-      add_to_shopping_list: string,
+      add_to_components_list: "true" | "false",
+      add_to_shopping_list: "true" | "false",
       location: string}
 }
 
@@ -113,8 +113,12 @@ function App() {
                 headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrftoken},
                 body: JSON.stringify({...componentsData})
             };
-            console.log(requestOptions);
-            fetch('/users/add_components/', requestOptions)
+            fetch('/users/add_components_to_shopping/', requestOptions)
+                .then(response => response.json())
+                .catch(function (error) {
+                    console.log(error);
+                });
+            fetch('/users/add_components_to_inventory/', requestOptions)
                 .then(response => response.json())
                 .catch(function (error) {
                     console.log(error);

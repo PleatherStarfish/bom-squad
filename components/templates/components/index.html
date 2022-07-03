@@ -115,6 +115,8 @@
             comp['supplier_short_name'] = document.getElementById(`supplier_${id}`).getAttribute('data-supplier-short-name');
             comp['item_no'] = document.getElementById(`item_no_${id}`).textContent;
             comp['item_url'] = document.getElementById(`item_url_${id}`).href;
+            comp['add_to_shopping_list'] = "false";
+            comp['add_to_components_list'] = "false";
             return comp;
         }
 
@@ -134,7 +136,7 @@
             {# Get quantity from form #}
             var userEnteredQuantity = parseInt(document.getElementById(e.target.id).value);
 
-            {# Does component ID is already in local storage? #}
+            {# Is component ID is already in local storage? #}
             if (componentIDNumber in compData["components"]) {
                 compData["components"][componentIDNumber]["quantity"] = userEnteredQuantity;
                 if (compData["components"][componentIDNumber]["quantity"] === 0) {

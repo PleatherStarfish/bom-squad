@@ -97,6 +97,11 @@
 {% block scripts %}
     <script>
 
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+
         {# Fix the number shown in the sticky tab #}
         function updateNumberInTab() {
             var tabNumber = document.getElementById('components-quantity-tab-number');

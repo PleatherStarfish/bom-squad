@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
+import CData from '../App'
 // @ts-ignore
 import { Button, CloseButton, Form } from 'react-bootstrap';
 
-const Row = (props: { componentsData: any; valueString: string; componentsChecked: Set<string>; shoppingChecked: Set<string>; handleSwitchesChange: any; handleQuantityChange: any; location: any; handleLocationChange: any; handleLocationBubbleDelete: any; handleDeleteRow: (arg0: any) => any; }) => {
+const Row = (props: { componentsData: any | false; valueString: string; componentsChecked: Set<string>; shoppingChecked: Set<string>; handleSwitchesChange: any; handleQuantityChange: any; location: any; handleLocationChange: any; handleLocationBubbleDelete: any; handleDeleteRow: (arg0: any) => any; }) => {
     const componentsData = props.componentsData;
     const value = props.valueString;
     const componentsChecked = props.componentsChecked;
@@ -14,6 +15,8 @@ const Row = (props: { componentsData: any; valueString: string; componentsChecke
     const handleLocationBubbleDelete = props.handleLocationBubbleDelete;
 
     const [locationList, setLocationList] = useState(null);
+    console.log("hello world 3");
+    console.log(componentsData);
 
     useEffect(() => {
         if (value && location[value] && location[value]["location"]) {

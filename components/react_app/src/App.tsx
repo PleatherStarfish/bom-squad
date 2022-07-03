@@ -1,27 +1,30 @@
 // @ts-ignore
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import React, {useEffect, useState, useMemo, useRef} from 'react';
 // @ts-ignore
-import { Button, Offcanvas, Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import {Button, Offcanvas, Form, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import Row from './components/Row'
 import OnDeleteConfirmation from './components/OnDeleteConfirmation';
 // @ts-ignore
 import Cookies from 'js-cookie'
 
 declare global {
-    interface Window { username: string; }
+    interface Window {
+        username: string;
+    }
 }
 
 interface CData {
-  [value: number]: {
-      prince: string,
-      item_url: string,
-      description: string,
-      item_no: string,
-      quantity: number,
-      supplier_short_name: string,
-      add_to_components_list: "true" | "false",
-      add_to_shopping_list: "true" | "false",
-      location: string}
+    [value: number]: {
+        prince: string,
+        item_url: string,
+        description: string,
+        item_no: string,
+        quantity: number,
+        supplier_short_name: string,
+        add_to_components_list: "true" | "false",
+        add_to_shopping_list: "true" | "false",
+        location: string
+    }
 }
 
 function getTotalPrice(number: string, price: string) {
@@ -50,7 +53,7 @@ function App() {
     const [extended, setExtended] = useState(false);
 
     // Main data from browser state
-    const [componentsData, setComponentsData] = useState<CData | boolean>(false);
+    const [componentsData, setComponentsData] = useState<CData | false>(false);
 
     // Number displayed in tab
     const [totalQuantityToAdd, setTotalQuantityToAdd] = useState(0);
@@ -62,7 +65,7 @@ function App() {
     const [componentsChecked, setComponentsChecked] = useState(new Set([]));
     const [shoppingChecked, setShoppingChecked] = useState(new Set([]));
 
-     // A boolean representing the state of the two "meta" switches at the top of the columns
+    // A boolean representing the state of the two "meta" switches at the top of the columns
     const [allCSwitchesOn, setAllCSwitchesOn] = useState(false);
     const [allSSwitchesOn, setAllSSwitchesOn] = useState(false);
 
@@ -70,7 +73,7 @@ function App() {
     const [deleteID, setDeleteID] = useState(null);
 
     // {"location": [], "remainder": ""}
-    const [location, setLocation ] = useState({});
+    const [location, setLocation] = useState({});
 
     let addToUserListsEnabled: React.MutableRefObject<boolean> = useRef(false);
 
@@ -188,10 +191,12 @@ function App() {
     };
 
     const handleDeleteRow = (e: string) => {
-        const id: number = parseInt(e);
+        const id = parseInt(e);
+
         // @ts-ignore
         const {[id]: _removedComponent, ...newComponentsData} = componentsData;
 
+        // @ts-ignore
         setComponentsData(newComponentsData);
         // @ts-ignore
         setComponentsChecked(prev => new Set([...prev].filter(x => x !== `${id}`)));
@@ -203,6 +208,8 @@ function App() {
 
         const localStorageStateComponent = localStorageState["components"];
         const localStorageStateMetadata = localStorageState["metadata"];
+        console.log(localStorageStateComponent);
+        console.log(localStorageStateMetadata);
 
         // Remove ID item from "components" object
         const {[id]: _removedLocalStateComponent, ...newLocalStorageState} = localStorageStateComponent;
@@ -212,9 +219,10 @@ function App() {
                 ...{["components"]: newLocalStorageState}, ...{["metadata"]: localStorageStateMetadata}
             })
         );
+        console.log("hello world")
     };
 
-    const handleQuantityChange = (e: { target: {id: string, value: string}; }) => {
+    const handleQuantityChange = (e: { target: { id: string, value: string }; }) => {
         const id = getID(e);
         const value = e.target.value;
 
@@ -239,20 +247,28 @@ function App() {
             // If last charecter in string is a comma...
             if (value.slice(-1) === ",") {
                 const newLocations = value.split(",");
-                const newLocationsFiltered = newLocations.filter(function (el: string) { return el !== ""; });
+                const newLocationsFiltered = newLocations.filter(function (el: string) {
+                    return el !== "";
+                });
                 // @ts-ignore
-                const newLocationArray = [...location[id]["location"],...newLocationsFiltered];
+                const newLocationArray = [...location[id]["location"], ...newLocationsFiltered];
                 setLocation((prev) => {
-                    return {...prev, [id]: {"location": newLocationArray, "remainder": ""}
-                }});
+                    return {
+                        ...prev, [id]: {"location": newLocationArray, "remainder": ""}
+                    }
+                });
             } else {
                 const newLocations = value.split(",");
                 // @ts-ignore
-                const newLocationArray = [...location[id]["location"],...newLocations];
-                const newLocationArrayFiltered = newLocationArray.filter(function (el) { return el !== ""; });
+                const newLocationArray = [...location[id]["location"], ...newLocations];
+                const newLocationArrayFiltered = newLocationArray.filter(function (el) {
+                    return el !== "";
+                });
                 setLocation((prev) => {
-                    return {...prev, [id]: {"location": newLocationArrayFiltered, "remainder": ""}
-                }});
+                    return {
+                        ...prev, [id]: {"location": newLocationArrayFiltered, "remainder": ""}
+                    }
+                });
             }
         } else {
             setLocation((prev) => {
@@ -378,6 +394,7 @@ function App() {
 
     useMemo(() => {
         let rows = null;
+        console.log("hello world 2")
         if (componentsData) {
             rows = Object.keys(componentsData).map((value, index) => {
                 return (
@@ -404,21 +421,28 @@ function App() {
             <Button id="components__offcanvas-button"
                     className={!show ? "btn btn-success px-3 components__offcanvas-button" : ((extended) ? "btn btn-success px-3 components__offcanvas-button components__offcanvas-button--full" : "btn btn-success px-3 components__offcanvas-button components__offcanvas-button--lifted")}
                     type="button"
-                    style={{ zIndex: 1045}}
+                    style={{zIndex: 1045}}
                     onClick={handleOffcanvasButtonClick}>
-                Components to Add [<span id="components-quantity-tab-number">{ totalQuantityToAdd || 0 }</span>]
+                Components to Add [<span id="components-quantity-tab-number">{totalQuantityToAdd || 0}</span>]
                 <span className="components__offcanvas-svg">
                     <svg id="components__offcanvas-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                         fill="currentColor" className={!show ? "bi bi-caret-up-fill components__offcanvas-arrow" : "bi bi-caret-up-fill components__offcanvas-arrow--flipped"} viewBox="0 0 16 16">
-                        <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                         fill="currentColor"
+                         className={!show ? "bi bi-caret-up-fill components__offcanvas-arrow" : "bi bi-caret-up-fill components__offcanvas-arrow--flipped"}
+                         viewBox="0 0 16 16">
+                        <path
+                            d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                     </svg>
                 </span>
             </Button>
 
             {
-                componentsData &&
                 deleteID &&
-                <OnDeleteConfirmation componentsData={componentsData} deleteID={deleteID} confirmDeleteShow={confirmDeleteShow} handleDeleteRow={handleDeleteRow} handleConfirmDeleteModelClose={handleConfirmDeleteModelClose} />}
+                typeof componentsData == "object" &&
+                deleteID in componentsData &&
+                <OnDeleteConfirmation componentsData={componentsData} deleteID={deleteID}
+                                      confirmDeleteShow={confirmDeleteShow} handleDeleteRow={handleDeleteRow}
+                                      handleConfirmDeleteModelClose={handleConfirmDeleteModelClose}/>
+            }
 
             <Offcanvas id="components__offcanvas-container"
                        className={!show ? "offcanvas offcanvas-bottom components__offcanvas-container" : ((extended) ? "offcanvas offcanvas-bottom components__offcanvas-container components__offcanvas-container--full" : "offcanvas offcanvas-bottom components__offcanvas-container components__offcanvas-container--lifted")}
@@ -433,9 +457,11 @@ function App() {
                             <Tooltip>Expand</Tooltip>
                         }
                     >
-                        <Button variant="outline-primary" className={"offcanvas__buttons"} onClick={handleExtended} style={{padding: ".375rem .575rem", marginRight: "1%"}}>
+                        <Button variant="outline-primary" className={"offcanvas__buttons"} onClick={handleExtended}
+                                style={{padding: ".375rem .575rem", marginRight: "1%"}}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                 className="bi bi-arrow-bar-up" viewBox="0 0 15 15" style={(extended) ? {transform: "scale(-1, -1)"} : {transform: "scale(-1, 1)"}}>
+                                 className="bi bi-arrow-bar-up" viewBox="0 0 15 15"
+                                 style={(extended) ? {transform: "scale(-1, -1)"} : {transform: "scale(-1, 1)"}}>
                                 <path fillRule="evenodd"
                                       d="M8 10a.5.5 0 0 0 .5-.5V3.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 3.707V9.5a.5.5 0 0 0 .5.5zm-7 2.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5z"/>
                             </svg>
@@ -447,9 +473,11 @@ function App() {
                             <Tooltip>Update</Tooltip>
                         }
                     >
-                        <Button variant="outline-primary" className={"offcanvas__buttons"} onClick={update} style={{padding: ".375rem .575rem", marginRight: "1%"}}>
+                        <Button variant="outline-primary" className={"offcanvas__buttons"} onClick={update}
+                                style={{padding: ".375rem .575rem", marginRight: "1%"}}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                 className="bi bi-arrow-clockwise" viewBox="0 0 15 15" style={{transform: "scale(-1, -1)"}}>
+                                 className="bi bi-arrow-clockwise" viewBox="0 0 15 15"
+                                 style={{transform: "scale(-1, -1)"}}>
                                 <path fillRule="evenodd"
                                       d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
                                 <path
@@ -458,45 +486,58 @@ function App() {
                         </Button>
                     </OverlayTrigger>
                     {(componentsChecked.size || shoppingChecked.size) ?
-                    <Button variant="outline-primary" className={"offcanvas__buttons"} onClick={addSelectionToList} style={{padding: ".375rem .575rem", border: "1px #528c69 solid", color: "white"}} active>Add Selection to List</Button>
+                        <Button variant="outline-primary" className={"offcanvas__buttons"} onClick={addSelectionToList}
+                                style={{padding: ".375rem .575rem", border: "1px #528c69 solid", color: "white"}}
+                                active>Add Selection to List</Button>
                         :
-                    <Button variant="outline-primary" className={"offcanvas__buttons"} style={{padding: ".375rem .575rem"}} disabled>Add Selection to List</Button>
+                        <Button variant="outline-primary" className={"offcanvas__buttons"}
+                                style={{padding: ".375rem .575rem"}} disabled>Add Selection to List</Button>
                     }
                     <table id="components__offcanvas-table" className="table table-sm components__offcanvas-table">
                         <thead className={"components__offcanvas-thead"} style={{fontSize: "13px"}}>
-                            <tr>
-                                <th scope="col">Description</th>
-                                <th scope="col">Supplier</th>
-                                <th scope="col">Supplier Item #</th>
-                                <th scope="col">Quantity to Add</th>
-                                <th scope="col" style={componentsChecked.size ? {width: "12%"} : {display: "none"}}>Location</th>
-                                <th scope="col">
-                                    Add to Components
-                                    <Form style={{fontSize: "16px"}}>
-                                        <Form.Check
-                                            type="switch"
-                                            id="custom-switch"
-                                            checked={allCSwitchesOn}
-                                            onChange={(e: object) => handleMetaSwitchChange(e, 'components')}
-                                        />
-                                    </Form>
-                                </th>
-                                <th scope="col">
-                                    Add to Shopping
-                                    <Form style={{fontSize: "16px"}}>
-                                        <Form.Check
-                                            type="switch"
-                                            id="custom-switch"
-                                            checked={allSSwitchesOn}
-                                            onChange={(e: object) => handleMetaSwitchChange(e, 'shopping')}
-                                        />
-                                    </Form>
-                                </th>
-                                <th scope="col"><span className="sr-only">Remove</span></th>
-                            </tr>
+                        <tr>
+                            <th scope="col">Description</th>
+                            <th scope="col">Supplier</th>
+                            <th scope="col">Supplier Item #</th>
+                            <th scope="col">Quantity to Add</th>
+                            <th scope="col" style={componentsChecked.size ? {width: "12%"} : {display: "none"}}>Location{" "}
+                                <span className="d-inline-block" data-bs-toggle="tooltip" title=""
+                                   data-bs-original-title="<span style='z-index: 99999999'>Enter location separated by commas (e.g. box 1, cell A1, etc.)</span>">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         className="bi bi-info-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                        <path
+                                            d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                    </svg>
+                                </span>
+                            </th>
+                            <th scope="col">
+                                Add to Components
+                                <Form style={{fontSize: "16px"}}>
+                                    <Form.Check
+                                        type="switch"
+                                        id="custom-switch"
+                                        checked={allCSwitchesOn}
+                                        onChange={(e: object) => handleMetaSwitchChange(e, 'components')}
+                                    />
+                                </Form>
+                            </th>
+                            <th scope="col">
+                                Add to Shopping
+                                <Form style={{fontSize: "16px"}}>
+                                    <Form.Check
+                                        type="switch"
+                                        id="custom-switch"
+                                        checked={allSSwitchesOn}
+                                        onChange={(e: object) => handleMetaSwitchChange(e, 'shopping')}
+                                    />
+                                </Form>
+                            </th>
+                            <th scope="col"><span className="sr-only">Remove</span></th>
+                        </tr>
                         </thead>
                         <tbody id="components__offcanvas-tbody" style={{fontSize: "13px"}}>
-                            { tableRows }
+                        { tableRows }
                         </tbody>
                     </table>
                 </Offcanvas.Body>

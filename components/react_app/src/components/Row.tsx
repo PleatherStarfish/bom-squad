@@ -14,9 +14,9 @@ const Row = (props: { componentsData: any | false; valueString: string; componen
     const handleLocationChange = props.handleLocationChange;
     const handleLocationBubbleDelete = props.handleLocationBubbleDelete;
 
+    console.log("shoppingChecked", shoppingChecked);
+
     const [locationList, setLocationList] = useState(null);
-    console.log("hello world 3");
-    console.log(componentsData);
 
     useEffect(() => {
         if (value && location[value] && location[value]["location"]) {

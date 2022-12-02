@@ -9,73 +9,110 @@
                     <div class="card bg-light text-black p-2 p-md-4 mb-4">
                         <form class="mb-3" action="{% url 'components_search_results' %}" method="get">
                             <h1 class="display-1 mb-4">Components</h1>
-                            <p class="mb-4">Find components and add them to you personal inventory. </p>
-                            <label for="search-bom" class="module-list__search-label form-label h4"">Keyword:</label>
+                            <p class="mb-4">Find components and add them to you personal inventory.
+                            </p>
+                            <label for="search-bom" class="module-list__search-label form-label h4">Keyword:</label>
                             <input id="search-bom" class="form-control" name="q" type="text" placeholder="Search...">
                         </form>
                     </div>
                     <div>
                         {% if not user.is_authenticated %}
-                            <div class="alert alert-warning" role="alert"><a href={% url 'login' %}><b>Login</b></a> to add components to your personal user inventory or shopping list.</div>
+                            <div class="alert alert-warning" role="alert">
+                                <a href={% url 'login' %}>
+                                    <b>Login</b>
+                                </a>
+                                to add components to your personal user inventory or shopping list.
+                            </div>
                         {% endif %}
                         {% if components %}
                             {% regroup components by type as types_list %}
                             {% for type in types_list %}
-                                <div class="d-flex flex-row h-100 w-100" style="border: 4px solid #ebeced; border-radius: 0.25rem; margin-bottom: 24px">
+                                <div class="d-flex flex-row h-100 w-100"
+                                     style="border: 4px solid #ebeced; border-radius: 0.25rem; margin-bottom: 24px">
                                     <div style="background-color: #ebeced; width: 100px;">
                                         <div class="h-100 w-100 d-flex flex-column justify-content-center">
                                             <div style="display: inline-block; writing-mode: vertical-rl;text-orientation: mixed; transform: rotate(180deg)">
-                                                <h2 class="py-3" style="display:inline-block; white-space: nowrap; text-align: center; color: #7a7a7a">{{type.grouper}}s</h2>
+                                                <h2 class="py-3"
+                                                    style="display:inline-block; white-space: nowrap; text-align: center; color: #7a7a7a">{{ type.grouper }}s</h2>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="w-100 table-responsive p-4">
                                         <table class="table">
                                             <thead style="font-weight: bold; font-size: 14px; background-color: white; color: #538b69; white-space: nowrap;">
-                                                <tr>
-                                                    {% if columns|get_item:type.grouper %}
-                                                        {% with heading_list=columns|get_item:type.grouper %}
-                                                            {% for heading in heading_list %}
-                                                                {% if heading == "Add" %}
-                                                                    {% if user.is_authenticated %}
-                                                                        <th scope="col">{{ heading }}</th>
-                                                                    {% endif %}
-                                                                {% elif heading == "# in Inv." or heading == "Inv. Location" %}
-                                                                    {% if user.is_authenticated %}
-                                                                        <th scope="col">{{ heading }}</th>
-                                                                    {% endif %}
-                                                                {% else %}
+                                            <tr>
+                                                {% if columns|get_item:type.grouper %}
+                                                    {% with heading_list=columns|get_item:type.grouper %}
+                                                        {% for heading in heading_list %}
+                                                            {% if heading == "Add" %}
+                                                                {% if user.is_authenticated %}
                                                                     <th scope="col">{{ heading }}</th>
                                                                 {% endif %}
-                                                            {% endfor %}
-                                                        {% endwith %}
-                                                    {% endif %}
-                                                </tr>
+                                                            {% elif heading == "# in Inv." or heading == "Inv. Location" %}
+                                                                {% if user.is_authenticated %}
+                                                                    <th scope="col">{{ heading }}</th>
+                                                                {% endif %}
+                                                            {% else %}
+                                                                <th scope="col">{{ heading }}</th>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endwith %}
+                                                {% endif %}
+                                            </tr>
                                             </thead>
                                             <tbody class="border-0" style="font-size: 11px">
-                                                {% for item in type.list %}
-                                                    <tr id="component_row_{{ item.id }}">
-                                                        {% with heading_list=columns|get_item:type.grouper %}
-                                                            <th id="description_{{ item.id }}" class="component_cell_description">{% if item.description %}{{ item.description }}{% endif %}</th>
-                                                            {% if "Manufacturer" in heading_list %}<th class="component_cell_manufacturer">{{ item.manufacturer.name }}</th>{% endif %}
-                                                            {% if "Voltage Rating" in heading_list %}<th class="component_cell_voltage_rating">{{ item.voltage_rating }}</th>{% endif %}
-                                                            {% if "Tolerance" in heading_list %}<th class="component_cell_tolerance">{{ item.tolerance }}</th>{% endif %}
-                                                            {% if "Suppliers" in heading_list %}<th id="supplier_{{ item.id }}" class="component_cell_supplier" data-supplier-short-name="{{ item.supplier.short_name }}">{{ item.supplier.name }}</th>{% endif %}
-                                                            {% if "Supplier Item #" in heading_list %}<th id="item_no_{{ item.id }}" class="component_cell_supplier_item_no"><a id="item_url_{{ item.id }}" href="{{ item.link }}">{{ item.supplier_item_no }}</a></th>{% endif %}
-                                                            <th id="price_{{ item.id }}" class="component_cell_price">{% if item.price %}{{ item.price }}{% endif %}</th>
-                                                            {% if user.is_authenticated %}
-                                                                <th></th>
-                                                                <th></th>
+                                            {% for item in type.list %}
+                                                <tr id="component_row_{{ item.id }}">
+                                                    {% with heading_list=columns|get_item:type.grouper %}
+                                                        <th id="description_{{ item.id }}"
+                                                            class="component_cell_description">
+                                                            {% if item.description %}
+                                                                {{ item.description }}
                                                             {% endif %}
-                                                        {% endwith %}
-                                                            {% if user.is_authenticated %}
-                                                                <th id="row_{{ item.id }}">
-                                                                    <label for="quantity_{{ item.id }}">Quantity:</label><br>
-                                                                    <input id="quantity_{{ item.id }}" class="me-2" type="number" name="quantity" min="0" style="max-width: 50px;" oninput="setCompData(event, 'updateQuantity')"><br>
-                                                                </th>
+                                                        </th>
+                                                        {% if "Manufacturer" in heading_list %}
+                                                            <th class="component_cell_manufacturer">{{ item.manufacturer.name }}</th>
+                                                        {% endif %}
+                                                        {% if "Voltage Rating" in heading_list %}
+                                                            <th class="component_cell_voltage_rating">{{ item.voltage_rating }}</th>
+                                                        {% endif %}
+                                                        {% if "Tolerance" in heading_list %}
+                                                            <th class="component_cell_tolerance">{{ item.tolerance }}</th>
+                                                        {% endif %}
+                                                        {% if "Suppliers" in heading_list %}
+                                                            <th id="supplier_{{ item.id }}"
+                                                                class="component_cell_supplier"
+                                                                data-supplier-short-name="{{ item.supplier.short_name }}">{{ item.supplier.name }}</th>
+                                                        {% endif %}
+                                                        {% if "Supplier Item #" in heading_list %}
+                                                            <th id="item_no_{{ item.id }}"
+                                                                class="component_cell_supplier_item_no">
+                                                                <a id="item_url_{{ item.id }}"
+                                                                   href="{{ item.link }}">{{ item.supplier_item_no }}</a>
+                                                            </th>
+                                                        {% endif %}
+                                                        <th id="price_{{ item.id }}" class="component_cell_price">
+                                                            {% if item.price %}
+                                                                {{ item.price }}
                                                             {% endif %}
-                                                    </tr>
-                                                {% endfor %}
+                                                        </th>
+                                                        {% if user.is_authenticated %}
+                                                            <th></th>
+                                                            <th></th>
+                                                        {% endif %}
+                                                    {% endwith %}
+                                                    {% if user.is_authenticated %}
+                                                        <th id="row_{{ item.id }}">
+                                                            <label for="quantity_{{ item.id }}">Quantity:</label><br>
+                                                            <input id="quantity_{{ item.id }}" class="me-2"
+                                                                   type="number" name="quantity" min="0"
+                                                                   style="max-width: 50px;"
+                                                                   data-id="{{ item.id }}"
+                                                                   oninput="updateComponentQuantity(event)"><br>
+                                                        </th>
+                                                    {% endif %}
+                                                </tr>
+                                            {% endfor %}
                                             </tbody>
                                         </table>
                                     </div>
@@ -97,86 +134,78 @@
 {% block scripts %}
     <script>
 
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipTriggerList = [].slice.call(
+            document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-          return new bootstrap.Tooltip(tooltipTriggerEl)
+            return new bootstrap.Tooltip(tooltipTriggerEl);
         });
+        var DEBUG = true;
 
-        {# Fix the number shown in the sticky tab #}
         function updateNumberInTab() {
-            var tabNumber = document.getElementById('components-quantity-tab-number');
-            var compData = JSON.parse(localStorage.getItem('{{ user.get_username }}_comp_data'));
-            var sum = 0;
-            for (key of Object.keys(compData["components"])) {
-                sum += compData["components"][key].quantity
-            }
-            tabNumber.innerText = sum;
-        }
-
-        function getMiscCompData(id) {
-            var comp = {};
-            comp['description'] = document.getElementById(`description_${id}`).textContent;
-            comp['price'] = document.getElementById(`price_${id}`).textContent;
-            comp['supplier_short_name'] = document.getElementById(`supplier_${id}`).getAttribute('data-supplier-short-name');
-            comp['item_no'] = document.getElementById(`item_no_${id}`).textContent;
-            comp['item_url'] = document.getElementById(`item_url_${id}`).href;
-            comp['add_to_shopping_list'] = "false";
-            comp['add_to_components_list'] = "false";
-            return comp;
-        }
-
-        function setCompData(e, inputType) {
-
-            {# If no local storage at all, create empty object #}
-            if (localStorage.getItem('{{ user.get_username }}_comp_data') === null) {
-                localStorage.setItem('{{ user.get_username }}_comp_data', JSON.stringify({components: {}, metadata: {}}));
-            }
-
-            {# Get the component data from local storage (even if empty, having been just set above)  #}
-            var compData = JSON.parse(localStorage.getItem('{{ user.get_username }}_comp_data'));
-
-            {# The ID (pk) number of component as a string #}
-            var componentIDNumber = e.target.id.split('_')[1];
-
-            {# Get quantity from form #}
-            var userEnteredQuantity = parseInt(document.getElementById(e.target.id).value);
-
-            {# Is component ID is already in local storage? #}
-            if (componentIDNumber in compData["components"]) {
-                compData["components"][componentIDNumber]["quantity"] = userEnteredQuantity;
-                if (compData["components"][componentIDNumber]["quantity"] === 0) {
-                    delete compData["components"][componentIDNumber];
+            var tabNumber = document.getElementById("components-quantity-tab-number");
+            localforage.getItem("components").then(function (value) {
+                sum = 0;
+                for (key of Object.keys(value)) {
+                    sum += value[key];
                 }
-            } else {
-                compData["components"][componentIDNumber] = getMiscCompData(componentIDNumber);
-                compData["components"][componentIDNumber]["quantity"] = userEnteredQuantity;
-                if (compData["components"][componentIDNumber]["quantity"] === 0) {
-                    delete compData["components"][componentIDNumber];
-                }
-            }
-            localStorage.setItem('{{ user }}_comp_data', JSON.stringify(compData));
-            updateNumberInTab();
+                tabNumber.innerText = sum;
+            });
         }
 
-        {# Set form values from localStorage #}
+        function updateComponentQuantity(e) {
+            var componentIDNumber = e.target.id.split("_")[1];
+            var userEnteredQuantity = parseInt(
+                document.getElementById(e.target.id).value
+            );
+            localforage
+                .getItem("components")
+                .then(function (value) {
+                    localforage
+                        .setItem("components", {
+                            ...value,
+                            [componentIDNumber]: userEnteredQuantity
+                        })
+                        .then(function () {
+                            updateNumberInTab();
+                        })
+                        .then(function () {
+                            if (DEBUG) {
+                                localforage.iterate(function (value, key) {
+                                    console.log([key, value]);
+                                });
+                            }
+                        });
+                })
+                .catch(function (err) {
+                    localforage.setItem("components", {
+                        [componentIDNumber]: userEnteredQuantity
+                    });
+                });
+            localforage
+                .setItem("components", {
+                    [componentIDNumber]: userEnteredQuantity
+                })
+                .then(function () {
+                    updateNumberInTab();
+                });
+        }
+
         window.onload = window.onload.extend_function_definition(function () {
             window.username = "{{ request.user.username }}";
-            var compData = null;
-
-            // If local storage for this user is already set, then assign to compData
-            if (localStorage.getItem('{{ user.get_username }}_comp_data') !== null) {
-                compData = JSON.parse(localStorage.getItem('{{ user.get_username }}_comp_data'));
-            }
-
-            if (compData) {
-                for (key of Object.keys(compData["components"])) {
-                    var formField = document.getElementById(`quantity_${key}`);
-                    formField.value = compData["components"][key].quantity
+            localforage.createInstance({
+                name: window.username
+            });
+            var elements = document.querySelectorAll('[id^="quantity_"]');
+            (async () => {
+                var lookup_dict = await localforage.getItem("components")
+                for (var input_element of elements) {
+                    elem_id = input_element.getAttribute("data-id");
+                    input_element.value = lookup_dict[elem_id];
                 }
-            }
-            updateNumberInTab();
+                updateNumberInTab()
+            })();
         });
-
     </script>
 
     <script type="text/javascript" src="{% static "bundles/components_bundle.js" %}"></script>

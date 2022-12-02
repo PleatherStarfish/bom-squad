@@ -23,7 +23,8 @@ interface CData {
         supplier_short_name: string,
         add_to_components_list: "true" | "false",
         add_to_shopping_list: "true" | "false",
-        location: string
+        location: string,
+        for_module?: string
     }
 }
 
@@ -37,8 +38,10 @@ function getTotalPrice(number: string, price: string) {
 
 const switchHandler = (array: Set<any>, value: any, setter: { (value: React.SetStateAction<Set<any>>): void; (value: React.SetStateAction<Set<any>>): void; (arg0: { (prev: any): Set<any>; (prev: any): Set<any>; }): void; }) => {
     if (array.has(value)) {
+        // Remove from set
         setter(prev => new Set([...prev].filter(x => x !== value)))
     } else {
+        // Add to set
         setter((prev) => new Set([...prev, value]))
     }
 };
@@ -82,7 +85,7 @@ function App() {
     const handleExtended = () => setExtended(!extended);
 
     // Handle a click on the main button that expands the offcanvas div
-    const handleOffcanvasButtonClick = () => {
+    const handleOffCanvasButtonClick = () => {
         const username = window.username;
         const compState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
         setComponentsData(compState["components"]);
@@ -208,8 +211,6 @@ function App() {
 
         const localStorageStateComponent = localStorageState["components"];
         const localStorageStateMetadata = localStorageState["metadata"];
-        console.log(localStorageStateComponent);
-        console.log(localStorageStateMetadata);
 
         // Remove ID item from "components" object
         const {[id]: _removedLocalStateComponent, ...newLocalStorageState} = localStorageStateComponent;
@@ -219,7 +220,6 @@ function App() {
                 ...{["components"]: newLocalStorageState}, ...{["metadata"]: localStorageStateMetadata}
             })
         );
-        console.log("hello world")
     };
 
     const handleQuantityChange = (e: { target: { id: string, value: string }; }) => {
@@ -295,23 +295,42 @@ function App() {
         const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
 
         // If local storage is loaded...
-        if (localStorageState) {
+        if (localStorageState && typeof localStorageState === "object") {
 
             // Get switch state from local storage
-            const newComponentsSwitchState: string[] = [];
-            const newShoppingSwitchState: string[] = [];
+            const newComponentsSwitchState = [];
+            const newShoppingSwitchState = [];
+
             Object.keys(localStorageState["components"]).forEach((item) => {
-                if ('add_to_components_list' in localStorageState["components"][item] && localStorageState["components"][item]['add_to_components_list'] === "true") {
-                    newComponentsSwitchState.push(item)
+                console.log("one", localStorageState)
+                console.log("two", localStorageState["components"])
+                console.log("three", localStorageState["components"][item])
+                console.log("four", localStorageState["components"][item]['add_to_components_list'])
+
+                // If we find a 'true' switch state in add_to_components_list...
+                if ('add_to_components_list' in localStorageState["components"][item] &&
+                    localStorageState["components"][item]['add_to_components_list'] === "true"
+                ) {
+                    console.log("newComponentsSwitchState", newComponentsSwitchState);
+                    newComponentsSwitchState.push(item);
                 }
-                if ('add_to_shopping_list' in localStorageState["components"][item] && localStorageState["components"][item]['add_to_shopping_list'] === "true") {
-                    newShoppingSwitchState.push(item)
+
+                // If we find a 'true' switch state in add_to_shopping_list...
+                if ('add_to_shopping_list' in localStorageState["components"][item] &&
+                    localStorageState["components"][item]['add_to_shopping_list'] === "true"
+                ) {
+                    console.log("newShoppingSwitchState", newShoppingSwitchState);
+                    newShoppingSwitchState.push(item);
                 }
             });
-            // @ts-ignore
-            setComponentsChecked((prev) => new Set([...prev, ...newComponentsSwitchState]));
-            // @ts-ignore
-            setShoppingChecked((prev) => new Set([...prev, ...newShoppingSwitchState]));
+            setComponentsChecked((prev) => {
+                console.log("C", [...prev, ...newComponentsSwitchState]);
+                return new Set([...prev, ...newComponentsSwitchState])
+            });
+            setShoppingChecked((prev) => {
+                console.log("S", [...prev, ...newShoppingSwitchState]);
+                return new Set([...prev, ...newShoppingSwitchState])
+            });
         }
 
     }, [show]);
@@ -394,7 +413,7 @@ function App() {
 
     useMemo(() => {
         let rows = null;
-        console.log("hello world 2")
+        console.log(shoppingChecked);
         if (componentsData) {
             rows = Object.keys(componentsData).map((value, index) => {
                 return (
@@ -414,7 +433,7 @@ function App() {
             });
             setTableRows(rows)
         }
-    }, [componentsData, componentsChecked, shoppingChecked, location]);
+    }, [componentsData, componentsChecked, shoppingChecked, location, show]);
 
     return (
         <>
@@ -422,7 +441,7 @@ function App() {
                     className={!show ? "btn btn-success px-3 components__offcanvas-button" : ((extended) ? "btn btn-success px-3 components__offcanvas-button components__offcanvas-button--full" : "btn btn-success px-3 components__offcanvas-button components__offcanvas-button--lifted")}
                     type="button"
                     style={{zIndex: 1045}}
-                    onClick={handleOffcanvasButtonClick}>
+                    onClick={handleOffCanvasButtonClick}>
                 Components to Add [<span id="components-quantity-tab-number">{totalQuantityToAdd || 0}</span>]
                 <span className="components__offcanvas-svg">
                     <svg id="components__offcanvas-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"

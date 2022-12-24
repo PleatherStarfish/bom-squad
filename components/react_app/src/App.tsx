@@ -1,11 +1,15 @@
 // @ts-ignore
-import React, {useEffect, useState, useMemo, useRef} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 // @ts-ignore
-import {Button, Offcanvas, Form, OverlayTrigger, Tooltip} from 'react-bootstrap';
+import {Button, Form, Offcanvas, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import Row from './components/Row'
 import OnDeleteConfirmation from './components/OnDeleteConfirmation';
 // @ts-ignore
+import localForage from 'localforage';
+// @ts-ignore
 import Cookies from 'js-cookie'
+// @ts-ignore
+import {useQuery,} from '@tanstack/react-query'
 
 declare global {
     interface Window {
@@ -13,9 +17,9 @@ declare global {
     }
 }
 
-interface CData {
+interface ComponentDataType {
     [value: number]: {
-        prince: string,
+        price: string,
         item_url: string,
         description: string,
         item_no: string,
@@ -56,7 +60,33 @@ function App() {
     const [extended, setExtended] = useState(false);
 
     // Main data from browser state
-    const [componentsData, setComponentsData] = useState<CData | false>(false);
+    const [componentsData, setComponentsData] = useState<ComponentDataType | false>(false);
+    const [componentIdArray, setComponentIdArray] = useState<number[] | []>([])
+
+    useEffect(() => {
+        console.log("componentsData: ", componentsData)
+    }, [componentsData])
+
+    const getComponents = async () => {
+        const settings = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(Object.keys(componentIdArray))
+        };
+        try {
+            const res = await fetch('/components/lookup/', settings);
+            return res.json();
+        } catch (e) {
+            return e;
+        }
+    };
+
+    const {data, status, isLoading} = useQuery(['componentsInfo'], () => getComponents());
+
+    useEffect(() => setComponentsData(data), [data])
 
     // Number displayed in tab
     const [totalQuantityToAdd, setTotalQuantityToAdd] = useState(0);
@@ -84,14 +114,23 @@ function App() {
 
     const handleExtended = () => setExtended(!extended);
 
+    useEffect(() => console.log(data), [data])
+
     // Handle a click on the main button that expands the offcanvas div
     const handleOffCanvasButtonClick = () => {
         const username = window.username;
-        const compState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
-        setComponentsData(compState["components"]);
 
-        setAllCSwitchesOn(compState["metadata"]["allCSwitchesOn"]);
-        setAllSSwitchesOn(compState["metadata"]["allSSwitchesOn"]);
+        window["localforage_store"].getItem('components').then((value) => {
+            setComponentIdArray(value)
+        }).catch((err) => {
+            console.log(err);
+        });
+
+
+        // setComponentsData(compState["components"]);
+        //
+        // setAllCSwitchesOn(compState["metadata"]["allCSwitchesOn"]);
+        // setAllSSwitchesOn(compState["metadata"]["allSSwitchesOn"]);
 
         setShow(!show);
     };
@@ -143,28 +182,28 @@ function App() {
     };
 
     // Update local storage with the state of a single row switch
-    const setLocalStorageSwitch = (compID: string, list_type: any, username: string) => {
-        const localStorageState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
-
-        if (localStorageState["components"][compID][`add_to_${list_type}_list`] === "true") {
-            localStorageState["components"][compID][`add_to_${list_type}_list`] = "false";
-        } else {
-            localStorageState["components"][compID][`add_to_${list_type}_list`] = "true";
-        }
-        localStorage.setItem(`${username}_comp_data`, JSON.stringify(localStorageState));
-    };
+    // const setLocalStorageSwitch = (compID: string, list_type: any, username: string) => {
+    //     const localStorageState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
+    //
+    //     if (localStorageState["components"][compID][`add_to_${list_type}_list`] === "true") {
+    //         localStorageState["components"][compID][`add_to_${list_type}_list`] = "false";
+    //     } else {
+    //         localStorageState["components"][compID][`add_to_${list_type}_list`] = "true";
+    //     }
+    //     localStorage.setItem(`${username}_comp_data`, JSON.stringify(localStorageState));
+    // };
 
     // Enforce an "all-on" or "all-off" switch state in local storage
-    const setLocalStorageSwitchOnOff = (compID: string, list_type: string, username: string, on: boolean) => {
-        const localStorageState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
-
-        if (on) {
-            localStorageState["components"][compID][`add_to_${list_type}_list`] = "true"
-        } else {
-            localStorageState["components"][compID][`add_to_${list_type}_list`] = "false"
-        }
-        localStorage.setItem(`${username}_comp_data`, JSON.stringify(localStorageState));
-    };
+    // const setLocalStorageSwitchOnOff = (compID: string, list_type: string, username: string, on: boolean) => {
+    //     const localStorageState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
+    //
+    //     if (on) {
+    //         localStorageState["components"][compID][`add_to_${list_type}_list`] = "true"
+    //     } else {
+    //         localStorageState["components"][compID][`add_to_${list_type}_list`] = "false"
+    //     }
+    //     localStorage.setItem(`${username}_comp_data`, JSON.stringify(localStorageState));
+    // };
 
     // Update hook with the state of a single row switch
     const setStateFromSwitch = (compID: string, list_type: string) => {
@@ -177,239 +216,239 @@ function App() {
     };
 
     // Handle a click on any of the switches for the data rows
-    const handleSwitchesChange = (e: { target: { id: string; }; }, type: string) => {
-        const switchID = getID(e);
-
-        setLocalStorageSwitch(switchID, type, window.username);
-        setStateFromSwitch(switchID, type)
-    };
+    // const handleSwitchesChange = (e: { target: { id: string; }; }, type: string) => {
+    //     const switchID = getID(e);
+    //
+    //     setLocalStorageSwitch(switchID, type, window.username);
+    //     setStateFromSwitch(switchID, type)
+    // };
 
     // Handle any click on the "meta" switches at the top of the switch columns
-    const handleMetaSwitchChange = (e: object, type: string) => {
-        if (type === 'components') {
-            setAllCSwitchesOn(!allCSwitchesOn);
-        } else {
-            setAllSSwitchesOn(!allSSwitchesOn)
-        }
-    };
+    // const handleMetaSwitchChange = (e: object, type: string) => {
+    //     if (type === 'components') {
+    //         setAllCSwitchesOn(!allCSwitchesOn);
+    //     } else {
+    //         setAllSSwitchesOn(!allSSwitchesOn)
+    //     }
+    // };
 
-    const handleDeleteRow = (e: string) => {
-        const id = parseInt(e);
+    // const handleDeleteRow = (e: string) => {
+    //     const id = parseInt(e);
+    //
+    //     // @ts-ignore
+    //     const {[id]: _removedComponent, ...newComponentsData} = componentsData;
+    //
+    //     // @ts-ignore
+    //     setComponentsData(newComponentsData);
+    //     // @ts-ignore
+    //     setComponentsChecked(prev => new Set([...prev].filter(x => x !== `${id}`)));
+    //     // @ts-ignore
+    //     setShoppingChecked(prev => new Set([...prev].filter(x => x !== `${id}`)));
+    //
+    //     // Get local storage
+    //     const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
+    //
+    //     const localStorageStateComponent = localStorageState["components"];
+    //     const localStorageStateMetadata = localStorageState["metadata"];
+    //
+    //     // Remove ID item from "components" object
+    //     const {[id]: _removedLocalStateComponent, ...newLocalStorageState} = localStorageStateComponent;
+    //
+    //     // Spread both the "components" object and the "metadata" object into new localStorage
+    //     localStorage.setItem(`${window.username}_comp_data`, JSON.stringify({
+    //             ...{["components"]: newLocalStorageState}, ...{["metadata"]: localStorageStateMetadata}
+    //         })
+    //     );
+    // };
 
-        // @ts-ignore
-        const {[id]: _removedComponent, ...newComponentsData} = componentsData;
+    // const handleQuantityChange = (e: { target: { id: string, value: string }; }) => {
+    //     const id = getID(e);
+    //     const value = e.target.value;
+    //
+    //     const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
+    //     localStorageState["components"][id]["quantity"] = parseInt(value);
+    //     localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
+    //
+    //     const updatedLocalStorageState = localStorage.getItem(`${window.username}_comp_data`);
+    //     setComponentsData(JSON.parse(updatedLocalStorageState)["components"]);
+    // };
 
-        // @ts-ignore
-        setComponentsData(newComponentsData);
-        // @ts-ignore
-        setComponentsChecked(prev => new Set([...prev].filter(x => x !== `${id}`)));
-        // @ts-ignore
-        setShoppingChecked(prev => new Set([...prev].filter(x => x !== `${id}`)));
+    // const handleLocationChange = (e: { target: any; }) => {
+    //     const id = getID(e);
+    //     const value = e.target.value;
+    //
+    //     if (value === ",") {
+    //         return;
+    //     }
+    //
+    //     if (value.includes(",")) {
+    //
+    //         // If last charecter in string is a comma...
+    //         if (value.slice(-1) === ",") {
+    //             const newLocations = value.split(",");
+    //             const newLocationsFiltered = newLocations.filter(function (el: string) {
+    //                 return el !== "";
+    //             });
+    //             // @ts-ignore
+    //             const newLocationArray = [...location[id]["location"], ...newLocationsFiltered];
+    //             setLocation((prev) => {
+    //                 return {
+    //                     ...prev, [id]: {"location": newLocationArray, "remainder": ""}
+    //                 }
+    //             });
+    //         } else {
+    //             const newLocations = value.split(",");
+    //             // @ts-ignore
+    //             const newLocationArray = [...location[id]["location"], ...newLocations];
+    //             const newLocationArrayFiltered = newLocationArray.filter(function (el) {
+    //                 return el !== "";
+    //             });
+    //             setLocation((prev) => {
+    //                 return {
+    //                     ...prev, [id]: {"location": newLocationArrayFiltered, "remainder": ""}
+    //                 }
+    //             });
+    //         }
+    //     } else {
+    //         setLocation((prev) => {
+    //             // @ts-ignore
+    //             return {...prev, [id]: {"location": prev[id] ? prev[id]["location"] : [], "remainder": value}}
+    //         })
+    //     }
+    // };
 
-        // Get local storage
-        const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
-
-        const localStorageStateComponent = localStorageState["components"];
-        const localStorageStateMetadata = localStorageState["metadata"];
-
-        // Remove ID item from "components" object
-        const {[id]: _removedLocalStateComponent, ...newLocalStorageState} = localStorageStateComponent;
-
-        // Spread both the "components" object and the "metadata" object into new localStorage
-        localStorage.setItem(`${window.username}_comp_data`, JSON.stringify({
-                ...{["components"]: newLocalStorageState}, ...{["metadata"]: localStorageStateMetadata}
-            })
-        );
-    };
-
-    const handleQuantityChange = (e: { target: { id: string, value: string }; }) => {
-        const id = getID(e);
-        const value = e.target.value;
-
-        const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
-        localStorageState["components"][id]["quantity"] = parseInt(value);
-        localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
-
-        const updatedLocalStorageState = localStorage.getItem(`${window.username}_comp_data`);
-        setComponentsData(JSON.parse(updatedLocalStorageState)["components"]);
-    };
-
-    const handleLocationChange = (e: { target: any; }) => {
-        const id = getID(e);
-        const value = e.target.value;
-
-        if (value === ",") {
-            return;
-        }
-
-        if (value.includes(",")) {
-
-            // If last charecter in string is a comma...
-            if (value.slice(-1) === ",") {
-                const newLocations = value.split(",");
-                const newLocationsFiltered = newLocations.filter(function (el: string) {
-                    return el !== "";
-                });
-                // @ts-ignore
-                const newLocationArray = [...location[id]["location"], ...newLocationsFiltered];
-                setLocation((prev) => {
-                    return {
-                        ...prev, [id]: {"location": newLocationArray, "remainder": ""}
-                    }
-                });
-            } else {
-                const newLocations = value.split(",");
-                // @ts-ignore
-                const newLocationArray = [...location[id]["location"], ...newLocations];
-                const newLocationArrayFiltered = newLocationArray.filter(function (el) {
-                    return el !== "";
-                });
-                setLocation((prev) => {
-                    return {
-                        ...prev, [id]: {"location": newLocationArrayFiltered, "remainder": ""}
-                    }
-                });
-            }
-        } else {
-            setLocation((prev) => {
-                // @ts-ignore
-                return {...prev, [id]: {"location": prev[id] ? prev[id]["location"] : [], "remainder": value}}
-            })
-        }
-    };
-
-    const handleLocationBubbleDelete = (e: { target: { id: string; }; }) => {
-        const row_id = e.target.id.split('_')[1];
-        const bubble_id = e.target.id.split('_')[2];
-
-        // @ts-ignore
-        let newLocationArray = location[row_id]["location"];
-        newLocationArray.splice(bubble_id, 1);
-        setLocation((prev) => {
-            return {...prev, [row_id]: {"location": newLocationArray, "remainder": ""}}
-        });
-    };
+    // const handleLocationBubbleDelete = (e: { target: { id: string; }; }) => {
+    //     const row_id = e.target.id.split('_')[1];
+    //     const bubble_id = e.target.id.split('_')[2];
+    //
+    //     // @ts-ignore
+    //     let newLocationArray = location[row_id]["location"];
+    //     newLocationArray.splice(bubble_id, 1);
+    //     setLocation((prev) => {
+    //         return {...prev, [row_id]: {"location": newLocationArray, "remainder": ""}}
+    //     });
+    // };
 
     // When "show" changes, get the switch state from LocalState
-    useEffect(() => {
-        const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
+    // useEffect(() => {
+    //     const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
+    //
+    //     // If local storage is loaded...
+    //     if (localStorageState && typeof localStorageState === "object") {
+    //
+    //         // Get switch state from local storage
+    //         const newComponentsSwitchState = [];
+    //         const newShoppingSwitchState = [];
+    //
+    //         Object.keys(localStorageState["components"]).forEach((item) => {
+    //             console.log("one", localStorageState)
+    //             console.log("two", localStorageState["components"])
+    //             console.log("three", localStorageState["components"][item])
+    //             console.log("four", localStorageState["components"][item]['add_to_components_list'])
+    //
+    //             // If we find a 'true' switch state in add_to_components_list...
+    //             if ('add_to_components_list' in localStorageState["components"][item] &&
+    //                 localStorageState["components"][item]['add_to_components_list'] === "true"
+    //             ) {
+    //                 console.log("newComponentsSwitchState", newComponentsSwitchState);
+    //                 newComponentsSwitchState.push(item);
+    //             }
+    //
+    //             // If we find a 'true' switch state in add_to_shopping_list...
+    //             if ('add_to_shopping_list' in localStorageState["components"][item] &&
+    //                 localStorageState["components"][item]['add_to_shopping_list'] === "true"
+    //             ) {
+    //                 console.log("newShoppingSwitchState", newShoppingSwitchState);
+    //                 newShoppingSwitchState.push(item);
+    //             }
+    //         });
+    //         setComponentsChecked((prev) => {
+    //             console.log("C", [...prev, ...newComponentsSwitchState]);
+    //             return new Set([...prev, ...newComponentsSwitchState])
+    //         });
+    //         setShoppingChecked((prev) => {
+    //             console.log("S", [...prev, ...newShoppingSwitchState]);
+    //             return new Set([...prev, ...newShoppingSwitchState])
+    //         });
+    //     }
+    //
+    // }, [show]);
 
-        // If local storage is loaded...
-        if (localStorageState && typeof localStorageState === "object") {
+    // useEffect(() => {
+    //     if (componentsData) {
+    //         const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
+    //         localStorageState["metadata"]["allCSwitchesOn"] = allCSwitchesOn;
+    //         localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
+    //     }
+    // }, [allCSwitchesOn]);
 
-            // Get switch state from local storage
-            const newComponentsSwitchState = [];
-            const newShoppingSwitchState = [];
+    // useEffect(() => {
+    //     if (componentsData) {
+    //         const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
+    //         localStorageState["metadata"]["allSSwitchesOn"] = allSSwitchesOn;
+    //         localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
+    //     }
+    // }, [allSSwitchesOn]);
 
-            Object.keys(localStorageState["components"]).forEach((item) => {
-                console.log("one", localStorageState)
-                console.log("two", localStorageState["components"])
-                console.log("three", localStorageState["components"][item])
-                console.log("four", localStorageState["components"][item]['add_to_components_list'])
-
-                // If we find a 'true' switch state in add_to_components_list...
-                if ('add_to_components_list' in localStorageState["components"][item] &&
-                    localStorageState["components"][item]['add_to_components_list'] === "true"
-                ) {
-                    console.log("newComponentsSwitchState", newComponentsSwitchState);
-                    newComponentsSwitchState.push(item);
-                }
-
-                // If we find a 'true' switch state in add_to_shopping_list...
-                if ('add_to_shopping_list' in localStorageState["components"][item] &&
-                    localStorageState["components"][item]['add_to_shopping_list'] === "true"
-                ) {
-                    console.log("newShoppingSwitchState", newShoppingSwitchState);
-                    newShoppingSwitchState.push(item);
-                }
-            });
-            setComponentsChecked((prev) => {
-                console.log("C", [...prev, ...newComponentsSwitchState]);
-                return new Set([...prev, ...newComponentsSwitchState])
-            });
-            setShoppingChecked((prev) => {
-                console.log("S", [...prev, ...newShoppingSwitchState]);
-                return new Set([...prev, ...newShoppingSwitchState])
-            });
-        }
-
-    }, [show]);
-
-    useEffect(() => {
-        if (componentsData) {
-            const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
-            localStorageState["metadata"]["allCSwitchesOn"] = allCSwitchesOn;
-            localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
-        }
-    }, [allCSwitchesOn]);
-
-    useEffect(() => {
-        if (componentsData) {
-            const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
-            localStorageState["metadata"]["allSSwitchesOn"] = allSSwitchesOn;
-            localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
-        }
-    }, [allSSwitchesOn]);
-
-    useEffect(() => {
-        if (Object.keys(location).length > 0) {
-            for (let id of Object.keys(location)) {
-                const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
-                // @ts-ignore
-                localStorageState["components"][id]["location"] = location[id];
-
-                const localStorageStateComponent = localStorageState["components"];
-                const localStorageStateMetadata = localStorageState["metadata"];
-
-                localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
-                setComponentsData(JSON.parse(localStorage.getItem(`${window.username}_comp_data`))["components"]);
-            }
-        }
-    }, [location]);
+    // useEffect(() => {
+    //     if (Object.keys(location).length > 0) {
+    //         for (let id of Object.keys(location)) {
+    //             const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
+    //             // @ts-ignore
+    //             localStorageState["components"][id]["location"] = location[id];
+    //
+    //             const localStorageStateComponent = localStorageState["components"];
+    //             const localStorageStateMetadata = localStorageState["metadata"];
+    //
+    //             localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
+    //             setComponentsData(JSON.parse(localStorage.getItem(`${window.username}_comp_data`))["components"]);
+    //         }
+    //     }
+    // }, [location]);
 
     // If the "allCSwitchesOn" state is true, switch all switches to the "on" state, else "off"
-    useEffect(() => {
-        if (componentsData) {
-
-            if (allCSwitchesOn) {
-                Object.keys(componentsData).forEach((value, index) => {
-                    setLocalStorageSwitchOnOff(value, 'components', window.username, true);
-                });
-                setComponentsChecked(new Set([...Object.keys(componentsData)]))
-            } else {
-                Object.keys(componentsData).forEach((value, index) => {
-                    setLocalStorageSwitchOnOff(value, 'components', window.username, false);
-                });
-                setComponentsChecked(new Set([]))
-            }
-        }
-    }, [allCSwitchesOn]);
+    // useEffect(() => {
+    //     if (componentsData) {
+    //
+    //         if (allCSwitchesOn) {
+    //             Object.keys(componentsData).forEach((value, index) => {
+    //                 setLocalStorageSwitchOnOff(value, 'components', window.username, true);
+    //             });
+    //             setComponentsChecked(new Set([...Object.keys(componentsData)]))
+    //         } else {
+    //             Object.keys(componentsData).forEach((value, index) => {
+    //                 setLocalStorageSwitchOnOff(value, 'components', window.username, false);
+    //             });
+    //             setComponentsChecked(new Set([]))
+    //         }
+    //     }
+    // }, [allCSwitchesOn]);
 
     // If the "allSSwitchesOn" state is true, switch all switches to the "on" state, else "off"
-    useEffect(() => {
-        if (componentsData) {
+    // useEffect(() => {
+    //     if (componentsData) {
+    //
+    //         if (allSSwitchesOn) {
+    //             Object.keys(componentsData).forEach((value, index) => {
+    //                 setLocalStorageSwitchOnOff(value, 'shopping', window.username, true)
+    //             });
+    //             setShoppingChecked(new Set([...Object.keys(componentsData)]))
+    //         } else {
+    //             Object.keys(componentsData).forEach((value, index) => {
+    //                 setLocalStorageSwitchOnOff(value, 'shopping', window.username, false);
+    //             });
+    //             setShoppingChecked(new Set([]))
+    //         }
+    //     }
+    // }, [allSSwitchesOn]);
 
-            if (allSSwitchesOn) {
-                Object.keys(componentsData).forEach((value, index) => {
-                    setLocalStorageSwitchOnOff(value, 'shopping', window.username, true)
-                });
-                setShoppingChecked(new Set([...Object.keys(componentsData)]))
-            } else {
-                Object.keys(componentsData).forEach((value, index) => {
-                    setLocalStorageSwitchOnOff(value, 'shopping', window.username, false);
-                });
-                setShoppingChecked(new Set([]))
-            }
-        }
-    }, [allSSwitchesOn]);
-
-    useEffect(() => {
-        // @ts-ignore
-        const bothLists = [...componentsChecked, ...shoppingChecked];
-        if (bothLists.length > 0) {
-            addToUserListsEnabled.current = true
-        }
-    }, [componentsChecked, shoppingChecked]);
+    // useEffect(() => {
+    //     // @ts-ignore
+    //     const bothLists = [...componentsChecked, ...shoppingChecked];
+    //     if (bothLists.length > 0) {
+    //         addToUserListsEnabled.current = true
+    //     }
+    // }, [componentsChecked, shoppingChecked]);
 
     useMemo(() => {
         let rows = null;
@@ -422,12 +461,12 @@ function App() {
                          valueString={value}
                          componentsChecked={componentsChecked}
                          shoppingChecked={shoppingChecked}
-                         handleSwitchesChange={handleSwitchesChange}
+                         handleSwitchesChange={null}
                          handleDeleteRow={handleConfirmDeleteModelShow}
-                         handleQuantityChange={handleQuantityChange}
+                         handleQuantityChange={null}
                          location={location}
-                         handleLocationChange={handleLocationChange}
-                         handleLocationBubbleDelete={handleLocationBubbleDelete}
+                         handleLocationChange={null}
+                         handleLocationBubbleDelete={null}
                     />
                 )
             });
@@ -454,14 +493,14 @@ function App() {
                 </span>
             </Button>
 
-            {
-                deleteID &&
-                typeof componentsData == "object" &&
-                deleteID in componentsData &&
-                <OnDeleteConfirmation componentsData={componentsData} deleteID={deleteID}
-                                      confirmDeleteShow={confirmDeleteShow} handleDeleteRow={handleDeleteRow}
-                                      handleConfirmDeleteModelClose={handleConfirmDeleteModelClose}/>
-            }
+            {/*{*/}
+            {/*    deleteID &&*/}
+            {/*    typeof componentsData == "object" &&*/}
+            {/*    deleteID in componentsData &&*/}
+            {/*    <OnDeleteConfirmation componentsData={componentsData} deleteID={deleteID}*/}
+            {/*                          confirmDeleteShow={confirmDeleteShow} handleDeleteRow={handleDeleteRow}*/}
+            {/*                          handleConfirmDeleteModelClose={handleConfirmDeleteModelClose}/>*/}
+            {/*}*/}
 
             <Offcanvas id="components__offcanvas-container"
                        className={!show ? "offcanvas offcanvas-bottom components__offcanvas-container" : ((extended) ? "offcanvas offcanvas-bottom components__offcanvas-container components__offcanvas-container--full" : "offcanvas offcanvas-bottom components__offcanvas-container components__offcanvas-container--lifted")}
@@ -512,53 +551,56 @@ function App() {
                         <Button variant="outline-primary" className={"offcanvas__buttons"}
                                 style={{padding: ".375rem .575rem"}} disabled>Add Selection to List</Button>
                     }
-                    <table id="components__offcanvas-table" className="table table-sm components__offcanvas-table">
-                        <thead className={"components__offcanvas-thead"} style={{fontSize: "13px"}}>
-                        <tr>
-                            <th scope="col">Description</th>
-                            <th scope="col">Supplier</th>
-                            <th scope="col">Supplier Item #</th>
-                            <th scope="col">Quantity to Add</th>
-                            <th scope="col" style={componentsChecked.size ? {width: "12%"} : {display: "none"}}>Location{" "}
-                                <span className="d-inline-block" data-bs-toggle="tooltip" title=""
-                                   data-bs-original-title="<span style='z-index: 99999999'>Enter location separated by commas (e.g. box 1, cell A1, etc.)</span>">
+                    {isLoading ? <p>Loading...</p> :
+                        <table id="components__offcanvas-table" className="table table-sm components__offcanvas-table">
+                            <thead className={"components__offcanvas-thead"} style={{fontSize: "13px"}}>
+                            <tr>
+                                <th scope="col">Description</th>
+                                <th scope="col">Supplier</th>
+                                <th scope="col">Supplier Item #</th>
+                                <th scope="col">Quantity to Add</th>
+                                <th scope="col"
+                                    style={componentsChecked.size ? {width: "12%"} : {display: "none"}}>Location{" "}
+                                    <span className="d-inline-block" data-bs-toggle="tooltip" title=""
+                                          data-bs-original-title="<span style='z-index: 99999999'>Enter location separated by commas (e.g. box 1, cell A1, etc.)</span>">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                          className="bi bi-info-circle" viewBox="0 0 16 16">
-                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                        <path
+                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                                         <path
                                             d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
                                     </svg>
                                 </span>
-                            </th>
-                            <th scope="col">
-                                Add to Components
-                                <Form style={{fontSize: "16px"}}>
-                                    <Form.Check
-                                        type="switch"
-                                        id="custom-switch"
-                                        checked={allCSwitchesOn}
-                                        onChange={(e: object) => handleMetaSwitchChange(e, 'components')}
-                                    />
-                                </Form>
-                            </th>
-                            <th scope="col">
-                                Add to Shopping
-                                <Form style={{fontSize: "16px"}}>
-                                    <Form.Check
-                                        type="switch"
-                                        id="custom-switch"
-                                        checked={allSSwitchesOn}
-                                        onChange={(e: object) => handleMetaSwitchChange(e, 'shopping')}
-                                    />
-                                </Form>
-                            </th>
-                            <th scope="col"><span className="sr-only">Remove</span></th>
-                        </tr>
-                        </thead>
-                        <tbody id="components__offcanvas-tbody" style={{fontSize: "13px"}}>
-                        { tableRows }
-                        </tbody>
-                    </table>
+                                </th>
+                                <th scope="col">
+                                    Add to Components
+                                    <Form style={{fontSize: "16px"}}>
+                                        <Form.Check
+                                            type="switch"
+                                            id="custom-switch"
+                                            checked={allCSwitchesOn}
+                                            // onChange={(e: object) => handleMetaSwitchChange(e, 'components')}
+                                        />
+                                    </Form>
+                                </th>
+                                <th scope="col">
+                                    Add to Shopping
+                                    <Form style={{fontSize: "16px"}}>
+                                        <Form.Check
+                                            type="switch"
+                                            id="custom-switch"
+                                            checked={allSSwitchesOn}
+                                            // onChange={(e: object) => handleMetaSwitchChange(e, 'shopping')}
+                                        />
+                                    </Form>
+                                </th>
+                                <th scope="col"><span className="sr-only">Remove</span></th>
+                            </tr>
+                            </thead>
+                            <tbody id="components__offcanvas-tbody" style={{fontSize: "13px"}}>
+                            {tableRows}
+                            </tbody>
+                        </table>}
                 </Offcanvas.Body>
             </Offcanvas>
         </>

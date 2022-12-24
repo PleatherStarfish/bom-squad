@@ -133,79 +133,87 @@
 
 {% block scripts %}
     <script>
+        {%  comment %}
+            {# On page Load, get username, create localforage #}
+            {# and set form quantity based on store state #}
+        {%  endcomment %}
+        window.onload = window.onload.extend_function_definition(function() {
+          window.username = "{{ request.user.username }}";
+          var store = localforage.createInstance({
+            name: window.username
+          });
+          window["localforage_store"] = store
+          var elements = document.querySelectorAll('[id^="quantity_"]');
+          (async () => {
+            var lookup_dict = await window["localforage_store"].getItem("components")
+            for (var input_element of elements) {
+              elem_id = input_element.getAttribute("data-id");
+              input_element.value = lookup_dict[elem_id]["quantity"];
+            }
+            updateNumberInTab()
+          })();
+        });
 
         var tooltipTriggerList = [].slice.call(
-            document.querySelectorAll('[data-bs-toggle="tooltip"]')
+          document.querySelectorAll('[data-bs-toggle="tooltip"]')
         );
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
         });
         var DEBUG = true;
 
         function updateNumberInTab() {
-            var tabNumber = document.getElementById("components-quantity-tab-number");
-            localforage.getItem("components").then(function (value) {
-                sum = 0;
-                for (key of Object.keys(value)) {
-                    sum += value[key];
-                }
-                tabNumber.innerText = sum;
-            });
+          var tabNumber = document.getElementById("components-quantity-tab-number");
+          window["localforage_store"].getItem("components").then(function(value) {
+            sum = 0;
+            for (key of Object.keys(value)) {
+              sum += value[key]["quantity"];
+            }
+            tabNumber.innerText = sum;
+          });
         }
 
         function updateComponentQuantity(e) {
-            var componentIDNumber = e.target.id.split("_")[1];
-            var userEnteredQuantity = parseInt(
-                document.getElementById(e.target.id).value
-            );
-            localforage
-                .getItem("components")
-                .then(function (value) {
-                    localforage
-                        .setItem("components", {
-                            ...value,
-                            [componentIDNumber]: userEnteredQuantity
-                        })
-                        .then(function () {
-                            updateNumberInTab();
-                        })
-                        .then(function () {
-                            if (DEBUG) {
-                                localforage.iterate(function (value, key) {
-                                    console.log([key, value]);
-                                });
-                            }
-                        });
+          var componentIDNumber = e.target.id.split("_")[1];
+          var userEnteredQuantity = parseInt(
+            document.getElementById(e.target.id).value
+          );
+          window["localforage_store"].getItem("components")
+            .then(function(value) {
+              window["localforage_store"].setItem("components", {
+                  ...value,
+                  [componentIDNumber]: {
+                    "quantity": userEnteredQuantity
+                  }
                 })
-                .catch(function (err) {
-                    localforage.setItem("components", {
-                        [componentIDNumber]: userEnteredQuantity
+                .then(function() {
+                  updateNumberInTab();
+                })
+                .then(function() {
+                  if (DEBUG) {
+                    window["localforage_store"].iterate(function(value, key) {
+                      console.log([key, value]);
                     });
+                  }
                 });
-            localforage
-                .setItem("components", {
-                    [componentIDNumber]: userEnteredQuantity
-                })
-                .then(function () {
-                    updateNumberInTab();
-                });
-        }
-
-        window.onload = window.onload.extend_function_definition(function () {
-            window.username = "{{ request.user.username }}";
-            localforage.createInstance({
-                name: window.username
-            });
-            var elements = document.querySelectorAll('[id^="quantity_"]');
-            (async () => {
-                var lookup_dict = await localforage.getItem("components")
-                for (var input_element of elements) {
-                    elem_id = input_element.getAttribute("data-id");
-                    input_element.value = lookup_dict[elem_id];
+            })
+            .catch(function(err) {
+              window["localforage_store"].setItem("components", {
+                [componentIDNumber]: {
+                  "quantity": userEnteredQuantity
                 }
-                updateNumberInTab()
-            })();
-        });
+              });
+            });
+
+          window["localforage_store"].setItem("components", {
+              [componentIDNumber]: {
+                "quantity": userEnteredQuantity
+              }
+            })
+            .then(function() {
+              updateNumberInTab();
+            });
+        }
     </script>
 
     <script type="text/javascript" src="{% static "bundles/components_bundle.js" %}"></script>

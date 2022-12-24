@@ -34,7 +34,7 @@ def search_results(request):
 
 @method_decorator(csrf_exempt)
 def get_components(request):
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return Response({"error": "Method not allowed"}, status=status.HTTP_401_UNAUTHORIZED)
     if request.method == "POST":
 
@@ -45,11 +45,21 @@ def get_components(request):
 
         output = {}
         items = Component.objects.filter(pk__in=int_id_list)
+        print(items)
         sorted(items, key=lambda i: int_id_list.index(i.pk))
         for item in items:
-            serializer = {"id": item.id, "description": item.description, "manufacturer": item.manufacturer.name,
-                          "supplier": item.supplier.name}
+            p = None
+            if (item.price):
+                p = f"{str(item.price.amount)} {str(item.price.currency)}"
+            serializer = {"id": item.id,
+                          "description": item.description,
+                          "manufacturer": item.manufacturer.name,
+                          "supplier": item.supplier.name,
+                          "price": p,
+                          "item_no": item.supplier_item_no,
+                          "supplier_short_name": item.supplier.short_name}
             output[item.id] = serializer
+        print(output)
         return JsonResponse(output)
     else:
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)

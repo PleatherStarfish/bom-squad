@@ -133,10 +133,18 @@
 
 {% block scripts %}
     <script>
-        {%  comment %}
-            {# On page Load, get username, create localforage #}
-            {# and set form quantity based on store state #}
-        {%  endcomment %}
+
+        function updateNumberInTab() {
+          var tabNumber = document.getElementById("components-quantity-tab-number");
+          window["localforage_store"].getItem("components").then(function(value) {
+            sum = 0;
+            for (key of Object.keys(value)) {
+              sum += value[key]["quantity"];
+            }
+            tabNumber.innerText = sum;
+          });
+        }
+
         window.onload = window.onload.extend_function_definition(function() {
           window.username = "{{ request.user.username }}";
           var store = localforage.createInstance({
@@ -150,8 +158,8 @@
               elem_id = input_element.getAttribute("data-id");
               input_element.value = lookup_dict[elem_id]["quantity"];
             }
-            updateNumberInTab()
           })();
+          updateNumberInTab()
         });
 
         var tooltipTriggerList = [].slice.call(
@@ -161,17 +169,6 @@
           return new bootstrap.Tooltip(tooltipTriggerEl);
         });
         var DEBUG = true;
-
-        function updateNumberInTab() {
-          var tabNumber = document.getElementById("components-quantity-tab-number");
-          window["localforage_store"].getItem("components").then(function(value) {
-            sum = 0;
-            for (key of Object.keys(value)) {
-              sum += value[key]["quantity"];
-            }
-            tabNumber.innerText = sum;
-          });
-        }
 
         function updateComponentQuantity(e) {
           var componentIDNumber = e.target.id.split("_")[1];

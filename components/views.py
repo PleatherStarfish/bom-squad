@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from components.models import Component
 from django.db.models import Q
+from rest_framework.decorators import api_view
 from django.shortcuts import render, redirect
 from components.column_names import columns
 from rest_framework.response import Response
@@ -32,34 +33,28 @@ def search_results(request):
         return redirect(index)
 
 
-@method_decorator(csrf_exempt)
+@api_view(['POST'])
 def get_components(request):
-    if not request.user.is_authenticated:
-        return Response({"error": "Method not allowed"}, status=status.HTTP_401_UNAUTHORIZED)
-    if request.method == "POST":
+    # if not request.user.is_authenticated:
+    #     return Response({"error": "Method not allowed"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        serializer_context = {'request': request}
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        int_id_list = [int(input_id) for input_id in body]
+    serializer_context = {'request': request}
+    body = request.data
+    int_id_list = [int(input_id) for input_id in body]
 
-        output = {}
-        items = Component.objects.filter(pk__in=int_id_list)
-        print(items)
-        sorted(items, key=lambda i: int_id_list.index(i.pk))
-        for item in items:
-            p = None
-            if (item.price):
-                p = f"{str(item.price.amount)} {str(item.price.currency)}"
-            serializer = {"id": item.id,
-                          "description": item.description,
-                          "manufacturer": item.manufacturer.name,
-                          "supplier": item.supplier.name,
-                          "price": p,
-                          "item_no": item.supplier_item_no,
-                          "supplier_short_name": item.supplier.short_name}
-            output[item.id] = serializer
-        print(output)
-        return JsonResponse(output)
-    else:
-        return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+    output = {}
+    items = Component.objects.filter(pk__in=int_id_list)
+    sorted(items, key=lambda i: int_id_list.index(i.pk))
+    for item in items:
+        p = None
+        if (item.price):
+            p = f"{str(item.price.amount)} {str(item.price.currency)}"
+        serializer = {"id": item.id,
+                      "description": item.description,
+                      "manufacturer": item.manufacturer.name,
+                      "supplier": item.supplier.name,
+                      "price": p,
+                      "item_no": item.supplier_item_no,
+                      "supplier_short_name": item.supplier.short_name}
+        output[item.id] = serializer
+    return JsonResponse(output)

@@ -10,6 +10,8 @@ import localForage from 'localforage';
 import Cookies from 'js-cookie'
 // @ts-ignore
 import {useQuery,} from '@tanstack/react-query'
+// @ts-ignore
+import _ from 'lodash'
 
 declare global {
     interface Window {
@@ -60,21 +62,19 @@ function App() {
     const [extended, setExtended] = useState(false);
 
     // Main data from browser state
-    const [componentsData, setComponentsData] = useState<ComponentDataType | false>(false);
-    const [componentIdArray, setComponentIdArray] = useState<number[] | []>([])
+    const [componentsAppState, setComponentsAppState] = useState<ComponentDataType | undefined>(undefined);
+    const [componentLocalStorage, setComponentLocalStorage] = useState<number[] | []>([])
 
-    useEffect(() => {
-        console.log("componentsData: ", componentsData)
-    }, [componentsData])
+    useEffect(() => console.log(Object.keys(componentLocalStorage)), [componentLocalStorage])
 
     const getComponents = async () => {
+        const csrftoken = Cookies.get("csrftoken");
         const settings = {
             method: 'POST',
             headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json', 'X-CSRFToken': csrftoken
             },
-            body: JSON.stringify(Object.keys(componentIdArray))
+            body: JSON.stringify(Object.keys(componentLocalStorage).map(Number))
         };
         try {
             const res = await fetch('/components/lookup/', settings);
@@ -83,10 +83,6 @@ function App() {
             return e;
         }
     };
-
-    const {data, status, isLoading} = useQuery(['componentsInfo'], () => getComponents());
-
-    useEffect(() => setComponentsData(data), [data])
 
     // Number displayed in tab
     const [totalQuantityToAdd, setTotalQuantityToAdd] = useState(0);
@@ -108,29 +104,28 @@ function App() {
     // {"location": [], "remainder": ""}
     const [location, setLocation] = useState({});
 
+    const {data: compData, isLoading: compIsLoading} = useQuery(['componentsInfo'], () => getComponents());
+
+    //  Set internal app state from API call
+    useEffect(() => {
+        setComponentsAppState(_.merge(compData, componentLocalStorage))
+    }, [compData])
+
     let addToUserListsEnabled: React.MutableRefObject<boolean> = useRef(false);
 
     const handleConfirmDeleteModelClose = () => setConfirmDeleteShow(false);
 
     const handleExtended = () => setExtended(!extended);
 
-    useEffect(() => console.log(data), [data])
-
     // Handle a click on the main button that expands the offcanvas div
     const handleOffCanvasButtonClick = () => {
         const username = window.username;
 
         window["localforage_store"].getItem('components').then((value) => {
-            setComponentIdArray(value)
+            setComponentLocalStorage(value)
         }).catch((err) => {
             console.log(err);
         });
-
-
-        // setComponentsData(compState["components"]);
-        //
-        // setAllCSwitchesOn(compState["metadata"]["allCSwitchesOn"]);
-        // setAllSSwitchesOn(compState["metadata"]["allSSwitchesOn"]);
 
         setShow(!show);
     };
@@ -145,18 +140,18 @@ function App() {
     const update = () => {
         const username = window.username;
         const compState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
-        setComponentsData(compState["components"]);
+        setComponentsAppState(compState["components"]);
     };
 
     // Handle click on Add Selection to List button
     const addSelectionToList = () => {
         const csrftoken = Cookies.get("csrftoken");
 
-        if (typeof componentsData === 'object') {
+        if (typeof componentsAppState === 'object') {
             const requestOptions = {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrftoken},
-                body: JSON.stringify({...componentsData})
+                body: JSON.stringify({...componentsAppState})
             };
             fetch('/users/add_components_to_shopping/', requestOptions)
                 .then(response => response.json())
@@ -236,10 +231,10 @@ function App() {
     //     const id = parseInt(e);
     //
     //     // @ts-ignore
-    //     const {[id]: _removedComponent, ...newComponentsData} = componentsData;
+    //     const {[id]: _removedComponent, ...newComponentsData} = componentsAppState;
     //
     //     // @ts-ignore
-    //     setComponentsData(newComponentsData);
+    //     setComponentsAppState(newComponentsData);
     //     // @ts-ignore
     //     setComponentsChecked(prev => new Set([...prev].filter(x => x !== `${id}`)));
     //     // @ts-ignore
@@ -270,7 +265,7 @@ function App() {
     //     localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
     //
     //     const updatedLocalStorageState = localStorage.getItem(`${window.username}_comp_data`);
-    //     setComponentsData(JSON.parse(updatedLocalStorageState)["components"]);
+    //     setComponentsAppState(JSON.parse(updatedLocalStorageState)["components"]);
     // };
 
     // const handleLocationChange = (e: { target: any; }) => {
@@ -375,7 +370,7 @@ function App() {
     // }, [show]);
 
     // useEffect(() => {
-    //     if (componentsData) {
+    //     if (componentsAppState) {
     //         const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
     //         localStorageState["metadata"]["allCSwitchesOn"] = allCSwitchesOn;
     //         localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
@@ -383,7 +378,7 @@ function App() {
     // }, [allCSwitchesOn]);
 
     // useEffect(() => {
-    //     if (componentsData) {
+    //     if (componentsAppState) {
     //         const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
     //         localStorageState["metadata"]["allSSwitchesOn"] = allSSwitchesOn;
     //         localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
@@ -401,22 +396,22 @@ function App() {
     //             const localStorageStateMetadata = localStorageState["metadata"];
     //
     //             localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
-    //             setComponentsData(JSON.parse(localStorage.getItem(`${window.username}_comp_data`))["components"]);
+    //             setComponentsAppState(JSON.parse(localStorage.getItem(`${window.username}_comp_data`))["components"]);
     //         }
     //     }
     // }, [location]);
 
     // If the "allCSwitchesOn" state is true, switch all switches to the "on" state, else "off"
     // useEffect(() => {
-    //     if (componentsData) {
+    //     if (componentsAppState) {
     //
     //         if (allCSwitchesOn) {
-    //             Object.keys(componentsData).forEach((value, index) => {
+    //             Object.keys(componentsAppState).forEach((value, index) => {
     //                 setLocalStorageSwitchOnOff(value, 'components', window.username, true);
     //             });
-    //             setComponentsChecked(new Set([...Object.keys(componentsData)]))
+    //             setComponentsChecked(new Set([...Object.keys(componentsAppState)]))
     //         } else {
-    //             Object.keys(componentsData).forEach((value, index) => {
+    //             Object.keys(componentsAppState).forEach((value, index) => {
     //                 setLocalStorageSwitchOnOff(value, 'components', window.username, false);
     //             });
     //             setComponentsChecked(new Set([]))
@@ -426,15 +421,15 @@ function App() {
 
     // If the "allSSwitchesOn" state is true, switch all switches to the "on" state, else "off"
     // useEffect(() => {
-    //     if (componentsData) {
+    //     if (componentsAppState) {
     //
     //         if (allSSwitchesOn) {
-    //             Object.keys(componentsData).forEach((value, index) => {
+    //             Object.keys(componentsAppState).forEach((value, index) => {
     //                 setLocalStorageSwitchOnOff(value, 'shopping', window.username, true)
     //             });
-    //             setShoppingChecked(new Set([...Object.keys(componentsData)]))
+    //             setShoppingChecked(new Set([...Object.keys(componentsAppState)]))
     //         } else {
-    //             Object.keys(componentsData).forEach((value, index) => {
+    //             Object.keys(componentsAppState).forEach((value, index) => {
     //                 setLocalStorageSwitchOnOff(value, 'shopping', window.username, false);
     //             });
     //             setShoppingChecked(new Set([]))
@@ -450,14 +445,13 @@ function App() {
     //     }
     // }, [componentsChecked, shoppingChecked]);
 
-    useMemo(() => {
+    useEffect(() => {
         let rows = null;
-        console.log(shoppingChecked);
-        if (componentsData) {
-            rows = Object.keys(componentsData).map((value, index) => {
+        if (componentsAppState) {
+            rows = Object.keys(componentsAppState).map((value, index) => {
                 return (
                     <Row key={`${value}_${index}`}
-                         componentsData={componentsData}
+                         componentsData={componentsAppState}
                          valueString={value}
                          componentsChecked={componentsChecked}
                          shoppingChecked={shoppingChecked}
@@ -472,7 +466,7 @@ function App() {
             });
             setTableRows(rows)
         }
-    }, [componentsData, componentsChecked, shoppingChecked, location, show]);
+    }, [componentsAppState]);
 
     return (
         <>
@@ -495,9 +489,9 @@ function App() {
 
             {/*{*/}
             {/*    deleteID &&*/}
-            {/*    typeof componentsData == "object" &&*/}
-            {/*    deleteID in componentsData &&*/}
-            {/*    <OnDeleteConfirmation componentsData={componentsData} deleteID={deleteID}*/}
+            {/*    typeof componentsAppState == "object" &&*/}
+            {/*    deleteID in componentsAppState &&*/}
+            {/*    <OnDeleteConfirmation componentsAppState={componentsAppState} deleteID={deleteID}*/}
             {/*                          confirmDeleteShow={confirmDeleteShow} handleDeleteRow={handleDeleteRow}*/}
             {/*                          handleConfirmDeleteModelClose={handleConfirmDeleteModelClose}/>*/}
             {/*}*/}
@@ -551,7 +545,8 @@ function App() {
                         <Button variant="outline-primary" className={"offcanvas__buttons"}
                                 style={{padding: ".375rem .575rem"}} disabled>Add Selection to List</Button>
                     }
-                    {isLoading ? <p>Loading...</p> :
+                    {!componentsAppState || Object.keys(componentsAppState).length === 0 ?
+                        <p className="my-4 text-secondary">Loading...</p> :
                         <table id="components__offcanvas-table" className="table table-sm components__offcanvas-table">
                             <thead className={"components__offcanvas-thead"} style={{fontSize: "13px"}}>
                             <tr>
@@ -600,7 +595,8 @@ function App() {
                             <tbody id="components__offcanvas-tbody" style={{fontSize: "13px"}}>
                             {tableRows}
                             </tbody>
-                        </table>}
+                        </table>
+                    }
                 </Offcanvas.Body>
             </Offcanvas>
         </>

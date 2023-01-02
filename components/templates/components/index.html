@@ -155,7 +155,7 @@
           (async () => {
             var lookup_dict = await window["localforage_store"].getItem("components")
             for (var input_element of elements) {
-              elem_id = input_element.getAttribute("data-id");
+              var elem_id = input_element.getAttribute("data-id");
               input_element.value = lookup_dict[elem_id]["quantity"];
             }
           })();

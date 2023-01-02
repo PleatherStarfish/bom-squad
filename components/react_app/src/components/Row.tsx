@@ -3,16 +3,29 @@ import CData from '../App'
 // @ts-ignore
 import { Button, CloseButton, Form } from 'react-bootstrap';
 
-const Row = (props: { componentsData: any | false; valueString: string; componentsChecked: Set<string>; shoppingChecked: Set<string>; handleSwitchesChange: any; handleQuantityChange: any; location: any; handleLocationChange: any; handleLocationBubbleDelete: any; handleDeleteRow: (arg0: any) => any; }) => {
-    const componentsData = props.componentsData;
-    const value = props.valueString;
-    const componentsChecked = props.componentsChecked;
-    const shoppingChecked = props.shoppingChecked;
-    const handleSwitchesChange = props.handleSwitchesChange;
-    const handleQuantityChange = props.handleQuantityChange;
-    const location = props.location;
-    const handleLocationChange = props.handleLocationChange;
-    const handleLocationBubbleDelete = props.handleLocationBubbleDelete;
+interface RowDataType {
+    componentsData: any,
+    value: string,
+    componentsChecked: Set<string>,
+    shoppingChecked: Set<string>,
+    handleSwitchesChange: any,
+    handleQuantityChange: any,
+    location: any,
+    handleLocationChange: any,
+    handleLocationBubbleDelete: any,
+    handleDeleteRow: (arg0: any) => any;
+}
+
+const Row = ({ componentsData,
+                 value,
+                 componentsChecked,
+                 shoppingChecked,
+                 handleSwitchesChange,
+                 handleQuantityChange,
+                 location,
+                 handleLocationChange,
+                 handleLocationBubbleDelete,
+                 handleDeleteRow, }: RowDataType) => {
 
     const [locationList, setLocationList] = useState(null);
 
@@ -91,7 +104,7 @@ const Row = (props: { componentsData: any | false; valueString: string; componen
                         variant="outline-danger"
                         size="sm"
                         id={`rowDelete_${value}`}
-                        onClick={() => props.handleDeleteRow(value)}>
+                        onClick={() => handleDeleteRow(value)}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                      className="bi bi-trash3" viewBox="0 0 16 16">
                     <path

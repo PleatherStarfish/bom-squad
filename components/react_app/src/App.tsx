@@ -62,10 +62,8 @@ function App() {
     const [extended, setExtended] = useState(false);
 
     // Main data from browser state
-    const [componentsAppState, setComponentsAppState] = useState<ComponentDataType | undefined>(undefined);
+    const [componentsAppState, setComponentsAppState] = useState<ComponentDataType | {}>({});
     const [componentLocalStorage, setComponentLocalStorage] = useState<number[] | []>([])
-
-    useEffect(() => console.log(Object.keys(componentLocalStorage)), [componentLocalStorage])
 
     const getComponents = async () => {
         const csrftoken = Cookies.get("csrftoken");
@@ -86,9 +84,6 @@ function App() {
 
     // Number displayed in tab
     const [totalQuantityToAdd, setTotalQuantityToAdd] = useState(0);
-
-    // LSX for table rows
-    const [tableRows, setTableRows] = useState(null);
 
     // An array of IDs representing the on/off state of the switches (if it's in the array it's "on")
     const [componentsChecked, setComponentsChecked] = useState(new Set([]));
@@ -138,9 +133,9 @@ function App() {
 
     // Handle click on update button
     const update = () => {
-        const username = window.username;
-        const compState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
-        setComponentsAppState(compState["components"]);
+    //     const username = window.username;
+    //     const compState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
+    //     setComponentsAppState(compState["components"]);
     };
 
     // Handle click on Add Selection to List button
@@ -256,17 +251,17 @@ function App() {
     //     );
     // };
 
-    // const handleQuantityChange = (e: { target: { id: string, value: string }; }) => {
-    //     const id = getID(e);
-    //     const value = e.target.value;
-    //
-    //     const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
-    //     localStorageState["components"][id]["quantity"] = parseInt(value);
-    //     localStorage.setItem(`${window.username}_comp_data`, JSON.stringify(localStorageState));
-    //
-    //     const updatedLocalStorageState = localStorage.getItem(`${window.username}_comp_data`);
-    //     setComponentsAppState(JSON.parse(updatedLocalStorageState)["components"]);
-    // };
+    const handleQuantityChange = (e: { target: { id: string, value: string }; }) => {
+        const id = getID(e);
+        const value = e.target.value;
+        window["localforage_store"].setItem("components", {...componentLocalStorage, [id]: {"quantity": parseInt(value)}}).then(() => {
+            setComponentLocalStorage({...componentLocalStorage, [id]: {"quantity": parseInt(value)}})
+            setComponentsAppState({...componentsAppState, [id]: {...componentsAppState[id], "quantity": parseInt(value)}})
+        }).then(() => {
+            const elements = document.getElementById(`quantity_${id}`) as HTMLInputElement
+            elements.value = value
+        })
+    };
 
     // const handleLocationChange = (e: { target: any; }) => {
     //     const id = getID(e);
@@ -445,28 +440,21 @@ function App() {
     //     }
     // }, [componentsChecked, shoppingChecked]);
 
-    useEffect(() => {
-        let rows = null;
-        if (componentsAppState) {
-            rows = Object.keys(componentsAppState).map((value, index) => {
-                return (
-                    <Row key={`${value}_${index}`}
-                         componentsData={componentsAppState}
-                         valueString={value}
-                         componentsChecked={componentsChecked}
-                         shoppingChecked={shoppingChecked}
-                         handleSwitchesChange={null}
-                         handleDeleteRow={handleConfirmDeleteModelShow}
-                         handleQuantityChange={null}
-                         location={location}
-                         handleLocationChange={null}
-                         handleLocationBubbleDelete={null}
-                    />
-                )
-            });
-            setTableRows(rows)
-        }
-    }, [componentsAppState]);
+
+    const rows = Object.keys(componentsAppState).map((value, index) =>
+        <Row key={`${value}_${index}`}
+             componentsData={componentsAppState}
+             value={value}
+             componentsChecked={componentsChecked}
+             shoppingChecked={shoppingChecked}
+             handleSwitchesChange={null}
+             handleDeleteRow={handleConfirmDeleteModelShow}
+             handleQuantityChange={handleQuantityChange}
+             location={location}
+             handleLocationChange={null}
+             handleLocationBubbleDelete={null}
+        />
+    );
 
     return (
         <>
@@ -545,7 +533,7 @@ function App() {
                         <Button variant="outline-primary" className={"offcanvas__buttons"}
                                 style={{padding: ".375rem .575rem"}} disabled>Add Selection to List</Button>
                     }
-                    {!componentsAppState || Object.keys(componentsAppState).length === 0 ?
+                    {compIsLoading || !componentsAppState || Object.keys(componentsAppState).length === 0 ?
                         <p className="my-4 text-secondary">Loading...</p> :
                         <table id="components__offcanvas-table" className="table table-sm components__offcanvas-table">
                             <thead className={"components__offcanvas-thead"} style={{fontSize: "13px"}}>
@@ -593,7 +581,7 @@ function App() {
                             </tr>
                             </thead>
                             <tbody id="components__offcanvas-tbody" style={{fontSize: "13px"}}>
-                            {tableRows}
+                            {rows}
                             </tbody>
                         </table>
                     }

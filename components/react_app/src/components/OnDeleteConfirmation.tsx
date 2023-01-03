@@ -5,7 +5,7 @@ import { Button, Modal } from "react-bootstrap";
 interface OnDeleteConfirmationTypes {
   confirmDeleteShow: boolean;
   handleConfirmDeleteModelClose: () => void;
-  componentsData: any;
+  componentsAppState: any;
   deleteID: string;
   handleDeleteRow: (arg0: any) => void;
 }
@@ -13,7 +13,7 @@ interface OnDeleteConfirmationTypes {
 const OnDeleteConfirmation = ({
   confirmDeleteShow,
   handleConfirmDeleteModelClose,
-  componentsData,
+  componentsAppState,
   deleteID,
   handleDeleteRow,
 }: OnDeleteConfirmationTypes) => {
@@ -28,8 +28,8 @@ const OnDeleteConfirmation = ({
       </Modal.Header>
       <Modal.Body>
         Do you really want to delete{" "}
-        {componentsData[deleteID]["supplier_short_name"]}{" "}
-        {componentsData[deleteID]["item_no"]}?
+        {componentsAppState[deleteID]["supplier_short_name"]}{" "}
+        {componentsAppState[deleteID]["item_no"]}?
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleConfirmDeleteModelClose}>

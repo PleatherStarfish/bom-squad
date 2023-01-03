@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 // @ts-ignore
-import {Button, CloseButton, Form} from "react-bootstrap";
+import { Button, CloseButton, Form } from "react-bootstrap";
 
 interface RowDataType {
   componentsData: any;

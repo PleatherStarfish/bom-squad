@@ -34,13 +34,34 @@ interface ComponentDataType {
   };
 }
 
-function getTotalPrice(number: string, price: string) {
+const getTotalPrice = (number: string, price: string) => {
   const quant = parseInt(number);
   const currency = price.charAt(0);
   const stringWithoutCurrency = price.substring(1);
   const floatPrice = parseFloat(stringWithoutCurrency);
   return `${currency}${(floatPrice * quant).toFixed(2)}`;
-}
+};
+
+const setAllSwitches = (
+  appState,
+  switchesOn,
+  setChecked,
+  localKey,
+  localforageStore
+) => {
+  if (Object.keys(appState).length) {
+    if (switchesOn) {
+      const newShoppingChecked = [...Object.keys(appState)];
+      localforageStore.setItem(localKey, newShoppingChecked).then(() => {
+        setChecked(new Set(newShoppingChecked));
+      });
+    } else {
+      localforageStore.setItem(localKey, []).then(() => {
+        setChecked(new Set([]));
+      });
+    }
+  }
+};
 
 const switchHandler = (
   array: Set<any>,
@@ -111,11 +132,10 @@ function App() {
   // {"location": [], "remainder": ""}
   const [location, setLocation] = useState({});
 
-  const {
-    data: compData,
-    isLoading: compIsLoading,
-    refetch,
-  } = useQuery(["componentsInfo"], () => getComponents());
+  const { data: compData, isLoading: compIsLoading } = useQuery(
+    ["componentsInfo"],
+    () => getComponents()
+  );
 
   //  Set internal app state from API call
   useEffect(() => {
@@ -140,6 +160,16 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+
+    window["localforage_store"]
+      .getItem("componentsChecked").then((checked) => {
+        setComponentsChecked(new Set(checked))
+    })
+
+    window["localforage_store"]
+      .getItem("shoppingChecked").then((checked) => {
+        setShoppingChecked(new Set(checked))
+    })
 
     setShow(!show);
   };
@@ -213,29 +243,44 @@ function App() {
   // Update hook with the state of a single row switch
   const setStateFromSwitch = (compID: string, list_type: string) => {
     if (list_type === "components") {
-      switchHandler(componentsChecked, compID, setComponentsChecked);
+      const newComponentsChecked = componentsChecked.has(compID)
+        ? _.remove(componentsChecked, (n) => n === compID)
+        : [...componentsChecked, compID];
+      window["localforage_store"]
+        .setItem("componentsChecked", newComponentsChecked)
+        .then(() => {
+          switchHandler(componentsChecked, compID, setComponentsChecked);
+        });
     }
     if (list_type === "shopping") {
-      switchHandler(shoppingChecked, compID, setShoppingChecked);
+      const newShoppingChecked = shoppingChecked.has(compID)
+        ? _.remove(shoppingChecked, (n) => n === compID)
+        : [...shoppingChecked, compID];
+      window["localforage_store"]
+        .setItem("shoppingChecked", newShoppingChecked)
+        .then(() => {
+          switchHandler(shoppingChecked, compID, setShoppingChecked);
+        });
     }
   };
 
   // Handle a click on any of the switches for the data rows
-  // const handleSwitchesChange = (e: { target: { id: string; }; }, type: string) => {
-  //     const switchID = getID(e);
-  //
-  //     setLocalStorageSwitch(switchID, type, window.username);
-  //     setStateFromSwitch(switchID, type)
-  // };
+  const handleSwitchesChange = (
+    e: { target: { id: string } },
+    type: string
+  ) => {
+    const switchID = getID(e);
+    setStateFromSwitch(switchID, type);
+  };
 
   // Handle any click on the "meta" switches at the top of the switch columns
-  // const handleMetaSwitchChange = (e: object, type: string) => {
-  //     if (type === 'components') {
-  //         setAllCSwitchesOn(!allCSwitchesOn);
-  //     } else {
-  //         setAllSSwitchesOn(!allSSwitchesOn)
-  //     }
-  // };
+  const handleMetaSwitchChange = (e: object, type: string) => {
+    if (type === "components") {
+      setAllCSwitchesOn(!allCSwitchesOn);
+    } else {
+      setAllSSwitchesOn(!allSSwitchesOn);
+    }
+  };
 
   const handleDeleteRow = (e: string) => {
     const id = parseInt(e);
@@ -409,40 +454,26 @@ function App() {
   // }, [location]);
 
   // If the "allCSwitchesOn" state is true, switch all switches to the "on" state, else "off"
-  // useEffect(() => {
-  //     if (componentsAppState) {
-  //
-  //         if (allCSwitchesOn) {
-  //             Object.keys(componentsAppState).forEach((value, index) => {
-  //                 setLocalStorageSwitchOnOff(value, 'components', window.username, true);
-  //             });
-  //             setComponentsChecked(new Set([...Object.keys(componentsAppState)]))
-  //         } else {
-  //             Object.keys(componentsAppState).forEach((value, index) => {
-  //                 setLocalStorageSwitchOnOff(value, 'components', window.username, false);
-  //             });
-  //             setComponentsChecked(new Set([]))
-  //         }
-  //     }
-  // }, [allCSwitchesOn]);
+  useEffect(() => {
+    setAllSwitches(
+      componentsAppState,
+      allCSwitchesOn,
+      setComponentsChecked,
+      "componentsChecked",
+      window["localforage_store"]
+    );
+  }, [allCSwitchesOn]);
 
   // If the "allSSwitchesOn" state is true, switch all switches to the "on" state, else "off"
-  // useEffect(() => {
-  //     if (componentsAppState) {
-  //
-  //         if (allSSwitchesOn) {
-  //             Object.keys(componentsAppState).forEach((value, index) => {
-  //                 setLocalStorageSwitchOnOff(value, 'shopping', window.username, true)
-  //             });
-  //             setShoppingChecked(new Set([...Object.keys(componentsAppState)]))
-  //         } else {
-  //             Object.keys(componentsAppState).forEach((value, index) => {
-  //                 setLocalStorageSwitchOnOff(value, 'shopping', window.username, false);
-  //             });
-  //             setShoppingChecked(new Set([]))
-  //         }
-  //     }
-  // }, [allSSwitchesOn]);
+  useEffect(() => {
+    setAllSwitches(
+      componentsAppState,
+      allSSwitchesOn,
+      setShoppingChecked,
+      "shoppingChecked",
+      window["localforage_store"]
+    );
+  }, [allSSwitchesOn]);
 
   // useEffect(() => {
   //     // @ts-ignore
@@ -459,7 +490,7 @@ function App() {
       value={value}
       componentsChecked={componentsChecked}
       shoppingChecked={shoppingChecked}
-      handleSwitchesChange={null}
+      handleSwitchesChange={handleSwitchesChange}
       handleConfirmDeleteModelShow={handleConfirmDeleteModelShow}
       handleQuantityChange={handleQuantityChange}
       location={location}
@@ -639,7 +670,9 @@ function App() {
                         type="switch"
                         id="custom-switch"
                         checked={allCSwitchesOn}
-                        // onChange={(e: object) => handleMetaSwitchChange(e, 'components')}
+                        onChange={(e: object) =>
+                          handleMetaSwitchChange(e, "components")
+                        }
                       />
                     </Form>
                   </th>
@@ -650,7 +683,9 @@ function App() {
                         type="switch"
                         id="custom-switch"
                         checked={allSSwitchesOn}
-                        // onChange={(e: object) => handleMetaSwitchChange(e, 'shopping')}
+                        onChange={(e: object) =>
+                          handleMetaSwitchChange(e, "shopping")
+                        }
                       />
                     </Form>
                   </th>

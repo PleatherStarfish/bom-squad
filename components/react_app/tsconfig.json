@@ -7,6 +7,6 @@
     "removeComments": true,
     "sourceMap": true,
     "target": "es2015",
-    "esModuleInterop": true,
+    "esModuleInterop": true
   }
 }

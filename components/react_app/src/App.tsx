@@ -99,7 +99,7 @@ function App() {
     // {"location": [], "remainder": ""}
     const [location, setLocation] = useState({});
 
-    const {data: compData, isLoading: compIsLoading} = useQuery(['componentsInfo'], () => getComponents());
+    const {data: compData, isLoading: compIsLoading, refetch} = useQuery(['componentsInfo'], () => getComponents());
 
     //  Set internal app state from API call
     useEffect(() => {
@@ -127,15 +127,8 @@ function App() {
 
     // Open popup to confirm delete
     const handleConfirmDeleteModelShow = (e) => {
+        setDeleteID(e)
         setConfirmDeleteShow(true);
-        setDeleteID(e);
-    };
-
-    // Handle click on update button
-    const update = () => {
-    //     const username = window.username;
-    //     const compState = JSON.parse(localStorage.getItem(`${username}_comp_data`));
-    //     setComponentsAppState(compState["components"]);
     };
 
     // Handle click on Add Selection to List button
@@ -222,34 +215,13 @@ function App() {
     //     }
     // };
 
-    // const handleDeleteRow = (e: string) => {
-    //     const id = parseInt(e);
-    //
-    //     // @ts-ignore
-    //     const {[id]: _removedComponent, ...newComponentsData} = componentsAppState;
-    //
-    //     // @ts-ignore
-    //     setComponentsAppState(newComponentsData);
-    //     // @ts-ignore
-    //     setComponentsChecked(prev => new Set([...prev].filter(x => x !== `${id}`)));
-    //     // @ts-ignore
-    //     setShoppingChecked(prev => new Set([...prev].filter(x => x !== `${id}`)));
-    //
-    //     // Get local storage
-    //     const localStorageState = JSON.parse(localStorage.getItem(`${window.username}_comp_data`));
-    //
-    //     const localStorageStateComponent = localStorageState["components"];
-    //     const localStorageStateMetadata = localStorageState["metadata"];
-    //
-    //     // Remove ID item from "components" object
-    //     const {[id]: _removedLocalStateComponent, ...newLocalStorageState} = localStorageStateComponent;
-    //
-    //     // Spread both the "components" object and the "metadata" object into new localStorage
-    //     localStorage.setItem(`${window.username}_comp_data`, JSON.stringify({
-    //             ...{["components"]: newLocalStorageState}, ...{["metadata"]: localStorageStateMetadata}
-    //         })
-    //     );
-    // };
+    const handleDeleteRow = (e: string) => {
+        const id = parseInt(e);
+        window["localforage_store"].setItem("components", _.omit(componentLocalStorage, [id])).then(() => {
+            setComponentLocalStorage(_.omit(componentLocalStorage, [id]))
+            setComponentsAppState(_.omit(componentsAppState, [id]))
+        })
+    };
 
     const handleQuantityChange = (e: { target: { id: string, value: string }; }) => {
         const id = getID(e);
@@ -448,7 +420,7 @@ function App() {
              componentsChecked={componentsChecked}
              shoppingChecked={shoppingChecked}
              handleSwitchesChange={null}
-             handleDeleteRow={handleConfirmDeleteModelShow}
+             handleConfirmDeleteModelShow={handleConfirmDeleteModelShow}
              handleQuantityChange={handleQuantityChange}
              location={location}
              handleLocationChange={null}
@@ -475,14 +447,15 @@ function App() {
                 </span>
             </Button>
 
-            {/*{*/}
-            {/*    deleteID &&*/}
-            {/*    typeof componentsAppState == "object" &&*/}
-            {/*    deleteID in componentsAppState &&*/}
-            {/*    <OnDeleteConfirmation componentsAppState={componentsAppState} deleteID={deleteID}*/}
-            {/*                          confirmDeleteShow={confirmDeleteShow} handleDeleteRow={handleDeleteRow}*/}
-            {/*                          handleConfirmDeleteModelClose={handleConfirmDeleteModelClose}/>*/}
-            {/*}*/}
+            {confirmDeleteShow &&
+                <OnDeleteConfirmation
+                    // @ts-ignore
+                    componentsAppState={componentsAppState}
+                    deleteID={deleteID}
+                    confirmDeleteShow={confirmDeleteShow}
+                    handleDeleteRow={handleDeleteRow}
+                    handleConfirmDeleteModelClose={handleConfirmDeleteModelClose}/>
+            }
 
             <Offcanvas id="components__offcanvas-container"
                        className={!show ? "offcanvas offcanvas-bottom components__offcanvas-container" : ((extended) ? "offcanvas offcanvas-bottom components__offcanvas-container components__offcanvas-container--full" : "offcanvas offcanvas-bottom components__offcanvas-container components__offcanvas-container--lifted")}
@@ -507,24 +480,6 @@ function App() {
                             </svg>
                         </Button>
                     </OverlayTrigger>
-                    <OverlayTrigger
-                        placement={'top'}
-                        overlay={
-                            <Tooltip>Update</Tooltip>
-                        }
-                    >
-                        <Button variant="outline-primary" className={"offcanvas__buttons"} onClick={update}
-                                style={{padding: ".375rem .575rem", marginRight: "1%"}}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                 className="bi bi-arrow-clockwise" viewBox="0 0 15 15"
-                                 style={{transform: "scale(-1, -1)"}}>
-                                <path fillRule="evenodd"
-                                      d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
-                                <path
-                                    d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
-                            </svg>
-                        </Button>
-                    </OverlayTrigger>
                     {(componentsChecked.size || shoppingChecked.size) ?
                         <Button variant="outline-primary" className={"offcanvas__buttons"} onClick={addSelectionToList}
                                 style={{padding: ".375rem .575rem", border: "1px #528c69 solid", color: "white"}}
@@ -533,7 +488,10 @@ function App() {
                         <Button variant="outline-primary" className={"offcanvas__buttons"}
                                 style={{padding: ".375rem .575rem"}} disabled>Add Selection to List</Button>
                     }
-                    {compIsLoading || !componentsAppState || Object.keys(componentsAppState).length === 0 ?
+                    {compIsLoading ||
+                    !componentsAppState ||
+                    Object.keys(componentsAppState).length === 0 ||
+                    Object.keys(componentsAppState).length !== Object.keys(componentLocalStorage).length ?
                         <p className="my-4 text-secondary">Loading...</p> :
                         <table id="components__offcanvas-table" className="table table-sm components__offcanvas-table">
                             <thead className={"components__offcanvas-thead"} style={{fontSize: "13px"}}>

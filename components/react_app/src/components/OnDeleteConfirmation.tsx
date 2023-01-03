@@ -8,8 +8,8 @@ const OnDeleteConfirmation = (props: { confirmDeleteShow: boolean; handleConfirm
                 <Modal.Header closeButton>
                     <Modal.Title>Are you sure?</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Do you really want to
-                    delete {props.componentsData[props.deleteID]["supplier_short_name"]} {props.componentsData[props.deleteID]["item_no"]}?</Modal.Body>
+                {/*<Modal.Body>Do you really want to*/}
+                {/*    delete {props.componentsData[props.deleteID]["supplier_short_name"]} {props.componentsData[props.deleteID]["item_no"]}?</Modal.Body>*/}
                 <Modal.Footer>
                     <Button variant="secondary" onClick={props.handleConfirmDeleteModelClose}>
                         Close

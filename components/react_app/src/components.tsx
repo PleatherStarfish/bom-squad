@@ -15,13 +15,13 @@ const queryClient = new QueryClient()
 queryClient.setDefaultOptions({
     queries: {
         retry: 3,
-        staleTime: 1000 * 10,// 30 seconds
-        cacheTime: 1000 * 10, //30 seconds
+        staleTime: 2000,
+        cacheTime: 2000,
         refetchOnMount: "always",
         refetchOnWindowFocus: "always",
         refetchOnReconnect: "always",
-        refetchInterval: 1000 * 10, //30 seconds
-        refetchIntervalInBackground: false,
+        refetchInterval: 2000,
+        refetchIntervalInBackground: true,
         suspense: false,
     }
 })

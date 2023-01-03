@@ -13,7 +13,7 @@ interface RowDataType {
     location: any,
     handleLocationChange: any,
     handleLocationBubbleDelete: any,
-    handleDeleteRow: (arg0: any) => any;
+    handleConfirmDeleteModelShow: (arg0: any) => any;
 }
 
 const Row = ({ componentsData,
@@ -25,7 +25,7 @@ const Row = ({ componentsData,
                  location,
                  handleLocationChange,
                  handleLocationBubbleDelete,
-                 handleDeleteRow, }: RowDataType) => {
+                 handleConfirmDeleteModelShow, }: RowDataType) => {
 
     const [locationList, setLocationList] = useState(null);
 
@@ -104,7 +104,7 @@ const Row = ({ componentsData,
                         variant="outline-danger"
                         size="sm"
                         id={`rowDelete_${value}`}
-                        onClick={() => handleDeleteRow(value)}>
+                        onClick={() => handleConfirmDeleteModelShow(value)}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                      className="bi bi-trash3" viewBox="0 0 16 16">
                     <path

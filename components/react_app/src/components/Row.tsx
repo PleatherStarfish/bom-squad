@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 // @ts-ignore
 import { Button, CloseButton, Form } from "react-bootstrap";
+// @ts-ignore
+import randomColor from "randomcolor";
 
 interface RowDataType {
   componentsData: any;
@@ -13,6 +15,7 @@ interface RowDataType {
   handleLocationChange: any;
   handleLocationBubbleDelete: any;
   handleConfirmDeleteModelShow: (arg0: any) => any;
+  colorList?: string[];
 }
 
 const Row = ({
@@ -26,6 +29,7 @@ const Row = ({
   handleLocationChange,
   handleLocationBubbleDelete,
   handleConfirmDeleteModelShow,
+  colorList = undefined,
 }: RowDataType) => {
   const [locationList, setLocationList] = useState(null);
 
@@ -60,24 +64,29 @@ const Row = ({
               key={index}
               style={{ display: "inline-block", whiteSpace: "nowrap" }}
             >
-              <div
-                style={{
-                  fontSize: "10px",
-                  display: "inline-block",
-                  padding: "3px 6px",
-                  border: "1px solid black",
-                  borderRadius: ".8em",
-                  margin: "3px 0 0 0",
-                }}
-              >
-                <b>{name}</b>
-                <CloseButton
-                  id={`deleteLocationButton_${value}_${index}`}
-                  style={{ fontSize: "0.8em", marginLeft: "3px" }}
-                  onClick={(e: object) => handleLocationBubbleDelete(e)}
-                />
-              </div>
-              {close}
+              <>
+                <div
+                  style={{
+                    fontSize: "10px",
+                    display: "inline-block",
+                    padding: "3px 6px",
+                    color: "white",
+                    backgroundColor: colorList[index] || "gray",
+                    border: "1px solid black",
+                    borderRadius: ".8em",
+                    margin: "3px 0 0 0",
+                  }}
+                >
+                  <b>{name}</b>
+                  <CloseButton
+                    id={`deleteLocationButton_${value}_${index}`}
+                    style={{ fontSize: "0.8em", marginLeft: "3px" }}
+                    variant="white"
+                    onClick={(e: object) => handleLocationBubbleDelete(e)}
+                  />
+                </div>
+                {close}
+              </>
             </div>
           );
         }

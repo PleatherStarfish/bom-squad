@@ -123,9 +123,6 @@ function App() {
     }
   };
 
-  // Number displayed in tab
-  const [totalQuantityToAdd, setTotalQuantityToAdd] = useState(0);
-
   // An array of IDs representing the on/off state of the switches (if it's in the array it's "on")
   const [componentsChecked, setComponentsChecked] = useState(new Set([]));
   const [shoppingChecked, setShoppingChecked] = useState(new Set([]));
@@ -273,6 +270,12 @@ function App() {
       .then(() => {
         setComponentLocalStorage(_.omit(componentLocalStorage, [id]));
         setComponentsAppState(_.omit(componentsAppState, [id]));
+      })
+      .then(() => {
+        const elements = document.getElementById(
+          `quantity_${id}`
+        ) as HTMLInputElement;
+        elements.value = null;
       });
   };
 
@@ -405,6 +408,12 @@ function App() {
       window["localforage_store"]
     );
   }, [allSSwitchesOn]);
+
+  const totalQuantityToAdd = Object.keys(componentLocalStorage).reduce(
+    (accumulator, currentValue) =>
+      accumulator + componentLocalStorage[currentValue]["quantity"],
+    0
+  );
 
   const rows = Object.keys(componentsAppState).map((value, index) => (
     <Row

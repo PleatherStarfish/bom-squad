@@ -99,9 +99,11 @@ function App() {
     number[] | []
   >([]);
 
-  const [colorList] = useState([...Array(20)].map(() => {
-      return (randomColor({luminosity: "dark"}))
-    }))
+  const [colorList] = useState(
+    [...Array(20)].map(() => {
+      return randomColor({ luminosity: "dark" });
+    })
+  );
 
   const getComponents = async () => {
     const csrftoken = Cookies.get("csrftoken");
@@ -143,11 +145,6 @@ function App() {
     () => getComponents()
   );
 
-  //  Set internal app state from API call
-  useEffect(() => {
-    setComponentsAppState(_.merge(compData, componentLocalStorage));
-  }, [compData]);
-
   let addToUserListsEnabled: React.MutableRefObject<boolean> = useRef(false);
 
   const handleConfirmDeleteModelClose = () => setConfirmDeleteShow(false);
@@ -176,8 +173,8 @@ function App() {
     });
 
     window["localforage_store"].getItem("locations").then((value) => {
-      setLocation(value)
-    })
+      setLocation(value);
+    });
 
     setShow(!show);
   };
@@ -217,11 +214,6 @@ function App() {
   // Handler called when offcanvas closes
   const handleClose = () => {
     setShow(false);
-  };
-
-  // Handler called when offcanvas opens
-  const handleShow = () => {
-    setShow(true);
   };
 
   // Update hook with the state of a single row switch
@@ -381,10 +373,15 @@ function App() {
     });
   };
 
+  //  Set internal app state from API call
   useEffect(() => {
-      if (Object.keys(location).length > 0) {
-          window["localforage_store"].setItem("locations", location)
-      }
+    setComponentsAppState(_.merge(compData, componentLocalStorage));
+  }, [compData]);
+
+  useEffect(() => {
+    if (Object.keys(location).length > 0) {
+      window["localforage_store"].setItem("locations", location);
+    }
   }, [location]);
 
   // If the "allCSwitchesOn" state is true, switch all switches to the "on" state, else "off"
@@ -542,11 +539,15 @@ function App() {
               Add Selection to List
             </Button>
           )}
-          {compIsLoading ||
-          !componentsAppState ||
-          Object.keys(componentsAppState).length === 0 ||
-          Object.keys(componentsAppState).length !==
-            Object.keys(componentLocalStorage).length ? (
+          {Object.keys(componentLocalStorage).length === 0 ? (
+            <p className="my-4 text-secondary">
+              No components added to the queue.
+            </p>
+          ) : compIsLoading ||
+            !componentsAppState ||
+            Object.keys(componentsAppState).length === 0 ||
+            Object.keys(componentsAppState).length !==
+              Object.keys(componentLocalStorage).length ? (
             <p className="my-4 text-secondary">Loading...</p>
           ) : (
             <table

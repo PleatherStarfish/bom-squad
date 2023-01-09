@@ -1,5 +1,6 @@
 // @ts-ignore
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { preparedObjectForFetch, switchHandler, getID, setAllSwitches, clear_app_cache } from './utils/common'
 // @ts-ignore
 import {Button, Form, Offcanvas, OverlayTrigger, Tooltip,} from "react-bootstrap";
 import Row from "./components/Row";
@@ -36,56 +37,7 @@ interface ComponentDataType {
   };
 }
 
-const getTotalPrice = (number: string, price: string) => {
-  const quant = parseInt(number);
-  const currency = price.charAt(0);
-  const stringWithoutCurrency = price.substring(1);
-  const floatPrice = parseFloat(stringWithoutCurrency);
-  return `${currency}${(floatPrice * quant).toFixed(2)}`;
-};
-
-const setAllSwitches = (
-  appState,
-  switchesOn,
-  setChecked,
-  localKey,
-  localforageStore
-) => {
-  if (Object.keys(appState).length) {
-    if (switchesOn) {
-      const newShoppingChecked = [...Object.keys(appState)];
-      localforageStore.setItem(localKey, newShoppingChecked).then(() => {
-        setChecked(new Set(newShoppingChecked));
-      });
-    } else {
-      localforageStore.setItem(localKey, []).then(() => {
-        setChecked(new Set([]));
-      });
-    }
-  }
-};
-
-const switchHandler = (
-  array: Set<any>,
-  value: any,
-  setter: {
-    (value: React.SetStateAction<Set<any>>): void;
-    (value: React.SetStateAction<Set<any>>): void;
-    (arg0: { (prev: any): Set<any>; (prev: any): Set<any> }): void;
-  }
-) => {
-  if (array.has(value)) {
-    // Remove from set
-    setter((prev) => new Set([...prev].filter((x) => x !== value)));
-  } else {
-    // Add to set
-    setter((prev) => new Set([...prev, value]));
-  }
-};
-
-const getID = (e: { target: { id: string } }) => e.target.id.split("_")[1];
-
-function App() {
+const App = () => {
   // Show hide state of tab
   const [show, setShow] = useState(false);
 
@@ -184,27 +136,75 @@ function App() {
 
   // Handle click on Add Selection to List button
   const addSelectionToList = () => {
+    if (typeof componentsAppState !== "object") {
+      return
+    }
+
     const csrftoken = Cookies.get("csrftoken");
 
-    if (typeof componentsAppState === "object") {
-      const requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrftoken,
-        },
-        body: JSON.stringify({ ...componentsAppState }),
-      };
-      fetch("/users/add_components_to_shopping/", requestOptions)
-        .then((response) => response.json())
-        .catch(function (error) {
-          console.log(error);
-        });
-      fetch("/users/add_components_to_inventory/", requestOptions)
-        .then((response) => response.json())
-        .catch(function (error) {
-          console.log(error);
-        });
+    const requestOptionsInventory = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken,
+      },
+      body: JSON.stringify(
+        preparedObjectForFetch(
+          componentsAppState,
+          componentsChecked,
+          location,
+          "inventory"
+        )
+      ),
+    };
+
+    const requestOptionsShopping = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken,
+      },
+      body: JSON.stringify(
+        //   "none" here refers to the module id. No module id means it's part of the anonymous shopping list
+        //   {[module id]: {[component id]: {'quantity': "...}}
+        {
+          none: preparedObjectForFetch(
+            componentsAppState,
+            shoppingChecked,
+            location,
+            "shopping"
+          ),
+        }
+      ),
+    };
+
+    let response_success = true;
+
+    fetch("/users/add_components_to_shopping/", requestOptionsShopping)
+      .then((response) => {
+        const status = response.status;
+        if (status != 200) {
+          response_success = false;
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    fetch("/users/add_components_to_inventory/", requestOptionsInventory)
+      .then((response) => {
+        const status = response.status;
+        if (status != 200) {
+          response_success = false;
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    // If all requests are successful, reset app state
+    if (response_success) {
+      // clear_app_cache()
     }
   };
 
@@ -258,10 +258,39 @@ function App() {
       window["localforage_store"]
         .setItem("metaSSwitch", !allSSwitchesOn)
         .then(() => {
+          if (!allSSwitchesOn) {
+            Object.keys(componentsAppState).forEach((item, index) => {
+              setShoppingChecked(new Set([...shoppingChecked, item]));
+            });
+          }
           setAllSSwitchesOn(!allSSwitchesOn);
         });
     }
   };
+
+  useEffect(() => {
+    if (allCSwitchesOn) {
+      const allKeys = Object.keys(componentsAppState);
+      window["localforage_store"]
+        .setItem("componentsChecked", allKeys)
+        .then(() => {
+          setComponentsChecked(new Set(allKeys));
+        });
+      console.log(allKeys);
+    }
+  }, [allCSwitchesOn]);
+
+  useEffect(() => {
+    if (allSSwitchesOn) {
+      const allKeys = Object.keys(componentsAppState);
+      window["localforage_store"]
+        .setItem("shoppingChecked", allKeys)
+        .then(() => {
+          setShoppingChecked(new Set(allKeys));
+        });
+      console.log(allKeys);
+    }
+  }, [allSSwitchesOn]);
 
   const handleDeleteRow = (e: string) => {
     const id = parseInt(e);

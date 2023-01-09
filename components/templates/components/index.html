@@ -147,17 +147,18 @@
 
         window.onload = window.onload.extend_function_definition(function() {
           window.username = "{{ request.user.username }}";
-          var store = localforage.createInstance({
-            name: window.username
-          });
-          window["localforage_store"] = store
+          window["localforage_store"] = localforage.createInstance({
+              name: window.username
+          })
           var elements = document.querySelectorAll('[id^="quantity_"]');
           (async () => {
-            var lookup_dict = await window["localforage_store"].getItem("components")
-            for (var input_element of elements) {
-              var elem_id = input_element.getAttribute("data-id");
-              input_element.value = lookup_dict[elem_id]["quantity"];
-            }
+            await window["localforage_store"].getItem("components").then(function(local_storage) {
+                for (var item of Object.keys(local_storage)) {
+                    var input = document.getElementById(`quantity_${item}`)
+                    console.log(input)
+                    input.value = local_storage[item]["quantity"]
+                }
+            })
           })();
           updateNumberInTab()
         });

@@ -7,6 +7,17 @@ from django.http import HttpResponse
 from user_profile.models import UserProfile
 import json
 
+def merge_shopping_lists(new_dict, old_dict):
+    new_dict = dict(new_dict)
+    old_dict = dict(old_dict)
+    for key, value in new_dict.items():
+        if key in old_dict:
+            old_dict[key]["quantity"] = old_dict[key]["quantity"] + new_dict[key]["quantity"]
+        else:
+            old_dict[key] = {}
+            old_dict[key]["quantity"] = new_dict[key]["quantity"]
+    return old_dict
+
 
 # Create your views here.
 @login_required()
@@ -40,30 +51,52 @@ def user_page(request, **kwargs):
 def addComponentsToShoppingList(request):
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        items_to_add = {key: value for key, value in body.items() if value["add_to_shopping_list"] == 'true'}
+        new_data = json.loads(body_unicode)
 
+        # If empty data is submitted, return 203
+        if not new_data.keys():
+            return HttpResponse(status=204)
+
+        # Make sure user is logged in
         if UserProfile.objects.filter(user=request.user).exists():
-            p = UserProfile.objects.get(user=request.user)
-            p.shopping_list_json = json.dumps(items_to_add)
-            p.save()
-        else:
-            print("error")
 
-    return HttpResponse(status=200)
+            # Get user's profile data
+            user_data = UserProfile.objects.get(user=request.user)
+
+            # If "user_data.shopping_list_json" is empty
+            if not isinstance(user_data.shopping_list_json, dict):
+                user_data.shopping_list_json = new_data
+                user_data.save()
+                return HttpResponse(status=200)
+
+            # Iterate over module ids (as well as the anonymous category) and merge sub dicts by adding quantities
+            for key, value in new_data.items():
+                print(key, value)
+                user_data.shopping_list_json[key] = merge_shopping_lists(new_data[key], user_data.shopping_list_json[key])
+
+            user_data.save()
+            return HttpResponse(status=200)
+
+        else:
+            # If user profile isn't found
+            return redirect('login')
+    else:
+        # If not a POST request
+        return HttpResponse(status=405)
 
 @login_required()
 def addComponentsToComponentInventoryList(request):
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        items_to_add = {key: value for key, value in body.items() if value["add_to_components_list"] == 'true'}
+        new_data = json.loads(body_unicode)
+        print(new_data)
 
         if UserProfile.objects.filter(user=request.user).exists():
-            p = UserProfile.objects.get(user=request.user)
-            p.component_inventory_json = json.dumps(items_to_add)
-            p.save()
+            user_data = UserProfile.objects.get(user=request.user)
+            user_data.component_inventory_json = new_data
+            user_data.save()
+            return HttpResponse(status=200)
         else:
-            print("error")
-
-    return HttpResponse(status=200)
+            return redirect('login')
+    else:
+        HttpResponse(status=405)

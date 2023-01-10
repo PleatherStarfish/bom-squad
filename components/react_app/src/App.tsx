@@ -1,6 +1,12 @@
 // @ts-ignore
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { preparedObjectForFetch, switchHandler, getID, setAllSwitches, clear_app_cache } from './utils/common'
+import {
+  preparedObjectForFetch,
+  switchHandler,
+  getID,
+  setAllSwitches,
+  clear_app_cache,
+} from "./utils/common";
 // @ts-ignore
 import {Button, Form, Offcanvas, OverlayTrigger, Tooltip,} from "react-bootstrap";
 import Row from "./components/Row";
@@ -57,6 +63,20 @@ const App = () => {
     })
   );
 
+  // An array of IDs representing the on/off state of the switches (if it's in the array it's "on")
+  const [componentsChecked, setComponentsChecked] = useState(new Set([]));
+  const [shoppingChecked, setShoppingChecked] = useState(new Set([]));
+
+  // A boolean representing the state of the two "meta" switches at the top of the columns
+  const [allCSwitchesOn, setAllCSwitchesOn] = useState(false);
+  const [allSSwitchesOn, setAllSSwitchesOn] = useState(false);
+
+  const [confirmDeleteShow, setConfirmDeleteShow] = useState(false);
+  const [deleteID, setDeleteID] = useState(null);
+
+  // {"location": ["text": ""}, etc.], "remainder": ""}
+  const [location, setLocation] = useState({});
+
   const getComponents = async () => {
     const csrftoken = Cookies.get("csrftoken");
     const settings = {
@@ -74,20 +94,6 @@ const App = () => {
       return e;
     }
   };
-
-  // An array of IDs representing the on/off state of the switches (if it's in the array it's "on")
-  const [componentsChecked, setComponentsChecked] = useState(new Set([]));
-  const [shoppingChecked, setShoppingChecked] = useState(new Set([]));
-
-  // A boolean representing the state of the two "meta" switches at the top of the columns
-  const [allCSwitchesOn, setAllCSwitchesOn] = useState(false);
-  const [allSSwitchesOn, setAllSSwitchesOn] = useState(false);
-
-  const [confirmDeleteShow, setConfirmDeleteShow] = useState(false);
-  const [deleteID, setDeleteID] = useState(null);
-
-  // {"location": ["text": ""}, etc.], "remainder": ""}
-  const [location, setLocation] = useState({});
 
   const { data: compData, isLoading: compIsLoading } = useQuery(
     ["componentsInfo"],
@@ -112,18 +118,31 @@ const App = () => {
       .catch((err) => {
         console.log(err);
       });
+    try {
+      window["localforage_store"]
+        .getItem("componentsChecked")
+        .then((checked) => {
+          setComponentsChecked(new Set(checked));
+        });
+    } catch {
+      console.log("No componentsChecked in local storage");
+    }
 
-    window["localforage_store"].getItem("componentsChecked").then((checked) => {
-      setComponentsChecked(new Set(checked));
-    });
+    try {
+      window["localforage_store"].getItem("shoppingChecked").then((checked) => {
+        setShoppingChecked(new Set(checked));
+      });
+    } catch {
+      console.log("No shoppingChecked in local storage");
+    }
 
-    window["localforage_store"].getItem("shoppingChecked").then((checked) => {
-      setShoppingChecked(new Set(checked));
-    });
-
-    window["localforage_store"].getItem("locations").then((value) => {
-      setLocation(value);
-    });
+    try {
+      window["localforage_store"].getItem("locations").then((value) => {
+        setLocation(value);
+      });
+    } catch {
+      console.log("No locations in local storage");
+    }
 
     setShow(!show);
   };
@@ -137,7 +156,7 @@ const App = () => {
   // Handle click on Add Selection to List button
   const addSelectionToList = () => {
     if (typeof componentsAppState !== "object") {
-      return
+      return;
     }
 
     const csrftoken = Cookies.get("csrftoken");
@@ -204,7 +223,17 @@ const App = () => {
 
     // If all requests are successful, reset app state
     if (response_success) {
-      // clear_app_cache()
+      clear_app_cache(
+        componentsAppState,
+        setComponentsAppState,
+        setComponentLocalStorage,
+        setComponentsChecked,
+        setShoppingChecked,
+        setAllCSwitchesOn,
+        setAllSSwitchesOn,
+        setLocation,
+        window["localforage_store"]
+      );
     }
   };
 
@@ -411,7 +440,7 @@ const App = () => {
   }, [compData]);
 
   useEffect(() => {
-    if (Object.keys(location).length > 0) {
+    if (location && Object.keys(location).length > 0) {
       window["localforage_store"].setItem("locations", location);
     }
   }, [location]);
@@ -444,22 +473,24 @@ const App = () => {
     0
   );
 
-  const rows = Object.keys(componentsAppState).map((value, index) => (
-    <Row
-      key={`${value}_${index}`}
-      componentsData={componentsAppState}
-      value={value}
-      componentsChecked={componentsChecked}
-      shoppingChecked={shoppingChecked}
-      handleSwitchesChange={handleSwitchesChange}
-      handleConfirmDeleteModelShow={handleConfirmDeleteModelShow}
-      handleQuantityChange={handleQuantityChange}
-      location={location}
-      handleLocationChange={handleLocationChange}
-      handleLocationBubbleDelete={handleLocationBubbleDelete}
-      colorList={colorList}
-    />
-  ));
+  const rows = Object.keys(componentsAppState).map((value, index) => {
+    return (
+      <Row
+        key={`${value}_${index}`}
+        componentsData={componentsAppState}
+        value={value}
+        componentsChecked={componentsChecked}
+        shoppingChecked={shoppingChecked}
+        handleSwitchesChange={handleSwitchesChange}
+        handleConfirmDeleteModelShow={handleConfirmDeleteModelShow}
+        handleQuantityChange={handleQuantityChange}
+        location={location || {}}
+        handleLocationChange={handleLocationChange}
+        handleLocationBubbleDelete={handleLocationBubbleDelete}
+        colorList={colorList}
+      />
+    );
+  });
 
   return (
     <>
@@ -553,6 +584,30 @@ const App = () => {
               </svg>
             </Button>
           </OverlayTrigger>
+          <Button
+            variant="outline-primary"
+            className={"offcanvas__buttons"}
+            onClick={() => clear_app_cache(
+              componentsAppState,
+              setComponentsAppState,
+              setComponentLocalStorage,
+              setComponentsChecked,
+              setShoppingChecked,
+              setAllCSwitchesOn,
+              setAllSSwitchesOn,
+              setLocation,
+              window["localforage_store"]
+            )}
+            style={{
+              padding: ".375rem .575rem",
+              border: "1px #528c69 solid",
+              marginRight: "1%",
+              color: "white",
+            }}
+            active
+          >
+            Clear
+          </Button>
           {componentsChecked.size || shoppingChecked.size ? (
             <Button
               variant="outline-primary"
@@ -672,5 +727,5 @@ const App = () => {
       </Offcanvas>
     </>
   );
-}
+};
 export default App;

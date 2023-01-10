@@ -31,10 +31,38 @@ export const preparedObjectForFetch = (
   return returnObject;
 };
 
-export const clear_app_cache = (setComponentsAppState, setComponentLocalStorage) => {
-  setComponentsAppState({})
-  setComponentLocalStorage([])
-}
+export const clear_app_cache = (
+  componentsAppState,
+  setComponentsAppState,
+  setComponentLocalStorage,
+  setComponentsChecked,
+  setShoppingChecked,
+  setAllCSwitchesOn,
+  setAllSSwitchesOn,
+  setLocation,
+  localforage
+) => {
+  localforage
+    .clear()
+    .then(() => {
+      Object.keys(componentsAppState).forEach((id) => {
+          const elements = document.getElementById(
+          `quantity_${id}`
+        ) as HTMLInputElement;
+        elements.value = null;
+      })
+      setComponentsAppState({});
+      setComponentLocalStorage([]);
+      setComponentsChecked(new Set([]));
+      setShoppingChecked(new Set([]));
+      setAllCSwitchesOn(false);
+      setAllSSwitchesOn(false);
+      setLocation({});
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 export const setAllSwitches = (
   appState,
@@ -75,5 +103,5 @@ export const switchHandler = (
   }
 };
 
-export const getID = (e: { target: { id: string } }) => e.target.id.split("_")[1];
-
+export const getID = (e: { target: { id: string } }) =>
+  e.target.id.split("_")[1];

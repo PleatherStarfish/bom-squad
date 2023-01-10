@@ -53,9 +53,7 @@ const App = () => {
   const [componentsAppState, setComponentsAppState] = useState<
     ComponentDataType | {}
   >({});
-  const [componentLocalStorage, setComponentLocalStorage] = useState<
-    number[] | []
-  >([]);
+  const [componentLocalStorage, setComponentLocalStorage] = useState({});
 
   const [colorList] = useState(
     [...Array(20)].map(() => {
@@ -113,7 +111,9 @@ const App = () => {
     window["localforage_store"]
       .getItem("components")
       .then((value) => {
-        setComponentLocalStorage(value);
+        if (value) {
+          setComponentLocalStorage(value);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -467,11 +467,13 @@ const App = () => {
     );
   }, [allSSwitchesOn]);
 
-  const totalQuantityToAdd = Object.keys(componentLocalStorage).reduce(
-    (accumulator, currentValue) =>
-      accumulator + componentLocalStorage[currentValue]["quantity"],
-    0
-  );
+  const totalQuantityToAdd = () => {
+    return (componentLocalStorage || Object.keys(componentLocalStorage).length > 0) ? (Object.keys(componentLocalStorage).reduce(
+        (accumulator, currentValue) =>
+            accumulator + componentLocalStorage[currentValue]["quantity"],
+        0
+    )) : 0
+  };
 
   const rows = Object.keys(componentsAppState).map((value, index) => {
     return (
@@ -509,7 +511,7 @@ const App = () => {
       >
         Components to Add [
         <span id="components-quantity-tab-number">
-          {totalQuantityToAdd || 0}
+          {totalQuantityToAdd()}
         </span>
         ]
         <span className="components__offcanvas-svg">

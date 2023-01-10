@@ -52,7 +52,7 @@ export const clear_app_cache = (
         elements.value = null;
       })
       setComponentsAppState({});
-      setComponentLocalStorage([]);
+      setComponentLocalStorage({});
       setComponentsChecked(new Set([]));
       setShoppingChecked(new Set([]));
       setAllCSwitchesOn(false);

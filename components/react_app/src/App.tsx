@@ -5,7 +5,7 @@ import {
   switchHandler,
   getID,
   setAllSwitches,
-  clear_app_cache,
+  clearAppCache,
 } from "./utils/common";
 // @ts-ignore
 import {Button, Form, Offcanvas, OverlayTrigger, Tooltip,} from "react-bootstrap";
@@ -223,7 +223,7 @@ const App = () => {
 
     // If all requests are successful, reset app state
     if (response_success) {
-      clear_app_cache(
+      clearAppCache(
         componentsAppState,
         setComponentsAppState,
         setComponentLocalStorage,
@@ -367,6 +367,7 @@ const App = () => {
 
   const handleLocationChange = (e: { target: any }) => {
     const id = getID(e);
+    console.log(id)
     const value = e.target.value;
 
     if (value === ",") {
@@ -406,18 +407,24 @@ const App = () => {
         });
       }
     } else {
-      setLocation((prev) => {
-        // @ts-ignore
-        return {
-          ...prev,
-          [id]: {
-            location: prev[id] ? prev[id]["location"] : [],
-            remainder: value,
-          },
-        };
-      });
+      if (location) {
+        setLocation((prev) => {
+          // @ts-ignore
+          return {
+            ...prev,
+            [id]: {
+              location: prev[id] ? prev[id]["location"] : [],
+              remainder: value,
+            },
+          };
+        });
+      } else {
+        setLocation({[id]: {location: [], remainder: value}})
+      }
     }
   };
+
+  useEffect(() => console.log(location), [location])
 
   const handleLocationBubbleDelete = (e: { target: { id: string } }) => {
     const row_id = e.target.id.split("_")[1];
@@ -440,8 +447,12 @@ const App = () => {
   }, [compData]);
 
   useEffect(() => {
-    if (location && Object.keys(location).length > 0) {
-      window["localforage_store"].setItem("locations", location);
+    try {
+      if (location && Object.keys(location).length > 0) {
+        window["localforage_store"].setItem("locations", location);
+      }
+    } catch {
+      setLocation({})
     }
   }, [location]);
 
@@ -589,7 +600,7 @@ const App = () => {
           <Button
             variant="outline-primary"
             className={"offcanvas__buttons"}
-            onClick={() => clear_app_cache(
+            onClick={() => clearAppCache(
               componentsAppState,
               setComponentsAppState,
               setComponentLocalStorage,

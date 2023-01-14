@@ -8,30 +8,39 @@ export const getTotalPrice = (number: string, price: string) => {
   return `${currency}${(floatPrice * quant).toFixed(2)}`;
 };
 
-export const preparedObjectForFetch = (
-  componentsAppState,
-  checked,
-  location,
-  type: "inventory" | "shopping"
-) => {
-  const returnObject = {};
+interface PreparedObject {
+  [key: string]: {
+    quantity: number;
+    location?: string;
+  };
+}
 
+export const preparedObjectForFetch = (
+  componentsAppState: any,
+  checked: Set<string> | null,
+  location: any,
+  type: "inventory" | "shopping"
+): PreparedObject => {
+  if (!componentsAppState || !checked) {
+    return {};
+  }
+
+  const returnObject: PreparedObject = {};
   Object.keys(componentsAppState)
-    .filter((item) => checked.has(item))
-    .forEach(
-      (item) =>
-        (returnObject[item] =
-          type === "inventory"
-            ? {
-                quantity: componentsAppState[item]["quantity"],
-                location: location[item]["location"],
-              }
-            : { quantity: componentsAppState[item]["quantity"] })
-    );
+    .filter((item) => checked?.has(item))
+    .forEach((item) => {
+      returnObject[item] =
+        type === "inventory"
+          ? {
+              quantity: componentsAppState[item]?.quantity || 0,
+              location: location?.[item]?.location,
+            }
+          : { quantity: componentsAppState[item]?.quantity || 0 };
+    });
   return returnObject;
 };
 
-export const clear_app_cache = (
+export const clearAppCache = async (
   componentsAppState,
   setComponentsAppState,
   setComponentLocalStorage,
@@ -42,65 +51,44 @@ export const clear_app_cache = (
   setLocation,
   localforage
 ) => {
-  localforage
-    .clear()
-    .then(() => {
-      Object.keys(componentsAppState).forEach((id) => {
-          const elements = document.getElementById(
-          `quantity_${id}`
-        ) as HTMLInputElement;
-        elements.value = null;
-      })
-      setComponentsAppState({});
-      setComponentLocalStorage({});
-      setComponentsChecked(new Set([]));
-      setShoppingChecked(new Set([]));
-      setAllCSwitchesOn(false);
-      setAllSSwitchesOn(false);
-      setLocation({});
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-export const setAllSwitches = (
-  appState,
-  switchesOn,
-  setChecked,
-  localKey,
-  localforageStore
-) => {
-  if (Object.keys(appState).length) {
-    if (switchesOn) {
-      const newShoppingChecked = [...Object.keys(appState)];
-      localforageStore.setItem(localKey, newShoppingChecked).then(() => {
-        setChecked(new Set(newShoppingChecked));
-      });
-    } else {
-      localforageStore.setItem(localKey, []).then(() => {
-        setChecked(new Set([]));
-      });
+    try {
+        await localforage.clear();
+        Object.keys(componentsAppState).forEach((id) => {
+            const element = document.getElementById(`quantity_${id}`);
+            if(element) { // @ts-ignore
+                element.value = null;
+            }
+        });
+        setComponentsAppState({});
+        setComponentLocalStorage({});
+        setComponentsChecked(new Set([]));
+        setShoppingChecked(new Set([]));
+        setAllCSwitchesOn(false);
+        setAllSSwitchesOn(false);
+        setLocation({});
+    } catch (err) {
+        console.log(err);
     }
-  }
 };
 
-export const switchHandler = (
-  array: Set<any>,
-  value: any,
-  setter: {
-    (value: React.SetStateAction<Set<any>>): void;
-    (value: React.SetStateAction<Set<any>>): void;
-    (arg0: { (prev: any): Set<any>; (prev: any): Set<any> }): void;
-  }
-) => {
-  if (array.has(value)) {
-    // Remove from set
-    setter((prev) => new Set([...prev].filter((x) => x !== value)));
-  } else {
-    // Add to set
-    setter((prev) => new Set([...prev, value]));
-  }
+export const setAllSwitches = (appState, switchesOn, setChecked, localKey, localforageStore) => {
+    if (Object.keys(appState).length) {
+        localforageStore.setItem(localKey, switchesOn ? Object.keys(appState) : []).then(() => {
+            setChecked(new Set(switchesOn ? Object.keys(appState) : []));
+        });
+    }
+};
+
+export const switchHandler = (array, value, setter) => {
+    setter(prev => {
+        const newArray = new Set(prev);
+        if (array.has(value)) {
+            newArray.delete(value);
+        } else {
+            newArray.add(value);
+        }
+        return newArray;
+    });
 };
 
 export const getID = (e: { target: { id: string } }) =>

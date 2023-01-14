@@ -43,14 +43,14 @@ class UserProfile(models.Model):
 class UserProfileComponentInventoryData(models.Model):
     component = models.ForeignKey(Component, null=True, on_delete=models.SET_NULL)
     profile = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL)
-    number = models.PositiveIntegerField(default=0, blank=False)
-    location = models.JSONField(blank=True)
+    quantity = models.PositiveIntegerField(default=0, blank=False)
+    location = models.JSONField(null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "User Component Inventory"
 
     def __str__(self):
-        return f'[ {self.profile} ] - {self.component}'
+        return f'[ {self.profile} ] - [ {self.location} ] - {self.component}'
 
 # Allows users to add modules to a named list
 # All modules are also in a default "all" list which is just

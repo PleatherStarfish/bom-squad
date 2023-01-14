@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
-{% load gravatar %}
-{% load custom_tags %}
+{% load gravatar zip_lists custom_tags %}
 
 {% block content %}
     <div class="row" style="margin-top: 5vh;">
@@ -21,7 +20,8 @@
         </div>
         <nav class="user-page-nav">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link active" id="built-modules-tab" data-bs-toggle="tab" data-bs-target="#built-modules"
+                <button class="nav-link active" id="built-modules-tab" data-bs-toggle="tab"
+                        data-bs-target="#built-modules"
                         type="button" role="tab" aria-controls="built-modules" aria-selected="true">Built
                 </button>
                 <button class="nav-link" id="want-to-build-tab" data-bs-toggle="tab" data-bs-target="#want-to-build"
@@ -36,12 +36,14 @@
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="built-modules" role="tabpanel" aria-labelledby="built-modules-tab">
+            <div class="tab-pane fade show active" id="built-modules" role="tabpanel"
+                 aria-labelledby="built-modules-tab">
                 <div class="container py-5 px-0">
                     {% if current_user.built_modules.all %}
                         {% include "users/profile_tabs/built-modules.html" %}
                     {% else %}
-                        <div class="alert alert-warning" role="alert">There are no modules in your Built Modules list.</div>
+                        <div class="alert alert-warning" role="alert">There are no modules in your Built Modules list.
+                        </div>
                     {% endif %}
                 </div>
             </div>
@@ -54,15 +56,53 @@
                             {% endfor %}
                         </div>
                     {% else %}
-                        <div class="alert alert-warning" role="alert">There are no modules in your Want to Build list.</div>
+                        <div class="alert alert-warning" role="alert">There are no modules in your Want to Build list.
+                        </div>
                     {% endif %}
                 </div>
             </div>
             <div class="tab-pane fade" id="inventory" role="tabpanel" aria-labelledby="inventory-tab">
-                <div class="container py-5 px-0">
-                    <div class="alert alert-warning" role="alert">
-                        Go to the <a href="{% url 'components' %}">Components page</a> to add components to your personal inventory.
-                    </div>
+
+                <div class="container py-5 px-0 d-flex flex-column">
+
+                    {% if zipped_data %}
+                        <div class="d-flex justify-content-between">
+                            <h2 class="display-4">Components Inventory</h2>
+                            <span class="align-self-center"><a href="{% url 'export_inventory_data_csv' %}"
+                                                               class="btn btn-primary text-white float-end">Download CSV</a></span>
+                        </div>
+                        <div class="py-5 px-0">
+                            <form>
+                                {% csrf_token %}
+                                <input type="hidden" id="csrftoken" value="{{ csrf_token }}">
+                                <table class="table sortable">
+                                    <thead>
+                                    <tr>
+                                        <th>Component</th>
+                                        <th>Quantity</th>
+                                        <th>Location</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="inventory-table-body">
+                                        {% for item in zipped_data %}
+                                            <tr>
+                                                <td>{{ item.1.component.description }}</td>
+                                                <td ondblclick="editQuantity(this)"
+                                                    data-id="{{ item.1.id }}">{{ item.1.quantity }}</td>
+                                                <td ondblclick="editLocation(this)"
+                                                    data-id="{{ item.1.id }}">{{ item.0 }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning" role="alert">
+                            Go to the <a href="{% url 'components' %}">Components page</a> to add components to your
+                            personal inventory.
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="tab-pane fade" id="shopping-list" role="tabpanel" aria-labelledby="shopping-list-tab">
@@ -77,4 +117,66 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        document.querySelector("#download-csv-btn").addEventListener("click", function () {
+            var link = document.createElement("a");
+            link.href = "{% url 'export_inventory_data_csv' %}";
+            link.download = "inventory_data.csv";
+            link.target = "_blank";
+            link.click();
+            console.log("CSV download started");
+        });
+
+        function updateInventory(itemId, newValue, field) {
+            const data = {id: itemId, value: newValue, field: field};
+            fetch("{% url 'update_inventory' %}", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": document.getElementById("csrftoken").value
+                },
+                body: JSON.stringify(data),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log("Success:", data);
+                    // Get the input element
+                    const input = document.querySelector(`input[data-id="${id}"]`);
+                    // Get the parent td element
+                    const td = input.parentElement;
+                    // Set the innerHTML of the td to the new value
+                    td.innerHTML = value;
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+        }
+
+        function editQuantity(element) {
+            var itemId = element.getAttribute("data-id");
+            var currentValue = element.innerHTML;
+            element.innerHTML = "<input type='text' value='" + currentValue + "' onblur='saveQuantity(" + itemId + ", this)'>";
+        }
+
+        function editLocation(element) {
+            var itemId = element.getAttribute("data-id");
+            var currentValue = element.innerHTML;
+            element.innerHTML = "<input type='text' value='" + currentValue + "' onblur='saveLocation(" + itemId + ", this)'>";
+        }
+
+        function saveQuantity(itemId, element) {
+            var newValue = element.value;
+            updateInventory(itemId, newValue, 'quantity');
+            element.parentElement.innerHTML = newValue;
+        }
+
+        function saveLocation(itemId, element) {
+            var newValue = element.value;
+            updateInventory(itemId, newValue, 'location');
+            element.parentElement.innerHTML = newValue;
+        }
+    </script>
 {% endblock %}

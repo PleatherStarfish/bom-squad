@@ -13,20 +13,20 @@
 
                                     <h1 class="fw-bold m-4 text-uppercase">Login</h1>
 
-                                    {% for message in messages %}
-                                        <div class="alert alert-danger" role="alert">{{ message }}</div>
-                                    {% endfor %}
+                                    {% if messages %}
+                                        <div class="alert alert-danger" role="alert">{{ messages }}</div>
+                                    {% endif %}
 
                                     <form method="POST" action="{% url 'login' %}">
                                         {% csrf_token %}
                                         <div class="form-outline form-white mb-4">
                                             <label class="form-label" for="username-field">Email</label>
-                                            <input type="text" id="username-field" class="form-control" placeholder="Enter Username" name="username">
+                                            <input type="text" id="username-field" class="form-control" placeholder="Enter email" name="username">
                                         </div>
 
                                         <div class="form-outline form-white mb-4">
                                             <label class="form-label" for="password-field">Password</label>
-                                            <input type="password" id="password-field" class="form-control" placeholder="Enter Password" name="password">
+                                            <input type="password" id="password-field" class="form-control" placeholder="Enter password" name="password">
                                         </div>
 
                                         <button class="btn btn-outline-dark btn-lg px-5" type="submit" style="margin-top: 3vh;">Login</button>

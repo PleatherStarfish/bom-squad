@@ -98,4 +98,12 @@
     margin-bottom: 18px;
 }
 
+.sortable th.indicator-left::after {
+  content: '';
+}
+.sortable th.indicator-left::before {
+  margin-right: 3px;
+  content: '▸';
+}
+
 @import "node_modules/bootstrap/scss/bootstrap";

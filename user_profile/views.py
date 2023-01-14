@@ -1,48 +1,24 @@
 from django.shortcuts import render, redirect
 from user_profile.models import UserProfile, UserProfileShoppingListData, Module, UserProfileComponentInventoryData
+from components.models import Component
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django_gravatar.helpers import get_gravatar_url, has_gravatar, get_gravatar_profile_url, calculate_gravatar_hash
 from django.http import HttpResponse
 from user_profile.models import UserProfile
+from django.core import serializers
+from django.http import HttpResponse, JsonResponse
 import collections
+from django import template
+from django.db.models import JSONField
 import json
 
 identical_lists = lambda x, y: collections.Counter(x) == collections.Counter(y)
 
 def merge_shopping_lists(new_dict, old_dict):
-    new_dict = dict(new_dict)
-    old_dict = dict(old_dict)
     for key, value in new_dict.items():
-        if key in old_dict:
-            old_dict[key]["quantity"] = old_dict[key]["quantity"] + new_dict[key]["quantity"]
-        else:
-            old_dict[key] = {}
-            old_dict[key]["quantity"] = new_dict[key]["quantity"]
-    return old_dict
-
-# def merge_inventory_lists(new_dict, old_dict):
-#     new_dict = dict(new_dict)
-#     old_dict = dict(old_dict)
-#     for key, value in new_dict.items():
-#         old_quantity = old_dict[key]["quantity"]
-#         old_location = old_dict[key]["location"]
-#         new_quantity = new_dict[key]["quantity"]
-#         new_location = new_dict[key]["location"]
-#
-#         if key in old_dict:
-#             if isinstance(old_dict[key], list):
-#                 pass
-#             else:
-#                 old_dict[key]["quantity"] = old_quantity + new_quantity
-#         else:
-#             old_dict[key] = {}
-#             old_dict[key]["quantity"] = new_dict[key]["quantity"]
-#             old_dict[key]["location"] = new_dict[key]["location"]
-#
-#     return old_dict
-
-
+        old_dict[key] = old_dict.get(key, {"quantity": 0})
+        old_dict[key]["quantity"] += value["quantity"]
 
 # Create your views here.
 @login_required()
@@ -62,15 +38,21 @@ def user_page(request, **kwargs):
 
     gravatar_exists = has_gravatar(user_email)
 
-    return render(request, 'users/index.html', {
+    inventory = UserProfileComponentInventoryData.objects.all()
+    location_strings = [json.dumps(item.location).replace('"', '').replace('[', '').replace(']', '').replace(',', ' \u2794') for item in inventory]
+    zipped_data = zip(location_strings, inventory)
+    context = {
         'current_user': current_user,
+        'zipped_data': zipped_data,
         'built': built,
         'to_build': to_build,
         'shopping_list_modules': shopping_list_modules,
         'user_email': user_email,
         'gravatar_exists': gravatar_exists,
         'username': username,
-    })
+    }
+
+    return render(request, 'users/index.html', context)
 
 @login_required()
 def addComponentsToShoppingList(request):
@@ -150,3 +132,80 @@ def addComponentsToComponentInventoryList(request):
     else:
         # If not a POST request
         return HttpResponse(status=405)
+
+
+import csv
+from django.http import HttpResponse
+
+def export_inventory_data_csv(request):
+    inventory_data = UserProfileComponentInventoryData.objects.prefetch_related('component').values(
+        'component__description',
+        'quantity',
+        'location'
+    )
+    new_data = []
+    for data in inventory_data:
+        if data['location']:
+            for location in data['location']:
+                new_data.append({
+                    'component__description': data['component__description'],
+                    'quantity': data['quantity'],
+                    'location': location
+                })
+        else:
+            new_data.append({
+                'component__description': data['component__description'],
+                'quantity': data['quantity'],
+                'location': None
+            })
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="inventory_data.csv"'
+
+    writer = csv.DictWriter(response, fieldnames=['component__description','quantity','location'])
+    writer.writeheader()
+    for item in new_data:
+        writer.writerow(item)
+
+    return response
+@login_required()
+def update_inventory(request):
+    if request.method == 'PUT':
+
+        # Get data from the PUT request body
+        data = json.loads(request.body)
+
+        # Get the id of the inventory item to update
+        id = data['id']
+
+        # Get the new value for the field that needs to be updated
+        new_value = data['value']
+
+        # Get the field that needs to be updated
+        field = data.get('field')
+
+        try:
+            # Get the user profile of the logged in user
+            user_profile = UserProfile.objects.get(user=request.user)
+
+            # Get the inventory item that needs to be updated
+            user_profile_component_inventory_data = UserProfileComponentInventoryData.objects.get(id=id, profile=user_profile)
+
+            # Check if the logged in user is authorized to update this inventory
+            if request.user.id != user_profile_component_inventory_data.profile.user.id:
+                return JsonResponse({'error': 'You are not authorized to update this inventory'}, status=401)
+
+            # Update the quantity field if the field is 'quantity'
+            if field == 'quantity':
+                user_profile_component_inventory_data.quantity = new_value
+
+            # Update the location field if the field is 'location'
+            elif field == 'location':
+                user_profile_component_inventory_data.location = new_value
+
+            # Save the updated inventory item
+            user_profile_component_inventory_data.save()
+            return JsonResponse({'success': 'Inventory updated successfully'}, status=200)
+        except UserProfileComponentInventoryData.DoesNotExist:
+            return JsonResponse({'error': 'Inventory not found'}, status=404)
+        except UserProfileComponentInventoryData.DoesNotExist:
+            return JsonResponse({'status': 'error'})

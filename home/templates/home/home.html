@@ -41,15 +41,11 @@
                                                     <div class="card-body">
                                                         <div class="d-flex justify-content-between w-100">
                                                             <div>
-                                                                {% if not module.version or module.version == '0' or module.version == '1' %}
-                                                                    <h2 class="card-title">
-                                                                        <a class="module-list__card-title-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }}</a>
-                                                                    </h2>
-                                                                {% else %}
-                                                                    <h2 class="card-title">
-                                                                        <a class="module-list__card-title-link" href="{% url 'modules:ModuleDetail' module.slug %}">{{ module.name }} (v{{ module.version }})</a>
-                                                                    </h2>
-                                                                {% endif %}
+                                                                <h2 class="card-title">
+                                                                    <a class="module-list__card-title-link" href="{% url 'modules:ModuleDetail' module.slug %}">
+                                                                        {{ module.name }} {% if module.version and module.version != '0' and module.version != '1' %}(v{{ module.version }}) {% endif %}
+                                                                    </a>
+                                                                </h2>
                                                             </div>
                                                             <div class="text-nowrap d-flex justify-content-between" style="width: 100px;">
                                                                 {% if built and module in built %}
@@ -80,6 +76,8 @@
                                             </div>
                                         </div>
                                     </li>
+                                {% empty %}
+                                    <li>No modules found.</li>
                                 {% endfor %}
                             {% endif %}
                         </ul>

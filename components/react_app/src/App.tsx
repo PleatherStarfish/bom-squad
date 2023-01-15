@@ -105,47 +105,26 @@ const App = () => {
   const handleExtended = () => setExtended(!extended);
 
   // Handle a click on the main button that expands the offcanvas div
-  const handleOffCanvasButtonClick = () => {
+  const handleOffCanvasButtonClick = async () => {
     const username = window.username;
-
-    window["localforage_store"]
-      .getItem("components")
-      .then((value) => {
-        if (value) {
-          setComponentLocalStorage(value);
+    try {
+        const components = await window["localforage_store"].getItem("components");
+        if (components) {
+            setComponentLocalStorage(components);
         }
-      })
-      .catch((err) => {
+        const componentsChecked = await window["localforage_store"].getItem("componentsChecked");
+        setComponentsChecked(new Set(componentsChecked));
+
+        const shoppingChecked = await window["localforage_store"].getItem("shoppingChecked");
+        setShoppingChecked(new Set(shoppingChecked));
+
+        const location = await window["localforage_store"].getItem("locations");
+        setLocation(location);
+    } catch (err) {
         console.log(err);
-      });
-    try {
-      window["localforage_store"]
-        .getItem("componentsChecked")
-        .then((checked) => {
-          setComponentsChecked(new Set(checked));
-        });
-    } catch {
-      console.log("No componentsChecked in local storage");
     }
-
-    try {
-      window["localforage_store"].getItem("shoppingChecked").then((checked) => {
-        setShoppingChecked(new Set(checked));
-      });
-    } catch {
-      console.log("No shoppingChecked in local storage");
-    }
-
-    try {
-      window["localforage_store"].getItem("locations").then((value) => {
-        setLocation(value);
-      });
-    } catch {
-      console.log("No locations in local storage");
-    }
-
     setShow(!show);
-  };
+};
 
   // Open popup to confirm delete
   const handleConfirmDeleteModelShow = (e) => {

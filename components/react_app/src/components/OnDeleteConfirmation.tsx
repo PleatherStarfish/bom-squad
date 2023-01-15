@@ -10,41 +10,64 @@ interface OnDeleteConfirmationTypes {
   handleDeleteRow: (arg0: any) => void;
 }
 
-const OnDeleteConfirmation = ({
-  confirmDeleteShow,
-  handleConfirmDeleteModelClose,
-  componentsAppState,
-  deleteID,
-  handleDeleteRow,
-}: OnDeleteConfirmationTypes) => {
+interface ComponentsAppState {
+  [key: string]: {
+    supplier_short_name: string;
+    item_no: string;
+  }
+}
+
+interface OnDeleteConfirmationProps {
+  confirmDeleteShow: boolean;
+  handleConfirmDeleteModelClose: () => void;
+  componentsAppState: ComponentsAppState;
+  deleteID: string;
+  handleDeleteRow: (deleteId: string) => void;
+}
+
+const ModalBody = ({ componentsAppState, deleteID }: OnDeleteConfirmationProps) => {
+  return (
+    <>
+      Do you really want to delete{" "}
+      {componentsAppState[deleteID]["supplier_short_name"]}{" "}
+      {componentsAppState[deleteID]["item_no"]}?
+    </>
+  );
+};
+
+const ModalFooter = ({ handleConfirmDeleteModelClose, handleDeleteRow, deleteID }: OnDeleteConfirmationProps) => {
+  const handleDelete = React.useCallback(() => {
+    handleDeleteRow(deleteID);
+    handleConfirmDeleteModelClose();
+  }, [handleDeleteRow, deleteID, handleConfirmDeleteModelClose]);
+
+  return (
+    <>
+      <Button variant="secondary" onClick={handleConfirmDeleteModelClose}>
+        Close
+      </Button>
+      <Button variant="primary" onClick={handleDelete} style={{ color: "white" }}>
+        Delete
+      </Button>
+    </>
+  );
+};
+
+const OnDeleteConfirmation = (props: OnDeleteConfirmationProps) => {
   return (
     <Modal
-      show={confirmDeleteShow}
-      onHide={handleConfirmDeleteModelClose}
+      show={props.confirmDeleteShow}
+      onHide={props.handleConfirmDeleteModelClose}
       animation={true}
     >
       <Modal.Header closeButton>
         <Modal.Title>Are you sure?</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        Do you really want to delete{" "}
-        {componentsAppState[deleteID]["supplier_short_name"]}{" "}
-        {componentsAppState[deleteID]["item_no"]}?
+        <ModalBody {...props} />
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleConfirmDeleteModelClose}>
-          Close
-        </Button>
-        <Button
-          variant="primary"
-          onClick={() => {
-            handleDeleteRow(deleteID);
-            handleConfirmDeleteModelClose();
-          }}
-          style={{ color: "white" }}
-        >
-          Delete
-        </Button>
+        <ModalFooter {...props} />
       </Modal.Footer>
     </Modal>
   );

@@ -132,88 +132,74 @@
 {% endblock %}
 
 {% block scripts %}
-    <script>
-
-        function updateNumberInTab() {
-          var tabNumber = document.getElementById("components-quantity-tab-number");
-          window["localforage_store"].getItem("components").then(function(value) {
-            sum = 0;
-            for (key of Object.keys(value)) {
-              sum += value[key]["quantity"];
-            }
-            tabNumber.innerText = sum;
-          });
+<script>
+    function updateNumberInTab() {
+      var tabNumber = document.getElementById("components-quantity-tab-number");
+      window["localforage_store"].getItem("components").then(function(value) {
+        let sum = 0;
+        for (const key of Object.keys(value)) {
+          sum += value[key]["quantity"];
         }
+        tabNumber.innerText = sum;
+      });
+    }
 
-        window.onload = window.onload.extend_function_definition(function() {
-          window.username = "{{ request.user.username }}";
-          window["localforage_store"] = localforage.createInstance({
-              name: window.username
-          })
-          var elements = document.querySelectorAll('[id^="quantity_"]');
-          (async () => {
-            await window["localforage_store"].getItem("components").then(function(local_storage) {
-                for (var item of Object.keys(local_storage)) {
-                    var input = document.getElementById(`quantity_${item}`)
-                    console.log(input)
-                    input.value = local_storage[item]["quantity"]
-                }
-            })
-          })();
-          updateNumberInTab()
-        });
+    window.onload = function() {
+      window.username = "{{ request.user.username }}";
+      window["localforage_store"] = localforage.createInstance({
+          name: window.username
+      });
+      const elements = document.querySelectorAll('[id^="quantity_"]');
+      window["localforage_store"].getItem("components").then(function(local_storage) {
+        for (const item of Object.keys(local_storage)) {
+            const input = document.getElementById(`quantity_${item}`);
+            input.value = local_storage[item]["quantity"];
+        }
+      });
+      updateNumberInTab();
+    };
 
-        var tooltipTriggerList = [].slice.call(
-          document.querySelectorAll('[data-bs-toggle="tooltip"]')
-        );
-        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-          return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-        var DEBUG = true;
+    const tooltipTriggerList = [].slice.call(
+      document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    );
+    const tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+    const DEBUG = true;
 
-        function updateComponentQuantity(e) {
-          var componentIDNumber = e.target.id.split("_")[1];
-          var userEnteredQuantity = parseInt(
-            document.getElementById(e.target.id).value
-          );
-          window["localforage_store"].getItem("components")
-            .then(function(value) {
-              window["localforage_store"].setItem("components", {
-                  ...value,
-                  [componentIDNumber]: {
-                    "quantity": userEnteredQuantity
-                  }
-                })
-                .then(function() {
-                  updateNumberInTab();
-                })
-                .then(function() {
-                  if (DEBUG) {
-                    window["localforage_store"].iterate(function(value, key) {
-                      console.log([key, value]);
-                    });
-                  }
-                });
-            })
-            .catch(function(err) {
-              window["localforage_store"].setItem("components", {
-                [componentIDNumber]: {
-                  "quantity": userEnteredQuantity
-                }
-              });
-            });
-
+    function updateComponentQuantity(e) {
+      const componentIDNumber = e.target.id.split("_")[1];
+      const userEnteredQuantity = parseInt(
+        document.getElementById(e.target.id).value
+      );
+      window["localforage_store"].getItem("components")
+        .then(function(value) {
           window["localforage_store"].setItem("components", {
+              ...value,
               [componentIDNumber]: {
                 "quantity": userEnteredQuantity
               }
             })
             .then(function() {
               updateNumberInTab();
+            })
+            .then(function() {
+              if (DEBUG) {
+                window["localforage_store"].iterate(function(value, key) {
+                  console.log([key, value]);
+                });
+              }
             });
-        }
-    </script>
-
-    <script type="text/javascript" src="{% static "bundles/components_bundle.js" %}"></script>
+        })
+        .catch(function(err) {
+          window["localforage_store"].setItem("components", {
+            [componentIDNumber]: {
+              "quantity": userEnteredQuantity
+            }
+          });
+        });
+    }
+</script>
+<script type="text/javascript" src="{% static "bundles/components_bundle.js" %}"></script>
 
 {% endblock %}

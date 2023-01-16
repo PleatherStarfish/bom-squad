@@ -39,7 +39,7 @@ def user_page(request, **kwargs):
     gravatar_exists = has_gravatar(user_email)
 
     inventory = UserProfileComponentInventoryData.objects.all()
-    location_strings = [json.dumps(item.location).replace('"', '').replace('[', '').replace(']', '').replace(',', ' \u2794') for item in inventory]
+    location_strings = [json.dumps(item.location).replace('"', '').replace('[', '').replace(']', '') for item in inventory]
     zipped_data = zip(location_strings, inventory)
     context = {
         'current_user': current_user,

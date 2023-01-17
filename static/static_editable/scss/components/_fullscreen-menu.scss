@@ -1,0 +1,112 @@
+.fullscreen-menu__body-inner-flex {
+  width: 100%;
+  margin-top: 3vh;
+}
+
+#bootstrap-overrides .fullscreen-menu__container {
+  height: 100vh;
+  transition-duration: .5s;
+  background-color: #212529;
+}
+
+#bootstrap-overrides .fullscreen-menu__close-btn {
+  @extend .btn-close, .btn-close-white;
+  position: absolute;
+  background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='#{$btn-close-color}'><path d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/></svg>");
+  background-size: 12vw 12vw !important;
+  top: 2vw;
+  left: 2vw;
+  width: 12vw !important;
+  height: 12vw !important;
+  visibility: hidden;
+}
+
+#bootstrap-overrides .fullscreen-menu__close-btn > * {
+  width: 12vw !important;
+  height: 12vw !important;
+}
+
+#bootstrap-overrides .fullscreen-menu__close-btn:hover {
+  fill:red;
+}
+
+.fullscreen-menu__left {
+  width: 50vw;
+  border-right: 1px solid #64727e;
+}
+
+.fullscreen-menu__right {
+  list-style-type: none;
+  font-weight: 900;
+}
+
+.fullscreen-menu__item {
+  transform: rotateX(90deg);
+  transition: all .4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fullscreen-menu__item > a {
+  font-family: 'Roboto', sans-serif;
+  color: #64727e;
+  letter-spacing: 5px;
+  text-decoration: none;
+  transition: color .5s, letter-spacing 0.5s;
+}
+
+@include media-breakpoint-down(md) {
+  .fullscreen-menu__item > a {
+    font-size: 12vw;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .fullscreen-menu__item > a {
+    font-size: 12vh;
+  }
+}
+
+.fullscreen-menu__item > a:hover {
+  color: white;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  //font-size: calc(12vh + 5px);
+}
+
+.fullscreen-menu__item--rotate-in {
+  transform: rotateX(0deg);
+}
+
+#fullscreen-menu__item--outline {
+  opacity: 1;
+  text-shadow:
+   -2px -2px 0 #fff,
+    2px -2px 0 #fff,
+    -2px 2px 0 #fff,
+     2px 2px 0 #fff;
+}
+
+#fullscreen-menu__item--outline > a {
+  color: #212529;
+}
+
+#fullscreen-menu__item--outline > a:hover {
+  color: #fff;
+  letter-spacing: 0.08em;
+  //font-size: calc(12vh + 5px);
+}
+
+#fullscreen-menu__item--highlight > a {
+  color: #fff;
+}
+
+#fullscreen-menu__item--highlight > a:hover {
+  opacity: 1;
+  text-shadow:
+   -2px -2px 0 #fff,
+    2px -2px 0 #fff,
+    -2px 2px 0 #fff,
+     2px 2px 0 #fff;
+  color: #212529;
+  letter-spacing: 0.08em;
+  //font-size: calc(12vh + 5px);
+}

@@ -8,9 +8,13 @@ from django.http import HttpResponse
 from user_profile.models import UserProfile
 from django.core import serializers
 from django.http import HttpResponse, JsonResponse
+from rest_framework.decorators import api_view
 import collections
 from django import template
 from django.db.models import JSONField
+from user_profile.serializers import InventorySerializer
+
+from rest_framework.response import Response
 import json
 
 identical_lists = lambda x, y: collections.Counter(x) == collections.Counter(y)
@@ -53,6 +57,17 @@ def user_page(request, **kwargs):
     }
 
     return render(request, 'users/index.html', context)
+
+
+# @login_required()
+@api_view(['GET'])
+def user_inventory(request, **kwargs):
+    if request.method == 'GET':
+        # user = UserProfile.objects.get(user=request.user)
+        inventory = UserProfileComponentInventoryData.objects.all()
+        serializer = InventorySerializer(inventory, many=True)
+        zipped_data = [item['zipped_data'] for item in serializer.data]
+        return Response(zipped_data)
 
 @login_required()
 def addComponentsToShoppingList(request):

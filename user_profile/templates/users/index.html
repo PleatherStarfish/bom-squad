@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load gravatar zip_lists custom_tags %}
+{% load gravatar zip_lists custom_tags static %}
 
 {% block content %}
     <div class="row" style="margin-top: 5vh;">
@@ -71,6 +71,7 @@
                             <span class="align-self-center"><a href="{% url 'export_inventory_data_csv' %}"
                                                                class="btn btn-primary text-white float-end">Download CSV</a></span>
                         </div>
+                        <div id="svelte_root"></div>
                         <div id="show-hide-section">
                             <label>
                                 <input type="checkbox" id="chk-component" checked onchange="toggleColumn(this, 0)">
@@ -138,6 +139,7 @@
 {% endblock %}
 
 {% block scripts %}
+    {% comment %}
     <script>
 		document.querySelector("#download-csv-btn").addEventListener("click", function () {
 			var link = document.createElement("a");
@@ -211,4 +213,6 @@
             }
         }
     </script>
+    {% endcomment %}
+    <script type="text/javascript" src="{% static 'bundles/inventory_bundle.js' %}"></script>
 {% endblock %}

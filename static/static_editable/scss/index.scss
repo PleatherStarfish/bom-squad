@@ -1,0 +1,119 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+
+@import "abstracts/all";
+@import "components/all";
+@import "core/all";
+@import "layout/all";
+@import "pages/all";
+@import "sections/all";
+
+/* Card text in account */
+#bootstrap-overrides .description-wrapped > p {
+    width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* User page active tabs */
+#bootstrap-overrides .user-page-nav > div > button.active {
+    border-top: unset;
+    border-left: unset;
+    border-right: unset;
+    border-bottom: 5px solid #50AFCC;
+    border-radius: unset;
+    color: #50AFCC;
+}
+
+#bootstrap-overrides .user-page-nav > div > button:hover {
+    border-top: unset;
+    border-left: unset;
+    border-right: unset;
+    border-bottom: 5px solid #50AFCC;
+    border-radius: unset;
+    color: #50AFCC;
+}
+
+#bootstrap-overrides .user-page-nav > div > button {
+    color: #495057;
+    border: unset;
+}
+
+.nav-style {
+    background-color: #212529;
+    transition: background-color 2s cubic-bezier(0.85, 0, 0.15, 1)
+}
+
+.home-module-list {
+    margin: calc(10vh + 55px) 0 10vh 0;
+}
+
+#bootstrap-overrides .nav-item > a > button, #bootstrap-overrides .nav-item button {
+    color: #64727e;
+    /*font-weight: 600;*/
+    border: none;
+    font-size: 18px;
+}
+
+#bootstrap-overrides .nav-item > a > button:hover {
+    color: white;
+}
+
+#main-content-area {
+    padding-top: 70px;
+    min-height:calc(100vh - 351px)
+}
+
+#rc-anchor-container {
+    width: 300px;
+}
+
+.avatar > img {
+    border-radius: 50%;
+}
+
+.card-body.link-card-inner {
+    padding: 0.7rem 1rem;
+}
+
+.link-card-outer {
+    border: none;
+    background-color: #edeff2;
+}
+
+.link-card-outer:hover {
+    background-color: #d6dce1;
+}
+
+.link-card-inner {
+    font-family: 'Roboto', sans-serif;
+    color: #505050
+}
+
+.module-page-headers {
+    font-size: 26px;
+    margin-bottom: 18px;
+}
+
+.sortable th.indicator-left::after {
+  content: '';
+}
+.sortable th.indicator-left::before {
+  margin-right: 3px;
+  content: '▸';
+}
+
+#user-page-location:after, #user-page-quantity:after {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23d6d6d6' width='18px' height='18px'><path stroke-linecap='round' stroke-linejoin='round' d='M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10'/></svg>");
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top:0;
+    right: 0;
+}
+
+@import "node_modules/bootstrap/scss/bootstrap";

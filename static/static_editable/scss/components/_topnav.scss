@@ -1,0 +1,44 @@
+$navbar-toggler-border-radius: 2px;
+
+// Main navbar at the top of the page
+@include media-breakpoint-down(md) {
+  #topnav__main {
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  .topnav__mobile-dropdown {
+    padding-top: 7vh;
+  }
+}
+@include media-breakpoint-up(md) {
+  #topnav__main {
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  .topnav__last-item {
+    margin-left: 10px;
+  }
+}
+
+.topnav__dropdown-arrow button {
+  fill: #A2AAB1;
+  margin-right: 15px
+}
+
+.topnav__dropdown-arrow button:hover {
+  fill: #A2AAB1;
+  margin-right: 15px;
+}
+
+.topnav__button > b {
+  color: #A2AAB1;
+  font-size: 18px;
+  font-family: Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif !important;
+}
+
+.topnav__mobile-dropdown {
+  background-color: #212529;
+  width: 10vw;
+}

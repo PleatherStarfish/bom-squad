@@ -1,0 +1,82 @@
+$blue:    #1E90FF;
+//$indigo:  #6610f2;
+//$purple:  #6f42c1;
+$pink:    #FF00C0;
+//$red:     #dc3545;
+//$orange:  #fd7e14;
+$yellow:  #fada02;
+$green:   #538b69;
+//$teal:    #20c997;
+//$cyan:    #0dcaf0;
+$brown:   #c2b59b;
+
+
+$white:    #fff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+$black:    #000;
+
+$primary:   $green;
+$secondary: $gray-600;
+$success:   $blue;
+$info:      $brown;
+$warning:   $yellow;
+$danger:    $pink;
+$light:     $gray-100;
+$dark:      #212529;
+
+$theme-colors: (
+  "primary":    $primary,
+  "secondary":  $secondary,
+  "success":    $success,
+  "info":       $info,
+  "warning":    $warning,
+  "danger":     $danger,
+  "light":      $light,
+  "dark":       $dark
+);
+
+//$form-check-input-checked-bg-color: #528c69;
+//$form-check-input-checked-border-color: #528c69;
+//$component-active-color: #528c69;
+//$form-check-input-checked-color: #528c69;
+//
+//$form-check-input-indeterminate-color: #528c69;
+//$form-check-input-indeterminate-bg-color: #528c69;
+//$form-check-input-indeterminate-border-color: #528c69;
+//
+//$form-check-input-focus-border: #528c69;
+//$form-check-input-focus-box-shadow: #528c69;
+//
+//$input-focus-border-color: #528c69;
+//$input-btn-focus-box-shadow: #528c69;
+
+$table-variants: (
+  "primary":    shift-color($primary, $table-bg-scale),
+  "secondary":  shift-color($secondary, $table-bg-scale),
+  "success":    shift-color($success, $table-bg-scale),
+  "info":       shift-color($info, $table-bg-scale),
+  "warning":    shift-color($warning, $table-bg-scale),
+  "danger":     $pink,
+  "light":      $light,
+  "dark":       $dark,
+);
+
+@each $color, $value in $theme-colors {
+  .btn-#{$color} {
+    @include button-variant($value, $value);
+  }
+}
+
+@each $color, $value in $theme-colors {
+  .btn-outline-#{$color} {
+    @include button-outline-variant($value);
+  }
+}

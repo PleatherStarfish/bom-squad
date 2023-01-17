@@ -1,0 +1,94 @@
+@include media-breakpoint-up(lg) {
+  .module__container, .components__container {
+    margin-top: 20vh;
+  }
+}
+
+@include media-breakpoint-only(md) {
+  .module__container, .components__container {
+    margin-top: 5vh;
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .module__container, .components__container {
+    margin-top: 45px;
+  }
+}
+
+@include media-breakpoint-only(md) {
+  .module-list__subtitle {
+    color: #64727e;
+    width: 100%;
+    margin-bottom: 3vh;
+    font-size: 24px;
+    text-align: left;
+    margin-left: auto;
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .module-list__subtitle {
+    color: #64727e;
+    width: 60%;
+    margin-bottom: 3vh;
+    font-size: 35px;
+    text-align: right;
+    margin-left: auto;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .module-list__subtitle {
+    color: #64727e;
+    width: 60%;
+    margin-bottom: 3vh;
+    font-size: 35px;
+    text-align: right;
+    margin-left: auto;
+  }
+}
+
+.module-list__search-box {}
+
+.module-list__module-card {
+  list-style-type: none;
+}
+
+.module-list__img {
+  max-height: 100%
+}
+
+.module-list__img-container {
+  height: 250px;
+  width: auto !important;
+}
+
+.module-list__search-label {
+  color: #505050;
+}
+
+a.module-list__card-title-link,
+a.module-detail__manufacturer-link {
+    color: #505050;
+    text-decoration: none;
+}
+
+a.module-list__card-title-link:hover,
+a.module-detail__manufacturer-link:hover {
+    color: #505050;
+    text-decoration: underline;
+}
+
+#bootstrap-overrides .rdt_TableCol_Sortable {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+#bootstrap-overrides .rdt_TableHeadRow {
+  border-bottom: 2px black solid;
+}
+
+#bootstrap-overrides .rdt_TableCell {
+  font-size: 16px;
+}

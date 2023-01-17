@@ -1,0 +1,72 @@
+.logo__main {
+    position: fixed;
+    top: 10px;
+    left: 30px;
+    width: 280px;
+    opacity: 1;
+    transform-origin: top left;
+    transition: opacity 1.3s, width 1.3s, left 1.3s, top .5s;
+}
+
+@include media-breakpoint-between(xs, lg) {
+    .logo__main {
+        visibility: hidden;
+    }
+}
+
+.logo__secondary--mobile {
+    left: 18px;
+    opacity: 1;
+    position: fixed;
+    top: 13px;
+    width: 100px;
+}
+
+@include media-breakpoint-up(lg) {
+    .logo__secondary {
+        z-index: 9999;
+        width: 228px;
+        left: 55px;
+        top: 8px;
+        position: fixed;
+        opacity: 0;
+        transform-origin: top left;
+        transition: opacity 1.3s, width 1.3s, left 1.3s, top .3s;
+    }
+    .logo__secondary--visible {
+        opacity: 1 !important;;
+        width: 140px;
+        left: 15px;
+    }
+}
+
+@include media-breakpoint-down(lg) {
+    .logo__secondary {
+        left: 18px;
+        opacity: 1 !important;
+        position: fixed;
+        top: 13px;
+        transform-origin: top left;
+        transition: opacity 1.3s, width 1.3s, left 1.3s, top .3s;
+        width: 100px;
+    }
+}
+.logo__secondary--main-hidden {
+    left: 18px;
+    opacity: 1!important;
+    position: fixed;
+    top: 13px;
+    transform-origin: top left;
+    transition: opacity 1.3s,width 1.3s,left 1.3s,top .3s;
+    width: 100px;
+}
+
+.logo__main--hidden {
+    left: 4px;
+    opacity: 0 !important;
+    width: 170px;
+}
+
+.logo__main--off-canvas, .logo__secondary--off-canvas {
+    top: -300px !important;
+}

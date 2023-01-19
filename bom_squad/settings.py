@@ -85,6 +85,12 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'bom_squad', 'static'),
 )
 
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ]
+}
+
 WSGI_APPLICATION = 'bom_squad.wsgi.application'
 
 RECAPTCHA_PUBLIC_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'

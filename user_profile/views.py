@@ -13,7 +13,6 @@ import collections
 from django import template
 from django.db.models import JSONField
 from user_profile.serializers import InventorySerializer
-
 from rest_framework.response import Response
 import json
 
@@ -59,15 +58,13 @@ def user_page(request, **kwargs):
     return render(request, 'users/index.html', context)
 
 
-# @login_required()
+@login_required()
 @api_view(['GET'])
 def user_inventory(request, **kwargs):
-    if request.method == 'GET':
-        # user = UserProfile.objects.get(user=request.user)
-        inventory = UserProfileComponentInventoryData.objects.all()
-        serializer = InventorySerializer(inventory, many=True)
-        zipped_data = [item['zipped_data'] for item in serializer.data]
-        return Response(zipped_data)
+    user = UserProfile.objects.filter(user=request.user).first()
+    inventory = UserProfileComponentInventoryData.objects.filter(profile=user)
+    serializer = InventorySerializer(inventory, many=True)
+    return Response(serializer.data)
 
 @login_required()
 def addComponentsToShoppingList(request):

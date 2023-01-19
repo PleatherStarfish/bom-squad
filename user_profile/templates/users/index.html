@@ -66,56 +66,12 @@
                 <div class="container py-5 px-0 d-flex flex-column">
 
                     {% if zipped_data %}
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between  mb-5">
                             <h2 class="display-4">Components Inventory</h2>
                             <span class="align-self-center"><a href="{% url 'export_inventory_data_csv' %}"
                                                                class="btn btn-primary text-white float-end">Download CSV</a></span>
                         </div>
-                        <div id="svelte_root"></div>
-                        <div id="show-hide-section">
-                            <label>
-                                <input type="checkbox" id="chk-component" checked onchange="toggleColumn(this, 0)">
-                                Component
-                            </label>
-                            <label>
-                                <input type="checkbox" id="chk-quantity" checked onchange="toggleColumn(this, 1)">
-                                Quantity
-                            </label>
-                            <label>
-                                <input type="checkbox" id="chk-location" checked onchange="toggleColumn(this, 2)">
-                                Location
-                            </label>
-                        </div>
-                        <div class="py-5 px-0">
-                            <form>
-                                {% csrf_token %}
-                                <input type="hidden" id="csrftoken" value="{{ csrf_token }}">
-                                <table class="table sortable">
-                                    <thead id="inventory-table-header">
-                                        <tr>
-                                            <th>Component</th>
-                                            <th>Quantity</th>
-                                            <th>Location</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="inventory-table-body">
-                                    {% for item in zipped_data %}
-                                        <tr>
-                                            <td>{{ item.1.component.description }}</td>
-                                            <td id="user-page-quantity" ondblclick="editQuantity(this)"
-                                                data-id="{{ item.1.id }}" role="button"
-                                                class="col-md-1">{{ item.1.quantity }}
-                                            </td>
-                                            <td id="user-page-location" style="position:relative;"
-                                                ondblclick="editLocation(this)"
-                                                data-id="{{ item.0 }}" role="button"
-                                                class="col-md-2">{{ item.0 }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </form>
-                        </div>
+                        <div id="_react_components_inventory"></div>
                     {% else %}
                         <div class="alert alert-warning" role="alert">
                             Go to the <a href="{% url 'components' %}">Components page</a> to add components to your

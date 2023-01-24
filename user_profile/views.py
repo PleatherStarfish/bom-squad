@@ -13,6 +13,7 @@ import collections
 from django import template
 from django.db.models import JSONField
 from user_profile.serializers import InventorySerializer
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 import json
 
@@ -221,3 +222,16 @@ def update_inventory(request):
             return JsonResponse({'error': 'Inventory not found'}, status=404)
         except UserProfileComponentInventoryData.DoesNotExist:
             return JsonResponse({'status': 'error'})
+
+@login_required
+def update_inventory_quantity(request, pk):
+    inventory = get_object_or_404(UserProfileComponentInventoryData, pk=pk)
+    if request.method == 'PATCH':
+        if inventory.profile.user != request.user:
+            return JsonResponse({'error': 'You do not have permission to update this inventory'}, status=403)
+        data = json.loads(request.body)
+        inventory.quantity = data['quantity']
+        inventory.save()
+        return JsonResponse({'message': 'Inventory quantity updated successfully'}, status=200)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)

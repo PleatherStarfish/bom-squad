@@ -405,9 +405,7 @@ const App = () => {
 
   useEffect(() => console.log(location), [location])
 
-  const handleLocationBubbleDelete = (e: { target: { id: string } }) => {
-    const row_id = e.target.id.split("_")[1];
-    const bubble_id = e.target.id.split("_")[2];
+  const handleLocationBubbleDelete = (e: { target: { id: string } }, row_id, bubble_id) => {
 
     // @ts-ignore
     let newLocationArray = location[row_id]["location"];

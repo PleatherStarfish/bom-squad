@@ -105,69 +105,6 @@
 			link.click();
 			console.log("CSV download started");
 		});
-
-		function updateInventory(itemId, newValue, field) {
-			const data = {id: itemId, value: newValue, field: field};
-			fetch("{% url 'update_inventory' %}", {
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-					"X-CSRFToken": document.getElementById("csrftoken").value
-				},
-				body: JSON.stringify(data),
-			})
-				.then((response) => response.json())
-				.then((data) => {
-					console.log("Success:", data);
-					// Get the input element
-					const input = document.querySelector(`input[data-id="${id}"]`);
-					// Get the parent td element
-					const td = input.parentElement;
-					// Set the innerHTML of the td to the new value
-					td.innerHTML = value;
-				})
-				.catch((error) => {
-					console.error("Error:", error);
-				});
-		}
-
-		function editQuantity(element) {
-			var itemId = element.getAttribute("data-id");
-			var currentValue = element.innerHTML;
-			element.innerHTML = "<input type='number' value=" + currentValue + " onblur='saveQuantity(" + itemId + ", this)'>";
-		}
-
-		function editLocation(element) {
-			var itemId = element.getAttribute("data-id");
-			var currentValue = element.innerHTML;
-			element.innerHTML = "<input type='text' value='" + currentValue + "' onblur='saveLocation(" + itemId + ", this)'>";
-		}
-
-		function saveQuantity(itemId, element) {
-			var newValue = element.value;
-			updateInventory(itemId, newValue, 'quantity');
-			element.parentElement.innerHTML = newValue;
-		}
-
-		function saveLocation(itemId, element) {
-			var newValue = element.value;
-			updateInventory(itemId, newValue, 'location');
-			element.parentElement.innerHTML = newValue;
-		}
-
-		function toggleColumn(checkbox, columnIndex) {
-            var table = document.getElementById('inventory-table-body')
-            var header = table.getElementsByTagName("thead")[0];
-            var rows = table.getElementsByTagName("tr");
-            var headerRows = header.getElementsByTagName("tr");
-
-            for (var i = 0; i < rows.length; i++) {
-                var cells = rows[i].getElementsByTagName("td");
-                var headerCells = headerRows[i].getElementsByTagName("th");
-                cells[columnIndex].style.display = checkbox.checked ? "table-cell" : "none";
-                headerCells[columnIndex].style.display = checkbox.checked ? "table-cell" : "none";
-            }
-        }
     </script>
     {% endcomment %}
     <script type="text/javascript" src="{% static 'bundles/inventory_bundle.js' %}"></script>

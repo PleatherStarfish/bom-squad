@@ -18,10 +18,13 @@ interface RowDataType {
     colorList?: string[];
 }
 
-const createPlaceList = (location, value, handleLocationBubbleDelete, colorList) => {
-    const arrayLength = location[value]["location"].length;
-    const placeList = location[value]["location"].map((name, index) => {
-        let close = null;
+export const createPlaceList = (locationArray = [], handleLocationBubbleDelete, colorList = [], value, flex = false) => {
+    const arrayLength = locationArray.length;
+    if (!arrayLength || arrayLength === 0) {
+        return []
+    }
+    return locationArray.map((name, index) => {
+        let close;
         if (index !== arrayLength - 1) {
             close = <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -40,9 +43,23 @@ const createPlaceList = (location, value, handleLocationBubbleDelete, colorList)
             </svg>;
         }
         return (
-            <div key={index} style={{display: "inline-block", whiteSpace: "nowrap"}}>
+            <div key={index} style={flex ? {display: "flex", alignItems: "center", flexWrap: "nowrap"} : {
+                display: "inline-block",
+                whiteSpace: "nowrap"
+            }}>
                 <>
-                    <div style={{
+                    <div style={flex ? {
+                        display: "flex",
+                        alignItems: "center",
+                        flexWrap: "nowrap",
+                        fontSize: "10px",
+                        padding: "3px 6px",
+                        color: "white",
+                        backgroundColor: colorList[index] || "gray",
+                        border: "1px solid black",
+                        borderRadius: ".8em",
+                        marginBottom: "3px"
+                    } : {
                         fontSize: "10px",
                         display: "inline-block",
                         padding: "3px 6px",
@@ -57,7 +74,7 @@ const createPlaceList = (location, value, handleLocationBubbleDelete, colorList)
                             id={`deleteLocationButton_${value}_${index}`}
                             style={{fontSize: "0.8em", marginLeft: "3px"}}
                             variant="white"
-                            onClick={(e) => handleLocationBubbleDelete(e)}
+                            onClick={(e) => handleLocationBubbleDelete(e, value, index)}
                         />
                     </div>
                     {close}
@@ -65,7 +82,6 @@ const createPlaceList = (location, value, handleLocationBubbleDelete, colorList)
             </div>
         );
     });
-    return placeList;
 };
 
 const Row = ({
@@ -86,8 +102,7 @@ const Row = ({
     useEffect(() => {
         const locationValue = location?.[value]?.location;
         if (locationValue) {
-            const arrayLength = locationValue.length;
-            const placeList = createPlaceList(location, value, handleLocationBubbleDelete, colorList)
+            const placeList = createPlaceList(location[value]["location"], handleLocationBubbleDelete, colorList, value)
             setLocationList(placeList);
         }
     }, [location]);

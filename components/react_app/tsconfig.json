@@ -7,6 +7,11 @@
     "removeComments": true,
     "sourceMap": true,
     "target": "es2015",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "randomcolor": [
+        "./node_modules/randomcolor/dist/randomColor.js"
+      ]
+    }
   }
 }

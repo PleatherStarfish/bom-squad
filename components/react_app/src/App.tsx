@@ -55,11 +55,17 @@ const App = () => {
   >({});
   const [componentLocalStorage, setComponentLocalStorage] = useState({});
 
-  const [colorList] = useState(
-    [...Array(20)].map(() => {
-      return randomColor({ luminosity: "dark" });
-    })
-  );
+  const [colorList] = useState(['#538b69',
+        '#4a7f5f',
+        '#417355',
+        '#38674b',
+        '#305b42',
+        '#275039',
+        '#1f4530',
+        '#173a27',
+        '#102f1e',
+        '#082516'
+    ]);
 
   // An array of IDs representing the on/off state of the switches (if it's in the array it's "on")
   const [componentsChecked, setComponentsChecked] = useState(new Set([]));
@@ -97,9 +103,6 @@ const App = () => {
     ["componentsInfo"],
     () => getComponents()
   );
-
-  let addToUserListsEnabled: React.MutableRefObject<boolean> = useRef(false);
-
   const handleConfirmDeleteModelClose = () => setConfirmDeleteShow(false);
 
   const handleExtended = () => setExtended(!extended);
@@ -344,63 +347,21 @@ const App = () => {
       });
   };
 
-  const handleLocationChange = (e: { target: any }) => {
+  const handleLocationChange = (e) => {
     const id = getID(e);
-    console.log(id)
     const value = e.target.value;
 
-    if (value === ",") {
-      return;
-    }
+    if (value === ",") return;
 
-    if (value.includes(",")) {
-      // If last character in string is a comma...
-      if (value.slice(-1) === ",") {
-        const newLocations = value.split(",");
-        const newLocationsFiltered = newLocations.filter(function (el: string) {
-          return el !== "";
-        });
-        // @ts-ignore
-        const newLocationArray = [
-          ...location[id]["location"],
-          ...newLocationsFiltered,
-        ];
-        setLocation((prev) => {
-          return {
-            ...prev,
-            [id]: { location: newLocationArray, remainder: "" },
-          };
-        });
-      } else {
-        const newLocations = value.split(",");
-        // @ts-ignore
-        const newLocationArray = [...location[id]["location"], ...newLocations];
-        const newLocationArrayFiltered = newLocationArray.filter(function (el) {
-          return el !== "";
-        });
-        setLocation((prev) => {
-          return {
-            ...prev,
-            [id]: { location: newLocationArrayFiltered, remainder: "" },
-          };
-        });
-      }
-    } else {
-      if (location) {
-        setLocation((prev) => {
-          // @ts-ignore
-          return {
-            ...prev,
-            [id]: {
-              location: prev[id] ? prev[id]["location"] : [],
-              remainder: value,
-            },
-          };
-        });
-      } else {
-        setLocation({[id]: {location: [], remainder: value}})
-      }
-    }
+    const newLocations = value.split(",").filter(el => el !== "");
+    const newLocationArray = value.includes(",")
+        ? [...location[id].location, ...newLocations]
+        : [...(location[id]?.location || [])];
+
+    setLocation((prev) => ({
+      ...prev,
+      [id]: {location: newLocationArray, remainder: value.includes(",") ? "" : value},
+    }));
   };
 
   useEffect(() => console.log(location), [location])

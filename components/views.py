@@ -35,26 +35,16 @@ def search_results(request):
 
 @api_view(['POST'])
 def get_components(request):
-    # if not request.user.is_authenticated:
-    #     return Response({"error": "Method not allowed"}, status=status.HTTP_401_UNAUTHORIZED)
-
-    serializer_context = {'request': request}
-    body = request.data
-    int_id_list = [int(input_id) for input_id in body]
-
-    output = {}
+    int_id_list = [int(input_id) for input_id in request.data]
     items = Component.objects.filter(pk__in=int_id_list)
-    sorted(items, key=lambda i: int_id_list.index(i.pk))
-    for item in items:
-        p = None
-        if (item.price):
-            p = f"{str(item.price.amount)} {str(item.price.currency)}"
-        serializer = {"id": item.id,
-                      "description": item.description,
-                      "manufacturer": item.manufacturer.name,
-                      "supplier": item.supplier.name,
-                      "price": p,
-                      "item_no": item.supplier_item_no,
-                      "supplier_short_name": item.supplier.short_name}
-        output[item.id] = serializer
+    sorted_items = sorted(items, key=lambda i: int_id_list.index(i.pk))
+    output = {item.id: {
+        "id": item.id,
+        "description": item.description,
+        "manufacturer": item.manufacturer.name,
+        "supplier": item.supplier.name,
+        "price": f"{str(item.price.amount)} {str(item.price.currency)}" if item.price else None,
+        "item_no": item.supplier_item_no,
+        "supplier_short_name": item.supplier.short_name
+    } for item in sorted_items}
     return JsonResponse(output)

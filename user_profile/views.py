@@ -197,7 +197,7 @@ def update_inventory(request):
         field = data.get('field')
 
         try:
-            # Get the user profile of the logged in user
+            # Get the user profile of the logged-in user
             user_profile = UserProfile.objects.get(user=request.user)
 
             # Get the inventory item that needs to be updated
@@ -235,3 +235,30 @@ def update_inventory_quantity(request, pk):
         return JsonResponse({'message': 'Inventory quantity updated successfully'}, status=200)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+@login_required
+def update_inventory_location(request, pk):
+    inventory = get_object_or_404(UserProfileComponentInventoryData, pk=pk)
+    if request.method == 'PATCH':
+        if inventory.profile.user != request.user:
+            return JsonResponse({'error': 'You do not have permission to update this inventory'}, status=403)
+        data = json.loads(request.body)
+        inventory.location = data['location']
+        inventory.save()
+        return JsonResponse({'message': 'Inventory location updated successfully'}, status=200)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+@login_required
+def delete_inventory_item(request, pk):
+    inventory = get_object_or_404(UserProfileComponentInventoryData, pk=pk)
+    if request.method != 'DELETE':
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+    if request.user != inventory.profile.user:
+        return JsonResponse({'error': 'You do not have permission to delete this inventory'}, status=403)
+
+    inventory.delete()
+
+    return JsonResponse({'message': 'Inventory item deleted'})
+

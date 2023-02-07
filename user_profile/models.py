@@ -47,6 +47,7 @@ class UserProfileComponentInventoryData(models.Model):
     location = models.JSONField(null=True, blank=True)
 
     class Meta:
+        # unique_together = ('component', 'profile', 'location')
         verbose_name_plural = "User Component Inventory"
 
     def __str__(self):

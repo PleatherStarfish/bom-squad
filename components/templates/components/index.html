@@ -44,11 +44,11 @@
                                                 {% if columns|get_item:type.grouper %}
                                                     {% with heading_list=columns|get_item:type.grouper %}
                                                         {% for heading in heading_list %}
-                                                            {% if heading == "Add" %}
+                                                            {% if heading == "Add to queue" %}
                                                                 {% if user.is_authenticated %}
                                                                     <th scope="col">{{ heading }}</th>
                                                                 {% endif %}
-                                                            {% elif heading == "# in Inv." or heading == "Inv. Location" %}
+                                                            {% elif heading == "# in Inv." %}
                                                                 {% if user.is_authenticated %}
                                                                     <th scope="col">{{ heading }}</th>
                                                                 {% endif %}
@@ -97,7 +97,6 @@
                                                             {% endif %}
                                                         </th>
                                                         {% if user.is_authenticated %}
-                                                            <th></th>
                                                             <th></th>
                                                         {% endif %}
                                                     {% endwith %}

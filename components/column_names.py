@@ -8,7 +8,6 @@ columns = {
          "Supplier Item #",
          "Price",
          "# in Inv.",
-         "Inv. Location",
          "Add"],
     "Diode":
         ["Description",
@@ -17,7 +16,6 @@ columns = {
          "Supplier Item #",
          "Price",
          "# in Inv.",
-         "Inv. Location",
          "Add"],
     "Jack":
         ["Description",
@@ -26,7 +24,6 @@ columns = {
          "Supplier Item #",
          "Price",
          "# in Inv.",
-         "Inv. Location",
          "Add"],
     "Pin Header Strip":
         ["Description",
@@ -35,7 +32,6 @@ columns = {
          "Supplier Item #",
          "Price",
          "# in Inv.",
-         "Inv. Location",
          "Add"],
     "Potentiometer":
         ["Description",
@@ -44,7 +40,6 @@ columns = {
          "Supplier Item #",
          "Price",
          "# in Inv.",
-         "Inv. Location",
          "Add"],
     "Power Connector":
         ["Description",
@@ -53,7 +48,6 @@ columns = {
          "Supplier Item #",
          "Price",
          "# in Inv.",
-         "Inv. Location",
          "Add"],
     "Resistor":
         ["Description",
@@ -63,7 +57,6 @@ columns = {
          "Supplier Item #",
          "Price",
          "# in Inv.",
-         "Inv. Location",
          "Add"],
     "SOIC IC":
         ["Description",
@@ -72,6 +65,5 @@ columns = {
          "Supplier Item #",
          "Price",
          "# in Inv.",
-         "Inv. Location",
          "Add"],
 }

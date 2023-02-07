@@ -116,4 +116,8 @@
     right: 0;
 }
 
+#bootstrap-overrides .rdt_TableCell > div {
+    width: 100%
+}
+
 @import "node_modules/bootstrap/scss/bootstrap";

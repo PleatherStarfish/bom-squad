@@ -175,9 +175,11 @@ const App = () => {
         });
     };
 
+    console.log(data)
+    console.log(deleteID)
+
     // Open popup to confirm delete
     const handleConfirmDeleteModelShow = (e) => {
-      console.log(e)
       setDeleteID(e);
       setConfirmDeleteShow(true);
     };
@@ -270,7 +272,7 @@ const App = () => {
 			/>}
             {confirmDeleteShow && (
                 <OnDeleteConfirmation
-                  componentsAppState={data}
+                  data={data}
                   deleteID={deleteID}
                   confirmDeleteShow={confirmDeleteShow}
                   handleDeleteRow={deleteMutate}

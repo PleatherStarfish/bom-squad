@@ -2,46 +2,30 @@ import React from "react";
 // @ts-ignore
 import { Button, Modal } from "react-bootstrap";
 
-interface OnDeleteConfirmationTypes {
-  confirmDeleteShow: boolean;
-  handleConfirmDeleteModelClose: () => void;
-  componentsAppState: any;
-  deleteID: string;
-  handleDeleteRow: (arg0: any) => void;
-}
-
-interface ComponentsAppState {
-  [key: string]: {
-    supplier_short_name: string;
-    item_no: string;
-  }
-}
-
 interface OnDeleteConfirmationProps {
   confirmDeleteShow: boolean;
   handleConfirmDeleteModelClose: () => void;
-  componentsAppState: ComponentsAppState;
+  data: any;
   deleteID: string;
   handleDeleteRow: (deleteId: string) => void;
 }
 
-const ModalBody = ({ componentsAppState, deleteID }: OnDeleteConfirmationProps) => {
+const ModalBody = ({ data, deleteID }: OnDeleteConfirmationProps) => {
+  console.log(data)
+  console.log(deleteID)
+  const target = data.find(obj => obj.id === deleteID);
   return (
     <>
-      Do you really want to delete{" "} {deleteID}
-      {/*{componentsAppState[deleteID]["supplier_short_name"]}{" "}*/}
-      {/*{componentsAppState[deleteID]["name"]}?*/}
+      {target ? `Do you really want to delete ${target.component}?` : null}
     </>
   );
 };
 
 const ModalFooter = ({ handleConfirmDeleteModelClose, handleDeleteRow, deleteID }: OnDeleteConfirmationProps) => {
-
-  const handleDelete = React.useCallback(() => {
-    console.log(deleteID)
+  const handleDelete = () => {
     handleDeleteRow(deleteID);
     handleConfirmDeleteModelClose();
-  }, [handleDeleteRow, deleteID, handleConfirmDeleteModelClose]);
+  };
 
   return (
     <>
@@ -57,11 +41,7 @@ const ModalFooter = ({ handleConfirmDeleteModelClose, handleDeleteRow, deleteID 
 
 const OnDeleteConfirmation = (props: OnDeleteConfirmationProps) => {
   return (
-    <Modal
-      show={props.confirmDeleteShow}
-      onHide={props.handleConfirmDeleteModelClose}
-      animation={true}
-    >
+    <Modal show={props.confirmDeleteShow} onHide={props.handleConfirmDeleteModelClose}>
       <Modal.Header closeButton>
         <Modal.Title>Are you sure?</Modal.Title>
       </Modal.Header>
@@ -76,3 +56,4 @@ const OnDeleteConfirmation = (props: OnDeleteConfirmationProps) => {
 };
 
 export default OnDeleteConfirmation;
+

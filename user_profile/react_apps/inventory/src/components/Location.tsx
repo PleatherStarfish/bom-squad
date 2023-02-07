@@ -57,7 +57,7 @@ const Location = ({
                             <button type="button"
                                     style={{maxHeight: "31px", marginLeft: !!locationList.length ? "15px" : "0"}}
                                     className="btn btn-sm btn-outline-secondary h-auto py-1"
-                                    onClick={() => handleEdit(item.id, locationArray)}>{!!locationList.length ? "edit" : "add location"}
+                                    onClick={() => handleEdit(item.id, locationArray)}>{!!locationList.length ? "edit" : "add"}
                             </button>
                         </> :
                         <div className="d-flex flex-column mt-2">

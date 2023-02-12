@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from rest_framework import status
 from user_profile.models import UserProfile, UserProfileShoppingListData, Module, UserProfileComponentInventoryData
 from components.models import Component
 from django.shortcuts import render
@@ -261,4 +262,12 @@ def delete_inventory_item(request, pk):
     inventory.delete()
 
     return JsonResponse({'message': 'Inventory item deleted'})
+
+@api_view(['GET'])
+@login_required
+def me(request):
+    if request.user.is_authenticated:
+        return Response({"username": request.user.username})
+    else:
+        return Response({"error": "Not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
 

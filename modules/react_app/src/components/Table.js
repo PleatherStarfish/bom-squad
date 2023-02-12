@@ -1,68 +1,72 @@
-import React, { useState, useEffect } from "react";
-import DataTable, { expandableRowsComponentProps } from "react-data-table-component";
+import React, {useState, useEffect} from "react";
+import DataTable from "react-data-table-component";
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import InnerTable from "./InnerTable";
-import {Th} from "react-super-responsive-table";
 
-const ExpandedComponent = ({data, ...props}) => {
-    return (
-        // For each item in data
-        <InnerTable data={data}
-                    compLookup={props.compLookup}
-                    suppliersLookup={props.suppliersLookup}
-                    userInventory={props.userInventory}
-        />
-    )
+const ExpandedComponent = ({data, compLookup, suppliersLookup, userInventory, components, handleAddComponent}) => {
+	return (
+		<InnerTable
+			data={data}
+			compLookup={compLookup}
+			suppliersLookup={suppliersLookup}
+			userInventory={userInventory}
+			components={components}
+			handleAddComponent={handleAddComponent}
+		/>
+	);
 };
 
+const BOMListTable = ({moduleList, compLookup, suppliersLookup, userInventory, components, handleAddComponent}) => {
+	const [columns, setColumns] = useState([
+		{
+			name: "Description",
+			selector: "description",
+			sortable: true,
+		},
+		{
+			name: "Type",
+			selector: "type",
+			sortable: true,
+		},
+		{
+			name: "Quantity",
+			selector: "quantity",
+			sortable: true,
+		},
+	]);
 
-const BOMListTable = (props) => {
+	useEffect(() => {
+		if (userInventory) {
+			setColumns((prev) => [
+				...prev,
+				{
+					name: "Sufficient # in Inventory",
+					selector: "in_user_inventory",
+					sortable: true,
+				},
+			]);
+		}
+	}, [userInventory]);
 
-    const [columns, setColumns] = useState([
-        {
-            name: 'Description',
-            selector: row => row.description,
-            sortable: true,
-        },
-        {
-            name: 'Type',
-            selector: row => row.type,
-            sortable: true,
-        },
-        {
-            name: 'Quantity',
-            selector: row => row.quantity,
-            sortable: true,
-        }
-    ]);
+	const data = moduleList.map((obj) => ({...obj.fields}));
 
-    const data = props.moduleList.map((obj) => {
-        return Object.assign({}, obj, obj.fields);
-    });
-
-    useEffect(() => {
-        if (props.userInventory) {
-            setColumns((prev) => [...prev, {name: 'Sufficient # in Inventory', selector: row => row.in_user_inventory, sortable: true}])
-        }
-    }, [props.userInventory]);
-
-    return (
-        <div className="module-table">
-            <DataTable
-                columns={columns}
-                data={data}
-                expandableRows
-                expandableRowsComponent={ExpandedComponent}
-                // noTableHead={!!data}
-                // noHeader={!!data}
-                expandableRowsComponentProps={{
-                    "compLookup": props.compLookup,
-                    "suppliersLookup": props.suppliersLookup,
-                    "userInventory": props.userInventory
-                }}
-            />
-        </div>
-    );
+	return (
+		<div className="module-table">
+			<DataTable
+				columns={columns}
+				data={data}
+				expandableRows
+				expandableRowsComponent={ExpandedComponent}
+				expandableRowsComponentProps={{
+					compLookup,
+					suppliersLookup,
+					userInventory,
+					components,
+					handleAddComponent,
+				}}
+			/>
+		</div>
+	);
 };
 
 export default BOMListTable;

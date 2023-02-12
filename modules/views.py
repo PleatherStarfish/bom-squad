@@ -57,7 +57,7 @@ def data(request, slug):
     }
 
     # Since module_bom_list is the BOM item, not the actual component, each entry in module_bom_list
-    # has an components_options list, which is a ManyToMany field and is represented as a list of
+    # has a components_options list, which is a ManyToMany field and is represented as a list of
     # component pk ids. Here we iterate over this list and create a dictionary keying the pk
     # to a JSON representing the component itself. This is used in the react app to display
     # components_options as a nested table under each BOM item

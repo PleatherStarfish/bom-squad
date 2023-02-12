@@ -1,50 +1,52 @@
 import React from "react";
+
 import {Table, Tbody, Td, Th, Thead, Tr} from "react-super-responsive-table";
 
-const InnerTable = (props) => {
+const InnerTable = ({ data, compLookup, suppliersLookup, userInventory, components, handleAddComponent }) => {
 
-    console.log(props.suppliersLookup);
-
-    const rows = props.data.components_options.map((item, index) => {
-        const key = props.data.components_options[index];
-        const supplierKey = parseInt(props.compLookup[key][0].fields["supplier"])
-        console.log(props.suppliersLookup[supplierKey])
-        return (
-            <Tr>
-                <Td>{props.compLookup[key][0].fields["description"]}</Td>
-                <Td>{props.compLookup[key][0].fields["voltage_rating"]}</Td>
-                <Td>{props.compLookup[key][0].fields["tolerance"]}</Td>
-                <Td>{props.suppliersLookup[supplierKey].short_name}</Td>
-                <Td><a href={props.compLookup[key][0].fields["link"]}>{props.compLookup[key][0].fields["supplier_item_no"]}</a></Td>
-                <Td>{props.compLookup[key][0].fields["price"] ? "$" + props.compLookup[key][0].fields["price"] + " USD" : null}</Td>
-                { props.userInventory && <Td></Td> }
-                { props.userInventory && <Td></Td> }
-            </Tr>
-        )
-    });
-
+  const rows = data.components_options.map((key, index) => {
+    const supplierKey = parseInt(compLookup[key][0].fields["supplier"]);
+    const supplier = suppliersLookup[supplierKey];
+    const component = compLookup[key][0].fields;
     return (
-        <div style={{padding: "0 0 0 48px"}}>
-            <Table className={"table"} style={{paddingLeft: "48px"}}>
-                <Thead style={{backgroundColor: "#505050", color: "white"}}>
-                    <Tr>
-                        <Th>Description</Th>
-                        <Th>Voltage Rating</Th>
-                        <Th>Tolerance</Th>
-                        <Th>Supplier</Th>
-                        <Th>Supplier Item #</Th>
-                        <Th>Unit Price</Th>
-                        { props.userInventory && <Th>Inventory</Th> }
-                        { props.userInventory && <Th><span className={"sr-only"}>Add</span></Th> }
-                    </Tr>
-                </Thead>
-                <Tbody style={{backgroundColor: "#f0f0f0", borderTop: 0}}>
-                    { rows }
-                </Tbody>
-            </Table>
-        </div>
-    )
-};
+      <Tr key={index}>
+        <Td>{component["description"]}</Td>
+        <Td>{component["voltage_rating"]}</Td>
+        <Td>{component["tolerance"]}</Td>
+        <Td>{supplier.short_name}</Td>
+        <Td>
+          <a href={component["link"]}>{component["supplier_item_no"]}</a>
+        </Td>
+        <Td>
+          {component["price"] ? `$${component["price"]} USD` : null}
+        </Td>
+        <Td>Inventory</Td>
+        <Td><input style={{maxWidth: "50px"}} value={components[key] ? components[key]["quantity"] : 0} defaultValue={0} type="number" min="0" onChange={(event) => handleAddComponent(key, event.target.value)} /></Td>
+      </Tr>
+    );
+  });
 
+  return (
+    <div style={{ padding: "0 0 0 48px" }}>
+      <Table className="table" style={{ paddingLeft: "48px" }}>
+        <Thead style={{ backgroundColor: "#505050", color: "white" }}>
+          <Tr>
+            <Th>Description</Th>
+            <Th>Voltage Rating</Th>
+            <Th>Tolerance</Th>
+            <Th>Supplier</Th>
+            <Th>Supplier Item #</Th>
+            <Th>Unit Price</Th>
+            <Th>Inventory</Th>
+            <Th><span className="sr-only">Add</span></Th>
+          </Tr>
+        </Thead>
+        <Tbody style={{ backgroundColor: "#f0f0f0", borderTop: 0 }}>
+          {rows}
+        </Tbody>
+      </Table>
+    </div>
+  );
+};
 
 export default InnerTable;

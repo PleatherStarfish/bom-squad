@@ -1,75 +1,94 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
+import {useQuery} from '@tanstack/react-query';
 import BOMListTable from "./components/Table";
+import 'regenerator-runtime/runtime'
+import Cookies from "js-cookie";
 
 function App() {
-    
-    // A list of columns in the outer (BOM list) table
-    const [moduleBOMList, setModuleBOMList] = useState(null);
+  const [components, setsComponents] = useState({})
 
-    // A dictionary of components by 'id'
-    const [compLookup, setCompLookup] = useState(null);
+	const handleAddComponent = (componentId, quantity) => {
+		setsComponents((prev) => {
+			return {
+				...prev,
+				[componentId]: {quantity: parseInt(quantity)}
+			}
+		})
+	}
 
-    // A dictionary of suppliers by 'id'
-    const [suppliersLookup, setSuppliersLookup] = useState(null);
+  const csrftoken = Cookies.get("csrftoken");
 
-    // User inventory; only populated if user is logged in
-    const [userInventory, setUserInventory] = useState(null);
+  const { data: username, isLoading: userIsLoading, error: userError } = useQuery(
+    ['current_user'],
+    async () => {
+      const response = await fetch(`${window.location.origin}/users/me/`, {
+        method: 'GET',
+        headers: {
+          'X-CSRFToken': csrftoken,
+        },
+        credentials: 'include',
+      });
+      return response.json();
+    }
+  );
 
-    useEffect(() => console.log(userInventory), [userInventory]);
 
-    useEffect(() => {
-        fetch('data/')
-            .then(res => res.json())
-            .then((json) => {
-                console.log(json);
-                setModuleBOMList([...json["module_bom_list"]]);
-                setCompLookup({...json["components_options_dict"]});
-                setUserInventory(json["user_inventory"] || null);
-                setSuppliersLookup({...json["suppliers"]});
-            })
-            .catch((error) => {
-              console.log(error)
-            })
-    }, []);
+  useEffect(() => {
+    if (username) {
+	    window["localforage_store"] = localforage.createInstance({
+		    name: username.username
+	    });
 
-    // For each BOM list item, check if user has any component in their inventory that works for this BOM item
-    // and set a variable, "in_user_inventory" in the moduleBOMList dictionary
-    useEffect(() => {
-        if (moduleBOMList && userInventory && compLookup) {
-            for (let i = 0; i < moduleBOMList.length; i++) {
-                const components = moduleBOMList[i]["fields"]["components_options"];
-                let in_user_inv = false;
-                let inter_index = 0;
+	    window["localforage_store"].getItem("components").then(local_storage => {
+		    for (const item of Object.keys(local_storage)) {
+			    setComponents(prevComponents => {
+				    return {
+					    ...prevComponents,
+					    [item]: local_storage[item]["quantity"]
+				    };
+			    });
+		    }
+	    });
+    }
+  }, [username]);
 
-                // Iterate until a module is found in the user inventory (in sufficient quantity) or until
-                // the end of the components array
-                while ((!in_user_inv) && (inter_index < components.length)) {
-                    if (components[inter_index] in userInventory) {
-                        in_user_inv = true;
-                        // setModuleBOMList((prev) => {
-                        //
-                        // })
-                    }
-                    inter_index += 1
-                }
-            }
-        }
-    }, [moduleBOMList, userInventory, compLookup]);
+  const { data, isLoading, error } = useQuery(
+    ['data'],
+    async () => {
+      const response = await fetch('data/');
+      return await response.json();
+    }
+  );
 
-    return (
-        <div style={{position: "relative"}}>
-            {moduleBOMList ?
-                <BOMListTable moduleList={moduleBOMList}
-                              compLookup={compLookup}
-                              suppliersLookup={suppliersLookup}
-                              userInventory={userInventory}
-                /> :
-                <div className="spinner-border text-secondary my-4" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-            }
+  const moduleList = (data && data["module_bom_list"])
+    ? data["module_bom_list"].map((item) => {
+      const components = item["fields"]["components_options"];
+      const inUserInventory = components.some((component) => component in data["user_inventory"]);
+
+      return {...item, in_user_inv: inUserInventory};
+    })
+    : [];
+
+  return (
+    <div style={{position: "relative"}}>
+      {userIsLoading || isLoading ? (
+        <div className="spinner-border text-secondary my-4" role="status">
+          <span className="sr-only">Loading...</span>
         </div>
-    );
+      ) : userError || error ? (
+        <div>Error: {(userError && userError.message) || (error && error.message)}</div>
+      ) : (
+        <BOMListTable
+          moduleList={moduleList}
+          compLookup={data ? data["components_options_dict"] : {}}
+          suppliersLookup={data ? data["suppliers"] : {}}
+          userInventory={data ? data["user_inventory"] : null}
+          components={components}
+          handleAddComponent={handleAddComponent}
+        />
+      )}
+    </div>
+  );
 }
 
 export default App;

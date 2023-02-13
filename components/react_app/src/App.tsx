@@ -111,17 +111,17 @@ const App = () => {
   const handleOffCanvasButtonClick = async () => {
     const username = window.username;
     try {
-        const components = await window["localforage_store"].getItem("components");
+        const components = await window[`localforage_store_${username}`].getItem("components");
         if (components) {
             setComponentLocalStorage(components);
         }
-        const componentsChecked = await window["localforage_store"].getItem("componentsChecked");
+        const componentsChecked = await window[`localforage_store_${username}`].getItem("componentsChecked");
         setComponentsChecked(new Set(componentsChecked));
 
-        const shoppingChecked = await window["localforage_store"].getItem("shoppingChecked");
+        const shoppingChecked = await window[`localforage_store_${username}`].getItem("shoppingChecked");
         setShoppingChecked(new Set(shoppingChecked));
 
-        const location = await window["localforage_store"].getItem("locations");
+        const location = await window[`localforage_store_${username}`].getItem("locations");
         setLocation(location);
     } catch (err) {
         console.log(err);
@@ -214,7 +214,7 @@ const App = () => {
         setAllCSwitchesOn,
         setAllSSwitchesOn,
         setLocation,
-        window["localforage_store"]
+        window[`localforage_store_${window.username}`]
       );
     }
   };
@@ -230,7 +230,7 @@ const App = () => {
       const newComponentsChecked = componentsChecked.has(compID)
         ? _.remove(componentsChecked, (n) => n === compID)
         : [...componentsChecked, compID];
-      window["localforage_store"]
+      window[`localforage_store_${window.username}`]
         .setItem("componentsChecked", newComponentsChecked)
         .then(() => {
           switchHandler(componentsChecked, compID, setComponentsChecked);
@@ -240,7 +240,7 @@ const App = () => {
       const newShoppingChecked = shoppingChecked.has(compID)
         ? _.remove(shoppingChecked, (n) => n === compID)
         : [...shoppingChecked, compID];
-      window["localforage_store"]
+      window[`localforage_store_${window.username}`]
         .setItem("shoppingChecked", newShoppingChecked)
         .then(() => {
           switchHandler(shoppingChecked, compID, setShoppingChecked);
@@ -260,13 +260,13 @@ const App = () => {
   // Handle any click on the "meta" switches at the top of the switch columns
   const handleMetaSwitchChange = (e: object, type: string) => {
     if (type === "components") {
-      window["localforage_store"]
+      window[`localforage_store_${window.username}`]
         .setItem("metaCSwitch", !allCSwitchesOn)
         .then(() => {
           setAllCSwitchesOn(!allCSwitchesOn);
         });
     } else {
-      window["localforage_store"]
+      window[`localforage_store_${window.username}`]
         .setItem("metaSSwitch", !allSSwitchesOn)
         .then(() => {
           if (!allSSwitchesOn) {
@@ -282,7 +282,7 @@ const App = () => {
   useEffect(() => {
     if (allCSwitchesOn) {
       const allKeys = Object.keys(componentsAppState);
-      window["localforage_store"]
+      window[`localforage_store_${window.username}`]
         .setItem("componentsChecked", allKeys)
         .then(() => {
           setComponentsChecked(new Set(allKeys));
@@ -294,7 +294,7 @@ const App = () => {
   useEffect(() => {
     if (allSSwitchesOn) {
       const allKeys = Object.keys(componentsAppState);
-      window["localforage_store"]
+      window[`localforage_store_${window.username}`]
         .setItem("shoppingChecked", allKeys)
         .then(() => {
           setShoppingChecked(new Set(allKeys));
@@ -305,7 +305,7 @@ const App = () => {
 
   const handleDeleteRow = (e: string) => {
     const id = parseInt(e);
-    window["localforage_store"]
+    window[`localforage_store_${window.username}`]
       .setItem("components", _.omit(componentLocalStorage, [id]))
       .then(() => {
         setComponentLocalStorage(_.omit(componentLocalStorage, [id]));
@@ -324,7 +324,7 @@ const App = () => {
   }) => {
     const id = getID(e);
     const value = e.target.value;
-    window["localforage_store"]
+    window[`localforage_store_${window.username}`]
       .setItem("components", {
         ...componentLocalStorage,
         [id]: { quantity: parseInt(value) },
@@ -387,7 +387,7 @@ const App = () => {
   useEffect(() => {
     try {
       if (location && Object.keys(location).length > 0) {
-        window["localforage_store"].setItem("locations", location);
+        window[`localforage_store_${window.username}`].setItem("locations", location);
       }
     } catch {
       setLocation({})
@@ -401,7 +401,7 @@ const App = () => {
       allCSwitchesOn,
       setComponentsChecked,
       "componentsChecked",
-      window["localforage_store"]
+      window[`localforage_store_${window.username}`]
     );
   }, [allCSwitchesOn]);
 
@@ -412,7 +412,7 @@ const App = () => {
       allSSwitchesOn,
       setShoppingChecked,
       "shoppingChecked",
-      window["localforage_store"]
+      window[`localforage_store_${window.username}`]
     );
   }, [allSSwitchesOn]);
 
@@ -547,7 +547,7 @@ const App = () => {
               setAllCSwitchesOn,
               setAllSSwitchesOn,
               setLocation,
-              window["localforage_store"]
+              window[`localforage_store_${window.username}`]
             )}
             style={{
               padding: ".375rem .575rem",

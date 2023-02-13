@@ -21,7 +21,7 @@ const InnerTable = ({ data, compLookup, suppliersLookup, userInventory, componen
           {component["price"] ? `$${component["price"]} USD` : null}
         </Td>
         <Td>Inventory</Td>
-        <Td><input style={{maxWidth: "50px"}} value={components[key] ? components[key]["quantity"] : 0} defaultValue={0} type="number" min="0" onChange={(event) => handleAddComponent(key, event.target.value)} /></Td>
+        <Td><input style={{maxWidth: "60px"}} value={components[key] ? components[key]["quantity"] : 0} defaultValue={0} type="number" min="0" onChange={(event) => handleAddComponent(key, event.target.valueAsNumber)} /></Td>
       </Tr>
     );
   });
